@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include "Spaceship.h"
+#include "debug.h"
 
 using namespace asteroids;
 
@@ -26,6 +27,7 @@ GlWindow::GlWindow(int width, int height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // 4, 2
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6); // 6, 0
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    debugln("Initializing window");
     window = glfwCreateWindow(width, height, "Asteroids", NULL, NULL);
     if (!window) {
         // Window or OpenGL context creation failed
@@ -37,6 +39,7 @@ GlWindow::GlWindow(int width, int height) {
 
     // load all OpenGL function pointers
     // needs to come after the glfwMakeContentCurrent call
+    debugln("Loading OpenGL");
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         throw std::runtime_error("Loading OpenGL failed with GLAD");
     }
@@ -75,7 +78,7 @@ void GlWindow::run() {
         glClearColor(1.0f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        spaceship.render(width, height);
+        spaceship.render(window);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwSwapBuffers(window);

@@ -2,14 +2,15 @@
 #define ASTEROIDS_SPACESHIP_H
 
 #include "glincludes.h"
+#include "Renderable.h"
 
 namespace asteroids {
 
-class Spaceship final {
+class Spaceship final : public Renderable {
 public:
     Spaceship();
 
-    void render(int width, int height);
+    void render(GLFWwindow *window) override;
 
 private:
     GLuint vertex_array_object_;

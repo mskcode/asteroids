@@ -82,7 +82,9 @@ void Spaceship::initialize_shaders() {
     //glUseProgram(program_);
 }
 
-void Spaceship::render(int width, int height) {
+void Spaceship::render(GLFWwindow *window) {
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
     float ratio = width / (float) height;
 
     mat4x4 m, p, mvp;
