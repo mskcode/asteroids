@@ -30,9 +30,15 @@ Vertex::Vertex() {
 }
 
 Vertex::~Vertex() {
+    GLuint arrays[] = {vertex_array_object_};
+    glDeleteVertexArrays(1, arrays);
 
+    GLuint buffers[] = {vertex_buffer_object_};
+    glDeleteBuffers(1, buffers);
 }
 
-void Vertex::bind() {
+void Vertex::draw() {
     glBindVertexArray(vertex_array_object_);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0); // unbind
 }

@@ -11,7 +11,7 @@ public:
 
     ~Vertex();
 
-    void bind();
+    void draw();
 
 private:
     GLuint vertex_array_object_;

@@ -39,9 +39,6 @@ void Spaceship::initialize_shaders() {
 
     shader_program_->attach_shaders({vertex_shader, fragment_shader});
     shader_program_->link();
-
-    //auto program = shader_program_->id();
-    //glUseProgram(program);
 }
 
 void Spaceship::render([[maybe_unused]] GLFWwindow *window) {
@@ -50,9 +47,7 @@ void Spaceship::render([[maybe_unused]] GLFWwindow *window) {
     //float ratio = width / (float) height;
 
     glUseProgram(shader_program_->id());
-
-    vertex_->bind();
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    vertex_->draw();
 
     /* mat4x4 m, p, mvp;
     mat4x4_identity(m);
