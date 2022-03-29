@@ -4,11 +4,11 @@
 #include <cstdio>
 
 #ifdef DEBUG
-#define debugln(fmt) std::fprintf(stderr, "DEBUG: " fmt "\n")
-#define debugfln(fmt, ...) std::fprintf(stderr, "DEBUG: " fmt "\n", __VA_ARGS__)
+#define dbgln(fmt) std::fprintf(stderr, "DEBUG: " fmt "\n")
+#define dbgfln(fmt, ...) std::fprintf(stderr, "DEBUG: " fmt "\n", __VA_ARGS__)
 #else
-#define debugln(x)
-#define debugfln(x)
+#define dbgln(x)
+#define dbgfln(x)
 #endif // DEBUG
 
 #endif // ASTEROIDS_DEBUG_H

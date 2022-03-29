@@ -1,7 +1,7 @@
 #ifndef ASTEROIDS_RENDERABLE_H
 #define ASTEROIDS_RENDERABLE_H
 
-#include "glincludes.h"
+#include "opengl.h"
 
 namespace asteroids {
 

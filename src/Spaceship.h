@@ -1,8 +1,11 @@
 #ifndef ASTEROIDS_SPACESHIP_H
 #define ASTEROIDS_SPACESHIP_H
 
-#include "glincludes.h"
+#include "opengl.h"
 #include "Renderable.h"
+#include "Shader.h"
+#include "ShaderProgram.h"
+#include "Vertex.h"
 
 namespace asteroids {
 
@@ -10,19 +13,13 @@ class Spaceship final : public Renderable {
 public:
     Spaceship();
 
+    ~Spaceship();
+
     void render(GLFWwindow *window) override;
 
 private:
-    GLuint vertex_array_object_;
-    GLuint vertex_buffer_object_;
-    GLuint vertex_shader_;
-    GLuint fragment_shader_;
-    GLuint program_;
-    GLint mvp_location_;
-    GLint vpos_location_;
-    GLint vcol_location_;
-
-    void initialize_objects();
+    opengl::ShaderProgram *shader_program_;
+    opengl::Vertex *vertex_;
 
     void initialize_shaders();
 };

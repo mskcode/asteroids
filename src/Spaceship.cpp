@@ -1,99 +1,65 @@
 #include "Spaceship.h"
+
+#include <vector>
 #include "linmath/linmath.h"
 
 using namespace asteroids;
 
-static const struct {
-    float x, y;
-    float r, g, b;
-} vertices[3] = {
-        {-0.6f, -0.4f, 1.f, 0.f, 0.f},
-        {0.6f,  -0.4f, 0.f, 1.f, 0.f},
-        {0.f,   0.6f,  0.f, 0.f, 1.f}
-};
-
 Spaceship::Spaceship() {
+    shader_program_ = new opengl::ShaderProgram();
+    vertex_ = new opengl::Vertex();
     initialize_shaders();
-    initialize_objects();
 }
 
-void Spaceship::initialize_objects() {
-    glCreateBuffers(1, &vertex_buffer_object_);
-    glNamedBufferStorage(vertex_buffer_object_, sizeof(vertices), vertices, GL_DYNAMIC_STORAGE_BIT);
-
-    glCreateVertexArrays(1, &vertex_array_object_);
-
-    GLuint vertex_array_binding_point = 0;  // A binding point in VAO. See GL_MAX_VERTEX_ATTRIB_BINDINGS
-    glVertexArrayVertexBuffer(
-            vertex_array_object_,        // vao to bind
-            vertex_array_binding_point,     // Could be 1, 2... if there were several vbo to source.
-            vertex_buffer_object_,       // VBO to bound at "vertex_array_binding_point".
-            0,                   // offset of the first element in the buffer hctVBO.
-            6 * sizeof(float));  // stride == 3 position floats + 3 color floats.
-
-    glEnableVertexArrayAttrib(vertex_array_object_, vpos_location_);
-    glEnableVertexArrayAttrib(vertex_array_object_, vcol_location_);
-
-    glVertexArrayAttribFormat(vertex_array_object_, vpos_location_, 3, GL_FLOAT, false, 0);
-    glVertexArrayAttribFormat(vertex_array_object_, vcol_location_, 3, GL_FLOAT, false, 3 * sizeof(float));
-
-    glVertexArrayAttribBinding(vertex_array_object_, vpos_location_, vertex_array_binding_point);
-    glVertexArrayAttribBinding(vertex_array_object_, vcol_location_, vertex_array_binding_point);
+Spaceship::~Spaceship() {
+    delete vertex_;
+    delete shader_program_;
 }
 
 static const char *vertex_shader_text =
-        "#version 110\n"
-        "uniform mat4 MVP;\n"
-        "attribute vec3 vCol;\n"
-        "attribute vec2 vPos;\n"
-        "varying vec3 color;\n"
+        "#version 460 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
         "void main()\n"
         "{\n"
-        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-        "    color = vCol;\n"
+        "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\n";
 
 static const char *fragment_shader_text =
-        "#version 110\n"
-        "varying vec3 color;\n"
+        "#version 460 core\n"
+        "out vec4 FragColor;\n"
+        "\n"
         "void main()\n"
         "{\n"
-        "    gl_FragColor = vec4(color, 1.0);\n"
+        "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
         "}\n";
 
 void Spaceship::initialize_shaders() {
-    vertex_shader_ = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader_, 1, &vertex_shader_text, nullptr);
-    glCompileShader(vertex_shader_);
+    auto vertex_shader = opengl::Shader::load_string(GL_VERTEX_SHADER, vertex_shader_text);
+    auto fragment_shader = opengl::Shader::load_string(GL_FRAGMENT_SHADER, fragment_shader_text);
 
-    fragment_shader_ = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader_, 1, &fragment_shader_text, nullptr);
-    glCompileShader(fragment_shader_);
+    shader_program_->attach_shaders({vertex_shader, fragment_shader});
+    shader_program_->link();
 
-    program_ = glCreateProgram();
-    glAttachShader(program_, vertex_shader_);
-    glAttachShader(program_, fragment_shader_);
-    glLinkProgram(program_);
-
-    mvp_location_ = glGetUniformLocation(program_, "MVP");
-    vpos_location_ = glGetAttribLocation(program_, "vPos");
-    vcol_location_ = glGetAttribLocation(program_, "vCol");
-
-    //glUseProgram(program_);
+    //auto program = shader_program_->id();
+    //glUseProgram(program);
 }
 
-void Spaceship::render(GLFWwindow *window) {
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    float ratio = width / (float) height;
+void Spaceship::render([[maybe_unused]] GLFWwindow *window) {
+    //int width, height;
+    //glfwGetFramebufferSize(window, &width, &height);
+    //float ratio = width / (float) height;
 
-    mat4x4 m, p, mvp;
+    glUseProgram(shader_program_->id());
+
+    vertex_->bind();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    /* mat4x4 m, p, mvp;
     mat4x4_identity(m);
     mat4x4_rotate_Z(m, m, (float) glfwGetTime());
     mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-    mat4x4_mul(mvp, p, m);
+    mat4x4_mul(mvp, p, m); */
 
-    glUseProgram(program_);
-    glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, (const GLfloat *) mvp);
-    glBindVertexArray(vertex_array_object_);
+
+    //glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, (const GLfloat *) mvp);
 }

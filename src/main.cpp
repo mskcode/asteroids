@@ -1,12 +1,10 @@
-#include "GlWindow.h"
+#include "Window.h"
 
 #include <cstdio>
 #include <cstdlib>
 #include <csignal>
 #include <exception>
 #include <functional>
-
-using namespace asteroids;
 
 std::function<void(int)> signal_handler_implementation;
 
@@ -21,7 +19,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     signal(SIGTERM, signal_handler);
 
     try {
-        GlWindow window(800, 600);
+        opengl::Window window(800, 600);
         signal_handler_implementation = [&](int signum) {
             switch (signum) {
                 case SIGINT:

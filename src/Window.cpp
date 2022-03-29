@@ -1,4 +1,4 @@
-#include "GlWindow.h"
+#include "Window.h"
 
 #include <stdexcept>
 #include <cstdio>
@@ -6,7 +6,7 @@
 #include "Spaceship.h"
 #include "debug.h"
 
-using namespace asteroids;
+using namespace opengl;
 
 static void error_callback(int error, const char *description) {
     std::fprintf(stderr, "GLFW3 ERROR: %d %s\n", error, description);
@@ -18,7 +18,7 @@ key_callback(GLFWwindow *window, int key, [[maybe_unused]] int scancode, int act
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
-GlWindow::GlWindow(int width, int height) {
+Window::Window(int width, int height) {
     glfwSetErrorCallback(error_callback);
     if (!glfwInit()) {
         throw std::runtime_error("GLFW initialization failed");
@@ -27,7 +27,7 @@ GlWindow::GlWindow(int width, int height) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4); // 4, 2
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6); // 6, 0
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    debugln("Initializing window");
+    dbgln("Initializing window");
     window = glfwCreateWindow(width, height, "Asteroids", NULL, NULL);
     if (!window) {
         // Window or OpenGL context creation failed
@@ -39,7 +39,7 @@ GlWindow::GlWindow(int width, int height) {
 
     // load all OpenGL function pointers
     // needs to come after the glfwMakeContentCurrent call
-    debugln("Loading OpenGL");
+    dbgln("Loading OpenGL");
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         throw std::runtime_error("Loading OpenGL failed with GLAD");
     }
@@ -58,7 +58,7 @@ GlWindow::GlWindow(int width, int height) {
     glfwSwapInterval(1);
 }
 
-GlWindow::~GlWindow() {
+Window::~Window() {
     if (window) {
         glfwDestroyWindow(window);
         window = nullptr;
@@ -66,8 +66,8 @@ GlWindow::~GlWindow() {
     glfwTerminate();
 }
 
-void GlWindow::run() {
-    Spaceship spaceship;
+void Window::run() {
+    asteroids::Spaceship spaceship;
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe rendering
     while (!glfwWindowShouldClose(window)) {
@@ -75,17 +75,17 @@ void GlWindow::run() {
         glfwGetFramebufferSize(window, &width, &height);
 
         glViewport(0, 0, width, height);
+
         glClearColor(1.0f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         spaceship.render(window);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 }
 
-void GlWindow::close() {
+void Window::close() {
     glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
