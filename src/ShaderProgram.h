@@ -2,8 +2,6 @@
 #define OPENGL_SHADERPROGRAM_H
 
 #include "opengl.h"
-#include <vector>
-#include "Shader.h"
 
 namespace opengl {
 
@@ -11,13 +9,17 @@ class ShaderProgram final {
 public:
     ShaderProgram();
 
+    ShaderProgram(const ShaderProgram&) = delete;
+
     ~ShaderProgram();
 
-    void attach_shader(Shader shader);
+    ShaderProgram& operator=(const ShaderProgram&) = delete;
 
-    void attach_shaders(const std::vector<Shader> &shaders);
+    void load_shader_file(GLenum shader_type, const char* path) const;
 
-    void link();
+    void load_shader_string(GLenum shader_type, const char* str) const;
+
+    void link() const;
 
     GLuint id() const;
 
@@ -25,6 +27,6 @@ private:
     GLuint program_;
 };
 
-} // namespace
+} // namespace opengl
 
 #endif // OPENGL_SHADERPROGRAM_H

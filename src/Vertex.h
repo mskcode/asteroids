@@ -2,10 +2,11 @@
 #define OPENGL_VERTEX_H
 
 #include "opengl.h"
+#include "ShaderProgram.h"
 
 namespace opengl {
 
-class Vertex {
+class Vertex final {
 public:
     Vertex();
 
@@ -22,6 +23,8 @@ private:
             0.5f, -0.5f, 0.0f,
             0.0f, 0.5f, 0.0f
     };
+
+    ShaderProgram *shader_program_;
 };
 
 } // namespace

@@ -3,7 +3,6 @@
 
 #include "opengl.h"
 #include "Renderable.h"
-#include "Shader.h"
 #include "ShaderProgram.h"
 #include "Vertex.h"
 
@@ -18,10 +17,7 @@ public:
     void render(GLFWwindow *window) override;
 
 private:
-    opengl::ShaderProgram *shader_program_;
     opengl::Vertex *vertex_;
-
-    void initialize_shaders();
 };
 
 } // namespace

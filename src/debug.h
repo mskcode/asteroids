@@ -1,14 +1,48 @@
-#ifndef ASTEROIDS_DEBUG_H
-#define ASTEROIDS_DEBUG_H
+#ifndef COMMON_UTILS_DEBUG_H
+#define COMMON_UTILS_DEBUG_H
 
+#include "strutils.h"
 #include <cstdio>
+#include <filesystem>
+#include <stdexcept>
 
-#ifdef DEBUG
-#define dbgln(fmt) std::fprintf(stderr, "DEBUG: " fmt "\n")
-#define dbgfln(fmt, ...) std::fprintf(stderr, "DEBUG: " fmt "\n", __VA_ARGS__)
+#ifdef NDEBUG
+#define assert(ignore)
+#define assertf(ignore)
+#define dbgln(ignore)
+#define dbgfln(ignore)
 #else
-#define dbgln(x)
-#define dbgfln(x)
-#endif // DEBUG
 
-#endif // ASTEROIDS_DEBUG_H
+// clang-format off
+
+#define dbgln(fmt)       std::fprintf(stderr, "DEBUG: " fmt "\n")
+#define dbgfln(fmt, ...) std::fprintf(stderr, "DEBUG: " fmt "\n", __VA_ARGS__)
+
+// clang-format on
+
+class AssertionError final : public std::runtime_error {
+public:
+    explicit AssertionError(const std::string& msg, const char* file = nullptr, unsigned int line = 0)
+        : std::runtime_error("ASSERT FAILED " + std::string(file) + ":" + std::to_string(line) + " " + msg) {}
+};
+
+constexpr auto file_name(const char* path) -> const char* {
+    const char* file = path;
+    while (*path != 0) {
+        if (*path++ == '/') {
+            file = path;
+        }
+    }
+    return file;
+}
+
+// clang-format off
+
+#define xassert(exp, msg)       if (!(exp)) { throw AssertionError(msg, file_name(__FILE__), __LINE__); }
+#define xassertf(exp, fmt, ...) if (!(exp)) { throw AssertionError(strutils::format(fmt, __VA_ARGS__), file_name(__FILE__), __LINE__); }
+
+// clang-format on
+
+#endif // NDEBUG
+
+#endif // COMMON_UTILS_DEBUG_H

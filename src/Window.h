@@ -9,16 +9,23 @@ class Window final {
 public:
     Window(int width, int height);
 
+    Window(const Window&) = delete;
+    Window(const Window&&) = delete;
+
     ~Window();
+
+    Window& operator=(const Window&) = delete;
+    Window& operator=(const Window&&) = delete;
 
     void run();
 
     void close();
 
 private:
-    GLFWwindow *window = nullptr;
+    GLFWwindow* window_ = nullptr;
+    bool terminated_ = false;
 };
 
-} // namespace
+} // namespace opengl
 
 #endif // OPENGL_WINDOW_H

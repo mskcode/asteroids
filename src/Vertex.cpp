@@ -3,30 +3,27 @@
 using namespace opengl;
 
 Vertex::Vertex() {
+    shader_program_ = new ShaderProgram();
+    shader_program_->load_shader_file(GL_VERTEX_SHADER, "./resources/shaders/vertex.vert");
+    shader_program_->load_shader_file(GL_FRAGMENT_SHADER, "./resources/shaders/fragment.frag");
+    shader_program_->link();
+
     glCreateBuffers(1, &vertex_buffer_object_);
     glNamedBufferStorage(vertex_buffer_object_, sizeof(vertices_), vertices_, GL_DYNAMIC_STORAGE_BIT);
 
     glCreateVertexArrays(1, &vertex_array_object_);
 
-    GLuint vertex_array_binding_point = 0;  // A binding point in VAO. See GL_MAX_VERTEX_ATTRIB_BINDINGS
-    glVertexArrayVertexBuffer(
-            vertex_array_object_,        // vao to bind
-            vertex_array_binding_point,     // Could be 1, 2... if there were several vbo to source.
-            vertex_buffer_object_,       // VBO to bound at "vertex_array_binding_point".
-            0,                   // offset of the first element in the buffer hctVBO.
-            3 * sizeof(float));  // stride == 3 position floats + 3 color floats.
+    GLuint vertex_array_binding_point = 0;
+    glVertexArrayVertexBuffer(vertex_array_object_,
+                              vertex_array_binding_point,
+                              vertex_buffer_object_,
+                              0,
+                              3 * sizeof(float));
 
-    GLuint attribute_position = 0;
-    GLuint attribute_column = 1;
-
-    glEnableVertexArrayAttrib(vertex_array_object_, attribute_position);
-    glEnableVertexArrayAttrib(vertex_array_object_, attribute_column);
-
-    glVertexArrayAttribFormat(vertex_array_object_, attribute_position, 3, GL_FLOAT, false, 0);
-    glVertexArrayAttribFormat(vertex_array_object_, attribute_column, 3, GL_FLOAT, false, 3 * sizeof(float));
-
-    glVertexArrayAttribBinding(vertex_array_object_, attribute_position, vertex_array_binding_point);
-    glVertexArrayAttribBinding(vertex_array_object_, attribute_column, vertex_array_binding_point);
+    auto attribute_1 = glGetAttribLocation(shader_program_->id(), "aPos");
+    glEnableVertexArrayAttrib(vertex_array_object_, attribute_1);
+    glVertexArrayAttribFormat(vertex_array_object_, attribute_1, 3, GL_FLOAT, false, 0);
+    glVertexArrayAttribBinding(vertex_array_object_, attribute_1, vertex_array_binding_point);
 }
 
 Vertex::~Vertex() {
@@ -35,9 +32,12 @@ Vertex::~Vertex() {
 
     GLuint buffers[] = {vertex_buffer_object_};
     glDeleteBuffers(1, buffers);
+
+    delete shader_program_;
 }
 
 void Vertex::draw() {
+    glUseProgram(shader_program_->id());
     glBindVertexArray(vertex_array_object_);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0); // unbind
