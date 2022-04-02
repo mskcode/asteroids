@@ -2,6 +2,7 @@
 #define OPENGL_WINDOW_H
 
 #include "opengl.h"
+#include <functional>
 
 namespace opengl {
 
@@ -14,10 +15,10 @@ public:
 
     ~Window();
 
-    Window& operator=(const Window&) = delete;
-    Window& operator=(const Window&&) = delete;
+    auto operator=(const Window&) -> Window& = delete;
+    auto operator=(const Window&&) -> Window& = delete;
 
-    void run();
+    void run(const std::function<bool(GLFWwindow*)>& render);
 
     void close();
 

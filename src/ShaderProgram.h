@@ -1,30 +1,35 @@
 #ifndef OPENGL_SHADERPROGRAM_H
 #define OPENGL_SHADERPROGRAM_H
 
+#include "Shader.h"
 #include "opengl.h"
+#include <string_view>
+#include <vector>
 
 namespace opengl {
 
 class ShaderProgram final {
 public:
-    ShaderProgram();
-
+    ShaderProgram(Shader vertex_shader, Shader fragment_shader);
     ShaderProgram(const ShaderProgram&) = delete;
-
+    ShaderProgram(ShaderProgram&& other) noexcept;
     ~ShaderProgram();
 
-    ShaderProgram& operator=(const ShaderProgram&) = delete;
+    auto operator=(const ShaderProgram&) -> ShaderProgram& = delete;
+    auto operator=(ShaderProgram&& rhs) noexcept -> ShaderProgram&;
 
-    void load_shader_file(GLenum shader_type, const char* path) const;
+    [[nodiscard]] auto id() const -> GLuint;
+    [[nodiscard]] auto vertex_shader() const -> const Shader&;
+    [[nodiscard]] auto fragment_shader() const -> const Shader&;
+    [[nodiscard]] auto query_attribute_location(const std::string_view& name) const -> GLint;
 
-    void load_shader_string(GLenum shader_type, const char* str) const;
-
-    void link() const;
-
-    GLuint id() const;
+    void bind() const;
+    void free_gpu_resources() noexcept;
 
 private:
     GLuint program_;
+    Shader fragment_shader_;
+    Shader vertex_shader_;
 };
 
 } // namespace opengl

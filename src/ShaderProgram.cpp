@@ -1,72 +1,27 @@
 #include "ShaderProgram.h"
 #include "OpenglException.h"
 #include "debug.h"
-#include "strutils.h"
-#include <fstream>
-#include <iostream>
 #include <string>
 
 using namespace opengl;
 
-static auto compile_shader(GLenum shader_type, const char* shader_source) -> GLuint {
-    auto shader = glCreateShader(shader_type);
-    dbgfln("Creating shader ID %d (shader_type=%d)", shader, shader_type);
-    glShaderSource(shader, 1, &shader_source, nullptr);
-    glCompileShader(shader);
+ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader)
+    : fragment_shader_(std::move(fragment_shader)),
+      vertex_shader_(std::move(vertex_shader)) {
+    xassertf(fragment_shader_.is_fragment_shader(), "Shader ID %d not a fragment shader", fragment_shader_.id());
+    xassertf(vertex_shader_.is_vertex_shader(), "Shader ID %d is not a vertex shader", vertex_shader_.id());
 
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (success != GL_TRUE) {
-        constexpr size_t buffer_size{512};
-        char log[buffer_size];
-        glGetShaderInfoLog(shader, buffer_size, nullptr, log);
-        throw_gl("Compiling shader " + std::string(shader_source) + " failed: " + std::string(log));
-    }
-
-    return shader;
-}
-
-static auto read_file(const std::string& path) -> std::string {
-    auto stream = std::ifstream(path.data());
-    xassertf(stream.good(), "Could not open file %s", path.c_str());
-    stream.exceptions(std::ios_base::badbit);
-
-    constexpr auto read_size = std::size_t(4096);
-    auto buf = std::string(read_size, '\0');
-
-    auto out = std::string();
-    while (stream.read(&buf[0], read_size)) {
-        out.append(buf, 0, stream.gcount());
-    }
-    out.append(buf, 0, stream.gcount());
-
-    std::cout << "SOURCE:" << out << std::endl;
-    return out;
-}
-
-ShaderProgram::ShaderProgram() {
     program_ = glCreateProgram();
-}
+    dbgfln("Creating shader program ID %d", program_);
+    glAttachShader(program_, vertex_shader_.id());
+    glAttachShader(program_, fragment_shader_.id());
 
-ShaderProgram::~ShaderProgram() {
-    dbgfln("Destruct ShaderProgram ID %d", program_);
-    glDeleteProgram(program_);
-}
-
-void ShaderProgram::load_shader_file(GLenum shader_type, const char* path) const {
-    auto source = read_file(path);
-    load_shader_string(shader_type, source.c_str());
-}
-
-void ShaderProgram::load_shader_string(GLenum shader_type, const char* str) const {
-    auto shader = compile_shader(shader_type, str);
-    dbgfln("Attaching and freeing shader ID %d", shader);
-    glAttachShader(program_, shader);
-    glDeleteShader(shader); // we can free the shader after attaching it
-}
-
-void ShaderProgram::link() const {
+    dbgfln("Linking shader program ID %d", program_);
     glLinkProgram(program_);
+
+    // we can free the shader GPU resources after attaching it
+    vertex_shader_.free_gpu_resources();
+    fragment_shader_.free_gpu_resources();
 
     int success;
     glGetProgramiv(program_, GL_LINK_STATUS, &success);
@@ -78,6 +33,54 @@ void ShaderProgram::link() const {
     }
 }
 
+ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
+    : program_(std::exchange(other.program_, 0)),
+      fragment_shader_(std::move(other.fragment_shader_)),
+      vertex_shader_(std::move(other.vertex_shader_)) {}
+
+ShaderProgram::~ShaderProgram() {
+    free_gpu_resources();
+}
+
+auto ShaderProgram::operator=(ShaderProgram&& rhs) noexcept -> ShaderProgram& {
+    if (this != &rhs) {
+        free_gpu_resources();
+        program_ = rhs.program_;
+        fragment_shader_ = std::move(rhs.fragment_shader_);
+        vertex_shader_ = std::move(rhs.vertex_shader_);
+        rhs.program_ = 0;
+    }
+    return *this;
+}
+
 auto ShaderProgram::id() const -> GLuint {
     return program_;
+}
+
+auto ShaderProgram::vertex_shader() const -> const Shader& {
+    return vertex_shader_;
+}
+
+auto ShaderProgram::fragment_shader() const -> const Shader& {
+    return fragment_shader_;
+}
+
+auto ShaderProgram::query_attribute_location(const std::string_view& name) const -> GLint {
+    auto location = glGetAttribLocation(program_, name.data());
+    if (location < 0) {
+        throw_gl("Attribute " + std::string(name) + " not found");
+    }
+    return location;
+}
+
+void ShaderProgram::bind() const {
+    glUseProgram(program_);
+}
+
+void ShaderProgram::free_gpu_resources() noexcept {
+    if (program_ != 0) {
+        dbgfln("Freeing ShaderProgram ID %d", program_);
+        glDeleteProgram(program_);
+        program_ = 0;
+    }
 }

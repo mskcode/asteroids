@@ -1,24 +1,17 @@
 #include "Spaceship.h"
-
-#include <vector>
 #include "linmath/linmath.h"
+#include <vector>
 
 using namespace asteroids;
 
-Spaceship::Spaceship() {
-    vertex_ = new opengl::Vertex();
+Spaceship::Spaceship() : renderable_object_(0) {
+    renderable_object_.update_data({{{{-0.5F, -0.5F, 0.0F}, {1.f, 0.f, 0.f}},
+                                     {{0.5F, -0.5F, 0.0F}, {0.f, 1.f, 0.f}},
+                                     {{0.0F, 0.5F, 0.0F}, {0.f, 0.f, 1.f}}}});
 }
 
-Spaceship::~Spaceship() {
-    delete vertex_;
-}
-
-void Spaceship::render([[maybe_unused]] GLFWwindow *window) {
-    //int width, height;
-    //glfwGetFramebufferSize(window, &width, &height);
-    //float ratio = width / (float) height;
-
-    vertex_->draw();
+void Spaceship::render([[maybe_unused]] GLFWwindow* window) {
+    renderable_object_.render();
 
     /* mat4x4 m, p, mvp;
     mat4x4_identity(m);
@@ -26,6 +19,5 @@ void Spaceship::render([[maybe_unused]] GLFWwindow *window) {
     mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     mat4x4_mul(mvp, p, m); */
 
-
-    //glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, (const GLfloat *) mvp);
+    // glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, (const GLfloat *) mvp);
 }

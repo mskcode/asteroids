@@ -1,17 +1,53 @@
 #include "Window.h"
-#include "Spaceship.h"
 #include "debug.h"
 #include <cstdio>
+#include <map>
 #include <stdexcept>
+#include <string>
 
 using namespace opengl;
 
 static void error_callback(int error, const char* description) {
-    std::fprintf(stderr, "GLFW3 ERROR: %d %s\n", error, description);
+    std::fprintf(stderr, "GL ERROR: %d %s\n", error, description);
 }
 
-static void key_callback(GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action,
-                         [[maybe_unused]] int mods) {
+static const std::map<GLenum, std::string> g_debug_source_map{{GL_DEBUG_SOURCE_API, "SOURCE_API"},
+                                                              {GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM"},
+                                                              {GL_DEBUG_SOURCE_SHADER_COMPILER, "SHADER_COMPILER"},
+                                                              {GL_DEBUG_SOURCE_THIRD_PARTY, "THIRD_PARTY"},
+                                                              {GL_DEBUG_SOURCE_APPLICATION, "APPLICATION"},
+                                                              {GL_DEBUG_SOURCE_OTHER, "OTHER"}};
+
+static const std::map<GLenum, std::string> g_debug_type_map{{GL_DEBUG_TYPE_ERROR, "ERROR"},
+                                                            {GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR"},
+                                                            {GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "UNDEFINED_BEHAVIOR"},
+                                                            {GL_DEBUG_TYPE_PORTABILITY, "PORTABILITY"},
+                                                            {GL_DEBUG_TYPE_PERFORMANCE, "PERFORMANCE"},
+                                                            {GL_DEBUG_TYPE_OTHER, "OTHER"},
+                                                            {GL_DEBUG_TYPE_MARKER, "MARKER"}};
+
+static const std::map<GLenum, std::string> g_debug_severity_map{{GL_DEBUG_SEVERITY_HIGH, "HIGH"},
+                                                                {GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM"},
+                                                                {GL_DEBUG_SEVERITY_LOW, "LOW"},
+                                                                {GL_DEBUG_SEVERITY_NOTIFICATION, "NOTIFICATION"}};
+
+static void debug_callback(GLenum source,
+                           GLenum type,
+                           [[maybe_unused]] GLuint id,
+                           GLenum severity,
+                           [[maybe_unused]] GLsizei length,
+                           const GLchar* message,
+                           [[maybe_unused]] const void* user_param) {
+    std::fprintf(stderr,
+                 "GL DEBUG: %s type = %s, severity = %s, message = %s\n",
+                 g_debug_source_map.at(source).c_str(),
+                 g_debug_type_map.at(type).c_str(),
+                 g_debug_severity_map.at(severity).c_str(),
+                 message);
+}
+
+static void
+key_callback(GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods) {
     dbgfln("Key event: key=%d, scancode=%d, action=%d, mods=%d", key, scancode, action, mods);
     if (action == GLFW_PRESS) {
         switch (key) {
@@ -32,6 +68,7 @@ static void key_callback(GLFWwindow* window, int key, [[maybe_unused]] int scanc
 
 Window::Window(int width, int height) {
     glfwSetErrorCallback(error_callback);
+
     if (glfwInit() != GLFW_TRUE) {
         throw std::runtime_error("GLFW initialization failed");
     }
@@ -63,38 +100,46 @@ Window::Window(int width, int height) {
         return -1;
     } */
 
-    std::printf("Vendor: %s, Renderer: %s, Version: %s, Shading Language Version: %s\n", glGetString(GL_VENDOR),
-                glGetString(GL_RENDER), glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
+#ifndef NDEBUG
+    // This block needs to come way down here or else you get a core dump
+    dbgln("Enabling OpenGL debug output");
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(debug_callback, nullptr);
+    glDebugMessageControl(GL_DEBUG_SOURCE_API,
+                          GL_DEBUG_TYPE_OTHER,
+                          GL_DEBUG_SEVERITY_NOTIFICATION,
+                          0,
+                          nullptr,
+                          GL_FALSE);
+#endif
+
+    std::printf("Vendor: %s, RenderableObject: %s, Version: %s, Shading Language Version: %s\n",
+                glGetString(GL_VENDOR),
+                glGetString(GL_RENDERER),
+                glGetString(GL_VERSION),
+                glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     glfwSwapInterval(1);
 }
 
 Window::~Window() {
     if (window_ != nullptr) {
+        dbgln("Destroying window");
         glfwDestroyWindow(window_);
         window_ = nullptr;
     }
     if (!terminated_) {
+        dbgln("Terminating GLFW");
         glfwTerminate();
         terminated_ = true;
     }
 }
 
-void Window::run() {
-    asteroids::Spaceship spaceship;
-
-    while (glfwWindowShouldClose(window_) == 0) {
-        int width;
-        int height;
-        glfwGetFramebufferSize(window_, &width, &height);
-
-        glViewport(0, 0, width, height);
-
-        glClearColor(1.0F, 0.3F, 0.3F, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        spaceship.render(window_);
-
+void Window::run(const std::function<bool(GLFWwindow*)>& render) {
+    bool continue_render_loop = true;
+    while (continue_render_loop && glfwWindowShouldClose(window_) == 0) {
+        continue_render_loop = render(window_);
         glfwSwapBuffers(window_);
         glfwPollEvents();
     }

@@ -26,6 +26,6 @@ target_compile_options(${BINARY}_lib PRIVATE
         )
 target_link_libraries(${BINARY}_lib PUBLIC dl glad glfw linmath)
 
-add_custom_command(TARGET ${BINARY} POST_BUILD
+add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${BINARY}>/resources)
