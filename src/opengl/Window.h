@@ -4,12 +4,13 @@
 #include "KeyEvent.h"
 #include "opengl.h"
 #include <functional>
+#include <string_view>
 
 namespace opengl {
 
 class Window final {
 public:
-    Window(int width, int height);
+    Window(const std::string_view& title, int width, int height);
 
     Window(const Window&) = delete;
     Window(const Window&&) = delete;
@@ -26,7 +27,6 @@ public:
 
 private:
     GLFWwindow* window_ = nullptr;
-    bool terminated_ = false;
     bool wireframe_rendering_ = false;
 };
 

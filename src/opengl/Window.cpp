@@ -3,13 +3,8 @@
 #include <cstdio>
 #include <map>
 #include <stdexcept>
-#include <string>
 
 using namespace opengl;
-
-static void error_callback(int error, const char* description) {
-    std::fprintf(stderr, "GL ERROR: %d %s\n", error, description);
-}
 
 static const std::map<GLenum, std::string> g_debug_source_map{{GL_DEBUG_SOURCE_API, "SOURCE_API"},
                                                               {GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM"},
@@ -71,18 +66,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-Window::Window(int width, int height) {
-    glfwSetErrorCallback(error_callback);
-
-    if (glfwInit() != GLFW_TRUE) {
-        throw std::runtime_error("GLFW initialization failed");
-    }
-
+Window::Window(const std::string_view& title, int width, int height) {
+    dbgln("Initializing window");
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    dbgln("Initializing window");
-    window_ = glfwCreateWindow(width, height, "Asteroids", nullptr, nullptr);
+    window_ = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
     if (window_ == nullptr) {
         // Window or OpenGL context creation failed
         throw std::runtime_error("Window creation failed");
@@ -133,11 +122,6 @@ Window::~Window() {
         dbgln("Destroying window");
         glfwDestroyWindow(window_);
         window_ = nullptr;
-    }
-    if (!terminated_) {
-        dbgln("Terminating GLFW");
-        glfwTerminate();
-        terminated_ = true;
     }
 }
 

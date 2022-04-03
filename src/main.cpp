@@ -1,8 +1,9 @@
+#include "Spaceship.h"
+#include "common/debug.h"
+#include "opengl/GlfwContext.h"
 #include "opengl/ShaderProgram.h"
 #include "opengl/ShaderProgramRegistry.h"
-#include "Spaceship.h"
 #include "opengl/Window.h"
-#include "common/debug.h"
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
@@ -34,11 +35,12 @@ static auto load_shaders() -> opengl::ShaderProgramRegistry {
 }
 
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
+    opengl::GlfwContext glfw_context;
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
     try {
-        opengl::Window window(800, 600);
+        opengl::Window window("Asteroids", 800, 600);
         g_signal_handler_implementation = [&](int signum) {
             switch (signum) {
             case SIGINT:
