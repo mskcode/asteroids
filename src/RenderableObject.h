@@ -1,7 +1,7 @@
 #ifndef OPENGL_RENDERABLEOBJECT_H
 #define OPENGL_RENDERABLEOBJECT_H
 
-#include "ShaderRegistry.h"
+#include "ShaderProgramRegistry.h"
 #include "debug.h"
 #include "opengl.h"
 #include <array>
@@ -37,12 +37,12 @@ struct Vertex3D {
 template <typename TType, size_t TSize>
 class RenderableObject final {
 public:
-    RenderableObject(int shader_index)
-        : buffer_size_(sizeof(TType) * TSize),
-          shader_index_(shader_index),
-          vao_(0),
-          vbo_(0),
-          index_count_(0) {
+    RenderableObject(const ShaderProgramRegistry& spr, int shader_index) :
+        buffer_size_(sizeof(TType) * TSize),
+        shader_index_(shader_index),
+        vao_(0),
+        vbo_(0),
+        index_count_(0) {
         glCreateBuffers(1, &vbo_);
         glNamedBufferStorage(vbo_, buffer_size_, nullptr, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
         dbgfln("Created VBO ID %d with size %d", vbo_, buffer_size_);
@@ -52,7 +52,7 @@ public:
         constexpr GLuint vertex_array_binding_point = 0;
         glVertexArrayVertexBuffer(vao_, vertex_array_binding_point, vbo_, /*offset*/ 0, sizeof(Vertex3D));
 
-        auto& shader_program = ShaderRegistry::instance().get(shader_index);
+        auto& shader_program = spr.get(shader_index);
         auto& vertex_shader = shader_program.vertex_shader();
         for (auto& attr : vertex_shader.attributes()) {
             auto location = shader_program.query_attribute_location(attr.name);
@@ -61,12 +61,7 @@ public:
                    location,
                    attr.relative_offset);
             glEnableVertexArrayAttrib(vao_, location);
-            glVertexArrayAttribFormat(vao_,
-                                      location,
-                                      attr.size,
-                                      attr.type,
-                                      attr.normalized,
-                                      sizeof(float) * attr.relative_offset);
+            glVertexArrayAttribFormat(vao_, location, attr.size, attr.type, attr.normalized, attr.relative_offset);
             glVertexArrayAttribBinding(vao_, location, vertex_array_binding_point);
         }
     }
@@ -79,23 +74,15 @@ public:
     auto operator=(const RenderableObject&) -> RenderableObject& = delete;
     auto operator=(RenderableObject&&) -> RenderableObject& = delete;
 
-    void render() {
+    void render(ShaderProgramRegistry& spr) {
         xassert(index_count_ > 0, "You're trying to render non-existing data");
-        ShaderRegistry::instance().get(shader_index_).bind();
+        spr.get(shader_index_).bind();
         glBindVertexArray(vao_);
         glDrawArrays(GL_TRIANGLES, 0, index_count_);
         glBindVertexArray(0); // unbind
     }
 
     void update_data(const std::array<TType, TSize>& data) {
-        for (auto& element : data) {
-            dbgfln("position[0]: %f", element.position[0]);
-            dbgfln("position[1]: %f", element.position[1]);
-            dbgfln("position[2]: %f", element.position[2]);
-            dbgfln("color[0]: %f", element.color[0]);
-            dbgfln("color[1]:%f", element.color[1]);
-            dbgfln("color[2]:%f", element.color[2]);
-        }
         glNamedBufferSubData(vbo_, 0, buffer_size_, data.data());
         index_count_ = data.size();
     }

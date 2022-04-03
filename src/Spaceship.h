@@ -1,22 +1,29 @@
 #ifndef ASTEROIDS_SPACESHIP_H
 #define ASTEROIDS_SPACESHIP_H
 
-#include "Renderable.h"
 #include "RenderableObject.h"
 #include "ShaderProgram.h"
 #include "opengl.h"
 
 namespace asteroids {
 
-class Spaceship final : public Renderable {
+struct Coordinates3D final {
+    float x;
+    float y;
+    float z;
+};
+
+class Spaceship final {
 public:
-    Spaceship();
+    Spaceship(const opengl::ShaderProgramRegistry& spr);
     ~Spaceship() = default;
 
-    void render(GLFWwindow* window) override;
+    void render(opengl::ShaderProgramRegistry& spr);
+    void move(float x_displacement, float y_displacement);
 
 private:
     opengl::RenderableObject<opengl::Vertex3D, 3> renderable_object_;
+    Coordinates3D position_;
 };
 
 } // namespace asteroids

@@ -46,9 +46,14 @@ static void debug_callback(GLenum source,
                  message);
 }
 
-static void
-key_callback(GLFWwindow* window, int key, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mods) {
+// FIXME this is kinda ugly but couldn't think anything better at the time
+static std::function<void(const KeyEvent& event)> g_key_event_handler;
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     dbgfln("Key event: key=%d, scancode=%d, action=%d, mods=%d", key, scancode, action, mods);
+    if (g_key_event_handler) {
+        g_key_event_handler({window, key, scancode, action, mods});
+    }
     if (action == GLFW_PRESS) {
         switch (key) {
         case GLFW_KEY_ESCAPE:
@@ -83,7 +88,7 @@ Window::Window(int width, int height) {
         throw std::runtime_error("Window creation failed");
     }
 
-    glfwSetKeyCallback(window_, key_callback);
+    glfwSetKeyCallback(window_, ::key_callback);
     glfwMakeContextCurrent(window_);
 
     // load all OpenGL function pointers
@@ -147,4 +152,18 @@ void Window::run(const std::function<bool(GLFWwindow*)>& render) {
 
 void Window::close() {
     glfwSetWindowShouldClose(window_, GLFW_TRUE);
+}
+
+void Window::on_key_event(const std::function<void(const KeyEvent&)>& key_event_handler) {
+    g_key_event_handler = key_event_handler;
+}
+
+void Window::toggle_wireframe_rendering() {
+    if (wireframe_rendering_) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // normal rendering
+        wireframe_rendering_ = false;
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe rendering
+        wireframe_rendering_ = true;
+    }
 }
