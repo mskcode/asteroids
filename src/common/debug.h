@@ -22,8 +22,8 @@
 
 class AssertionError final : public std::runtime_error {
 public:
-    explicit AssertionError(const std::string& msg, const char* file = nullptr, unsigned int line = 0)
-        : std::runtime_error("ASSERT FAILED " + std::string(file) + ":" + std::to_string(line) + " " + msg) {}
+    explicit AssertionError(const std::string& msg, const char* file = nullptr, unsigned int line = 0) :
+        std::runtime_error("ASSERT FAILED " + std::string(file) + ":" + std::to_string(line) + " " + msg) {}
 };
 
 constexpr auto file_name(const char* path) -> const char* {

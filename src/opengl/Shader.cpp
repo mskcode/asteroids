@@ -1,13 +1,13 @@
 #include "Shader.h"
+#include "../common/debug.h"
+#include "../common/fileutils.h"
 #include "OpenglException.h"
-#include "debug.h"
-#include "fileutils.h"
 
 using namespace opengl;
 
-Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShaderAttribute> attributes)
-    : type_(type),
-      attributes_(std::move(attributes)) {
+Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShaderAttribute> attributes) :
+    type_(type),
+    attributes_(std::move(attributes)) {
     dbgfln("Loading shader type %d from file: %s", type, path.data());
     auto source = fileutils::read_file(path);
 
@@ -27,10 +27,10 @@ Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShad
     }
 }
 
-Shader::Shader(Shader&& other) noexcept
-    : type_(other.type_),
-      id_(std::exchange(other.id_, 0)),
-      attributes_(std::move(other.attributes_)) {}
+Shader::Shader(Shader&& other) noexcept :
+    type_(other.type_),
+    id_(std::exchange(other.id_, 0)),
+    attributes_(std::move(other.attributes_)) {}
 
 Shader::~Shader() {
     free_gpu_resources();

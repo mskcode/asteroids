@@ -1,9 +1,9 @@
 #ifndef ASTEROIDS_SPACESHIP_H
 #define ASTEROIDS_SPACESHIP_H
 
-#include "RenderableObject.h"
-#include "ShaderProgram.h"
-#include "opengl.h"
+#include "opengl/RenderableObject.h"
+#include "opengl/ShaderProgram.h"
+#include "opengl/opengl.h"
 
 namespace asteroids {
 

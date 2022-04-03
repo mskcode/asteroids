@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "debug.h"
+#include "../common/debug.h"
 #include <cstdio>
 #include <map>
 #include <stdexcept>

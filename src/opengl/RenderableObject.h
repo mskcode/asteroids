@@ -1,8 +1,8 @@
 #ifndef OPENGL_RENDERABLEOBJECT_H
 #define OPENGL_RENDERABLEOBJECT_H
 
+#include "../common/debug.h"
 #include "ShaderProgramRegistry.h"
-#include "debug.h"
 #include "opengl.h"
 #include <array>
 

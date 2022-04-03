@@ -1,8 +1,8 @@
-#include "ShaderProgram.h"
-#include "ShaderProgramRegistry.h"
+#include "opengl/ShaderProgram.h"
+#include "opengl/ShaderProgramRegistry.h"
 #include "Spaceship.h"
-#include "Window.h"
-#include "debug.h"
+#include "opengl/Window.h"
+#include "common/debug.h"
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
@@ -89,7 +89,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
 
             glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
-            
+
             spaceship.render(shader_program_registry);
 
             return true;

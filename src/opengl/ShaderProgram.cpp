@@ -1,13 +1,13 @@
 #include "ShaderProgram.h"
+#include "../common/debug.h"
 #include "OpenglException.h"
-#include "debug.h"
 #include <string>
 
 using namespace opengl;
 
-ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader)
-    : fragment_shader_(std::move(fragment_shader)),
-      vertex_shader_(std::move(vertex_shader)) {
+ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader) :
+    fragment_shader_(std::move(fragment_shader)),
+    vertex_shader_(std::move(vertex_shader)) {
     xassertf(fragment_shader_.is_fragment_shader(), "Shader ID %d not a fragment shader", fragment_shader_.id());
     xassertf(vertex_shader_.is_vertex_shader(), "Shader ID %d is not a vertex shader", vertex_shader_.id());
 
@@ -33,10 +33,10 @@ ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader)
     }
 }
 
-ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
-    : program_(std::exchange(other.program_, 0)),
-      fragment_shader_(std::move(other.fragment_shader_)),
-      vertex_shader_(std::move(other.vertex_shader_)) {}
+ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
+    program_(std::exchange(other.program_, 0)),
+    fragment_shader_(std::move(other.fragment_shader_)),
+    vertex_shader_(std::move(other.vertex_shader_)) {}
 
 ShaderProgram::~ShaderProgram() {
     free_gpu_resources();
