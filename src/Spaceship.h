@@ -1,6 +1,7 @@
 #ifndef ASTEROIDS_SPACESHIP_H
 #define ASTEROIDS_SPACESHIP_H
 
+#include "Renderable.h"
 #include "opengl/RenderableObject.h"
 #include "opengl/ShaderProgram.h"
 #include "opengl/opengl.h"
@@ -13,12 +14,12 @@ struct Coordinates3D final {
     float z;
 };
 
-class Spaceship final {
+class Spaceship final : public Renderable {
 public:
     Spaceship();
     ~Spaceship() = default;
 
-    void render();
+    void render() override;
     void move(float x_displacement, float y_displacement);
 
 private:

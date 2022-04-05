@@ -1,3 +1,4 @@
+#include "Renderer.h"
 #include "ServiceLocator.h"
 #include "Spaceship.h"
 #include "common/SignalHandler.h"
@@ -63,20 +64,12 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
             .set_key_event_dispatcher(&key_event_dispatcher)
             .set_shader_program_registry(&shader_program_registry);
 
-        dbgln("Building spaceship");
-        asteroids::Spaceship spaceship;
+        Spaceship spaceship;
+        Renderer renderer{window};
+        renderer.add_renderable(&spaceship);
 
-        window.run([&](auto window) -> bool {
-            int width;
-            int height;
-            glfwGetFramebufferSize(window, &width, &height);
-            glViewport(0, 0, width, height);
-
-            glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            spaceship.render();
-
+        window.run([&]([[maybe_unused]] auto window) -> bool {
+            renderer.render();
             return true;
         });
     } catch (std::exception& e) {
