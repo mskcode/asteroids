@@ -15,10 +15,10 @@ struct Coordinates3D final {
 
 class Spaceship final {
 public:
-    Spaceship(const opengl::ShaderProgramRegistry& spr);
+    Spaceship();
     ~Spaceship() = default;
 
-    void render(opengl::ShaderProgramRegistry& spr);
+    void render();
     void move(float x_displacement, float y_displacement);
 
 private:

@@ -40,4 +40,6 @@ CheckOptions:
     value: ''
   - key: readability-identifier-naming.VariableCase
     value: 'lower_case'
+  - key: readability-qualified-auto.AddConstToQualified
+    value: 'false'
 ...

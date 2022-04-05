@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "../common/debug.h"
+#include "OpenglException.h"
 #include <cstdio>
 #include <map>
 #include <stdexcept>
@@ -41,31 +42,6 @@ static void debug_callback(GLenum source,
                  message);
 }
 
-// FIXME this is kinda ugly but couldn't think anything better at the time
-static std::function<void(const KeyEvent& event)> g_key_event_handler;
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    dbgfln("Key event: key=%d, scancode=%d, action=%d, mods=%d", key, scancode, action, mods);
-    if (g_key_event_handler) {
-        g_key_event_handler({window, key, scancode, action, mods});
-    }
-    if (action == GLFW_PRESS) {
-        switch (key) {
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-            break;
-        case GLFW_KEY_F1:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe rendering
-            break;
-        case GLFW_KEY_F2:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // normal rendering
-            break;
-        default:
-            break;
-        }
-    }
-}
-
 Window::Window(const std::string_view& title, int width, int height) {
     dbgln("Initializing window");
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -74,17 +50,16 @@ Window::Window(const std::string_view& title, int width, int height) {
     window_ = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
     if (window_ == nullptr) {
         // Window or OpenGL context creation failed
-        throw std::runtime_error("Window creation failed");
+        throw_gl("Window creation failed");
     }
 
-    glfwSetKeyCallback(window_, ::key_callback);
     glfwMakeContextCurrent(window_);
 
     // load all OpenGL function pointers
     // needs to come after the glfwMakeContentCurrent call
     dbgln("Loading OpenGL");
     if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 0) {
-        throw std::runtime_error("Loading OpenGL failed with GLAD");
+        throw_gl("Loading OpenGL failed with GLAD");
     }
 
     /* if (!GLAD_GL_ARB_direct_state_access) {
@@ -125,6 +100,10 @@ Window::~Window() {
     }
 }
 
+auto Window::window_pointer() const -> GLFWwindow* {
+    return window_;
+}
+
 void Window::run(const std::function<bool(GLFWwindow*)>& render) {
     bool continue_render_loop = true;
     while (continue_render_loop && glfwWindowShouldClose(window_) == 0) {
@@ -136,10 +115,6 @@ void Window::run(const std::function<bool(GLFWwindow*)>& render) {
 
 void Window::close() {
     glfwSetWindowShouldClose(window_, GLFW_TRUE);
-}
-
-void Window::on_key_event(const std::function<void(const KeyEvent&)>& key_event_handler) {
-    g_key_event_handler = key_event_handler;
 }
 
 void Window::toggle_wireframe_rendering() {

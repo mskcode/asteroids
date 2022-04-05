@@ -11,18 +11,17 @@ namespace opengl {
 class Window final {
 public:
     Window(const std::string_view& title, int width, int height);
-
     Window(const Window&) = delete;
     Window(const Window&&) = delete;
-
     ~Window();
 
     auto operator=(const Window&) -> Window& = delete;
-    auto operator=(const Window&&) -> Window& = delete;
+    auto operator=(const Window&&) noexcept -> Window& = delete;
+
+    [[nodiscard]] auto window_pointer() const -> GLFWwindow*;
 
     void run(const std::function<bool(GLFWwindow*)>& render);
     void close();
-    void on_key_event(const std::function<void(const KeyEvent& event)>& key_event_handler);
     void toggle_wireframe_rendering();
 
 private:

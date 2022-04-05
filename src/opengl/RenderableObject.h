@@ -39,7 +39,7 @@ class RenderableObject final {
 public:
     RenderableObject(const ShaderProgramRegistry& spr, int shader_index) :
         buffer_size_(sizeof(TType) * TSize),
-        shader_index_(shader_index),
+        shader_program_id_(spr.get(shader_index).id()),
         vao_(0),
         vbo_(0),
         index_count_(0) {
@@ -74,9 +74,9 @@ public:
     auto operator=(const RenderableObject&) -> RenderableObject& = delete;
     auto operator=(RenderableObject&&) -> RenderableObject& = delete;
 
-    void render(ShaderProgramRegistry& spr) {
+    void render() {
         xassert(index_count_ > 0, "You're trying to render non-existing data");
-        spr.get(shader_index_).bind();
+        glUseProgram(shader_program_id_);
         glBindVertexArray(vao_);
         glDrawArrays(GL_TRIANGLES, 0, index_count_);
         glBindVertexArray(0); // unbind
@@ -102,7 +102,7 @@ public:
 
 private:
     unsigned int buffer_size_;
-    int shader_index_;
+    unsigned int shader_program_id_;
     GLuint vao_;
     GLuint vbo_;
     unsigned int index_count_;

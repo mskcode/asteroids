@@ -1,4 +1,6 @@
 #include "Spaceship.h"
+#include "ServiceLocator.h"
+#include "opengl/KeyEventDispatcher.h"
 #include <array>
 
 using namespace asteroids;
@@ -10,14 +12,36 @@ static auto generate_vertex_data(const Coordinates3D& position) -> std::array<op
              {{position.x, position.y + 0.2f, 0.0F}, color}}};      // top
 }
 
-Spaceship::Spaceship(const opengl::ShaderProgramRegistry& spr) :
-    renderable_object_(spr, 0),
+Spaceship::Spaceship() :
+    renderable_object_(ServiceLocator::instance().shader_program_registry(), 0),
     position_({0.0f, 0.0f, 0.0f}) {
+
     renderable_object_.update_data(generate_vertex_data(position_));
+
+    ServiceLocator::instance().key_event_dispatcher().register_listener([&](auto event) {
+        if (event.action() == GLFW_PRESS) {
+            switch (event.key()) {
+            case GLFW_KEY_UP:
+                this->move(0, 0.1f);
+                break;
+            case GLFW_KEY_DOWN:
+                this->move(0, -0.1f);
+                break;
+            case GLFW_KEY_LEFT:
+                this->move(-0.1f, 0);
+                break;
+            case GLFW_KEY_RIGHT:
+                this->move(0.1f, 0);
+                break;
+            default:
+                break;
+            }
+        }
+    });
 }
 
-void Spaceship::render(opengl::ShaderProgramRegistry& spr) {
-    renderable_object_.render(spr);
+void Spaceship::render() {
+    renderable_object_.render();
 }
 
 void Spaceship::move(float x_displacement, float y_displacement) {
