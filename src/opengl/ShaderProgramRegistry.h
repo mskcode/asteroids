@@ -22,7 +22,7 @@ public:
 
 private:
     std::vector<ShaderProgram> registry_;
-    int shader_index_currently_in_use_;
+    int shader_index_currently_in_use_ = 0;
 };
 
 } // namespace opengl

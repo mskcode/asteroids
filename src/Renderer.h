@@ -21,8 +21,8 @@ public:
 private:
     const opengl::Window& window_;
     std::vector<Renderable*> renderables_;
-    uint64_t frame_counter_;
-    bool wireframe_rendering_;
+    uint64_t frame_counter_ = 0;
+    bool wireframe_rendering_ = false;
 };
 
 } // namespace asteroids

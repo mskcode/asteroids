@@ -27,7 +27,7 @@ public:
     void free_gpu_resources() noexcept;
 
 private:
-    GLuint program_;
+    GLuint program_ = 0;
     Shader fragment_shader_;
     Shader vertex_shader_;
 };

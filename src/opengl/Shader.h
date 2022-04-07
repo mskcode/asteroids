@@ -35,8 +35,8 @@ public:
     void free_gpu_resources() noexcept;
 
 private:
-    GLenum type_;
-    GLuint id_;
+    GLenum type_ = 0;
+    GLuint id_ = 0;
     std::vector<VertexShaderAttribute> attributes_;
 };
 

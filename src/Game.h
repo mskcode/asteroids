@@ -22,8 +22,8 @@ private:
     opengl::KeyEventDispatcher key_event_dispatcher_;
     std::unique_ptr<opengl::ShaderProgramRegistry> shader_program_registry_;
     Renderer renderer_;
-    Spaceship* spaceship_;
-    bool stop_requested_;
+    Spaceship* spaceship_ = nullptr;
+    bool stop_requested_ = false;
 };
 
 } // namespace asteroids

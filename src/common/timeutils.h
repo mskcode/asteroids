@@ -33,7 +33,7 @@ private:
     // nanosecond precision requires at least 64bit integer: https://en.cppreference.com/w/cpp/chrono/duration
     // std::chrono::time_point_t.time_since_epoch.count() returns a signed value, that's why epoch_ns_ is also defined
     // as such
-    int64_t epoch_ns_;
+    int64_t epoch_ns_ = 0;
 
     Instant(int64_t epoch_ns);
 };
@@ -53,7 +53,7 @@ public:
     [[nodiscard]] auto value(TimeUnit time_unit) const -> int64_t;
 
 private:
-    int64_t duration_ns_;
+    int64_t duration_ns_ = 0;
 
     Duration(int64_t duration_ns);
 };

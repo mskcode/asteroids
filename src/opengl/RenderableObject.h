@@ -117,11 +117,11 @@ public:
     }
 
 private:
-    unsigned int buffer_size_;
-    unsigned int shader_program_id_;
-    GLuint vao_;
-    GLuint vbo_;
-    unsigned int index_count_;
+    unsigned int buffer_size_ = 0;
+    unsigned int shader_program_id_ = 0;
+    GLuint vao_ = 0;
+    GLuint vbo_ = 0;
+    unsigned int index_count_ = 0;
 };
 
 } // namespace opengl

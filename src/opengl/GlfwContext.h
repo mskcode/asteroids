@@ -14,7 +14,7 @@ public:
     auto operator=(GlfwContext&&) -> GlfwContext& = delete;
 
 private:
-    bool terminated_;
+    bool terminated_ = false;
 };
 
 } // namespace opengl
