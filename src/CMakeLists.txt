@@ -3,6 +3,7 @@ set(BINARY ${CMAKE_PROJECT_NAME})
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 
 set(SOURCES ${SOURCES})
+set(LINK_LIBRARY_TARGETS dl freetype glad glfw linmath)
 
 add_executable(${BINARY} ${SOURCES})
 target_compile_options(${BINARY} PRIVATE
@@ -13,7 +14,7 @@ target_compile_options(${BINARY} PRIVATE
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
         )
-target_link_libraries(${BINARY} PUBLIC dl glad glfw linmath)
+target_link_libraries(${BINARY} PUBLIC ${LINK_LIBRARY_TARGETS})
 
 add_library(${BINARY}_lib STATIC ${SOURCES})
 target_compile_options(${BINARY}_lib PRIVATE
@@ -24,7 +25,7 @@ target_compile_options(${BINARY}_lib PRIVATE
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
         )
-target_link_libraries(${BINARY}_lib PUBLIC dl glad glfw linmath)
+target_link_libraries(${BINARY}_lib PUBLIC ${LINK_LIBRARY_TARGETS})
 
 add_custom_command(TARGET ${BINARY} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

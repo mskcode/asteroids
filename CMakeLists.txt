@@ -19,5 +19,6 @@ add_subdirectory(tests)
 add_subdirectory(libs/glad)
 add_subdirectory(libs/linmath)
 
+add_subdirectory(submodules/freetype)
 add_subdirectory(submodules/glfw)
 add_subdirectory(submodules/googletest)
