@@ -48,6 +48,8 @@ void Game::initialize() {
 
 void Game::loop() {
     while (!stop_requested_ && !window_.should_close()) {
+
+        spaceship_->update();
         renderer_.render();
 
         glfwSwapBuffers(window_.window_pointer());

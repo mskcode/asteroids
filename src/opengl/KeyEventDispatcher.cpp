@@ -15,11 +15,21 @@ KeyEventDispatcher::KeyEventDispatcher(const Window& window) {
     g_key_event_dispatcher = this;
 }
 
+auto KeyEventDispatcher::keyboard() const -> const Keyboard& {
+    return keyboard_;
+}
+
 void KeyEventDispatcher::register_listener(const std::function<void(const KeyEvent&)>& listener) {
     listeners_.push_back(listener);
 }
 
 void KeyEventDispatcher::dispatch_event(const KeyEvent& event) {
+    if (event.action() == GLFW_PRESS) {
+        keyboard_[event.key()].set_down(true);
+    } else if (event.action() == GLFW_RELEASE) {
+        keyboard_[event.key()].set_down(false);
+    }
+
     for (auto& listener : listeners_) {
         listener(event);
     }

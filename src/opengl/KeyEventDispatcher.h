@@ -1,6 +1,7 @@
 #ifndef OPENGL_KEYEVENTDISPATCHER_H
 #define OPENGL_KEYEVENTDISPATCHER_H
 
+#include "Keyboard.h"
 #include "Window.h"
 
 namespace opengl {
@@ -14,11 +15,14 @@ public:
 
     auto operator=(const KeyEventDispatcher&) -> KeyEventDispatcher& = delete;
     auto operator=(KeyEventDispatcher&&) noexcept -> KeyEventDispatcher& = delete;
-    
+
+    [[nodiscard]] auto keyboard() const -> const Keyboard&;
+
     void register_listener(const std::function<void(const KeyEvent&)>& listener);
     void dispatch_event(const KeyEvent& event);
 
 private:
+    Keyboard keyboard_;
     std::vector<std::function<void(const KeyEvent&)>> listeners_;
 };
 

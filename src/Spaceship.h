@@ -2,6 +2,7 @@
 #define ASTEROIDS_SPACESHIP_H
 
 #include "Renderable.h"
+#include "Updateable.h"
 #include "opengl/KeyEventDispatcher.h"
 #include "opengl/RenderableObject.h"
 #include "opengl/ShaderProgram.h"
@@ -15,17 +16,20 @@ struct Coordinates3D final {
     float z;
 };
 
-class Spaceship final : public Renderable {
+class Spaceship final : public Renderable, Updateable {
 public:
     Spaceship(opengl::RenderableObject<opengl::Vertex3D, 3>&& renderable_object,
-              opengl::KeyEventDispatcher& key_event_dispatcher);
+              const opengl::KeyEventDispatcher& key_event_dispatcher);
     ~Spaceship() = default;
 
+    void update() override;
     void render() override;
+
     void move(float x_displacement, float y_displacement);
 
 private:
     opengl::RenderableObject<opengl::Vertex3D, 3> renderable_object_;
+    const opengl::Keyboard& keyboard_;
     Coordinates3D position_;
 };
 

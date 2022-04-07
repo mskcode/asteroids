@@ -1,5 +1,5 @@
 #include "Spaceship.h"
-#include "ServiceLocator.h"
+#include "common/debug.h"
 #include "opengl/KeyEventDispatcher.h"
 #include <array>
 
@@ -13,32 +13,27 @@ static auto generate_vertex_data(const Coordinates3D& position) -> std::array<op
 }
 
 Spaceship::Spaceship(opengl::RenderableObject<opengl::Vertex3D, 3>&& renderable_object,
-                     opengl::KeyEventDispatcher& key_event_dispatcher) :
+                     const opengl::KeyEventDispatcher& key_event_dispatcher) :
     renderable_object_(std::move(renderable_object)),
+    keyboard_(key_event_dispatcher.keyboard()),
     position_({0.0f, 0.0f, 0.0f}) {
 
     renderable_object_.update_data(generate_vertex_data(position_));
+}
 
-    key_event_dispatcher.register_listener([&](auto event) {
-        if (event.action() == GLFW_PRESS) {
-            switch (event.key()) {
-            case GLFW_KEY_UP:
-                this->move(0, 0.1f);
-                break;
-            case GLFW_KEY_DOWN:
-                this->move(0, -0.1f);
-                break;
-            case GLFW_KEY_LEFT:
-                this->move(-0.1f, 0);
-                break;
-            case GLFW_KEY_RIGHT:
-                this->move(0.1f, 0);
-                break;
-            default:
-                break;
-            }
-        }
-    });
+void Spaceship::update() {
+    if (keyboard_[GLFW_KEY_UP].is_down()) {
+        this->move(0, 0.1f);
+    }
+    if (keyboard_[GLFW_KEY_DOWN].is_down()) {
+        this->move(0, -0.1f);
+    }
+    if (keyboard_[GLFW_KEY_LEFT].is_down()) {
+        this->move(-0.1f, 0);
+    }
+    if (keyboard_[GLFW_KEY_RIGHT].is_down()) {
+        this->move(0.1f, 0);
+    }
 }
 
 void Spaceship::render() {
