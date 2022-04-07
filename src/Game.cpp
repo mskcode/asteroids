@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "ServiceLocator.h"
+#include "TickLimiter.h"
 
 using namespace asteroids;
 
@@ -47,12 +48,21 @@ void Game::initialize() {
 }
 
 void Game::loop() {
+    TickLimiter update_tick_limiter{30};
+    TickLimiter render_tick_limiter{60};
+
     while (!stop_requested_ && !window_.should_close()) {
+        if (update_tick_limiter.should_tick()) {
+            spaceship_->update();
+            update_tick_limiter.tick();
+        }
 
-        spaceship_->update();
-        renderer_.render();
+        if (render_tick_limiter.should_tick()) {
+            renderer_.render();
+            glfwSwapBuffers(window_.window_pointer());
+            render_tick_limiter.tick();
+        }
 
-        glfwSwapBuffers(window_.window_pointer());
         glfwPollEvents();
     }
 }

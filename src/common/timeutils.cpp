@@ -3,43 +3,30 @@
 
 using namespace common::time;
 
-constexpr auto convert_nanoseconds(int64_t value, TimeUnit time_unit) -> int64_t {
-    switch (time_unit) {
-    case TimeUnit::NANOSECONDS:
-        return value;
-    case TimeUnit::MICROSECONDS:
-        return value / 1000;
-    case TimeUnit::MILLISECONDS:
-        return value / 1000000;
-    case TimeUnit::SECONDS:
-        return value / 1000000000;
-    case TimeUnit::MINUTES: // TODO implement me
-    case TimeUnit::HOURS:   // TODO implement me
-    default:
-        throw std::runtime_error("Unsupported time unit");
-    }
-}
-
-Instant::Instant(int64_t epoch_ns) :
+Instant::Instant(uint64_t epoch_ns) :
     epoch_ns_(epoch_ns) {}
+
+auto Instant::of(uint64_t nanos, TimeUnit time_unit) -> Instant {
+    return {convert_nanoseconds(nanos, time_unit)};
+}
 
 auto Instant::now() -> Instant {
     using namespace std::chrono;
     auto time_point_now = high_resolution_clock::now();
     auto time_point_ns = time_point_cast<nanoseconds>(time_point_now);
     auto value = time_point_ns.time_since_epoch().count();
-    return {value};
+    return {static_cast<uint64_t>(value)};
 }
 
-auto Instant::nanosecond_value() const -> int64_t {
+auto Instant::nanosecond_value() const -> uint64_t {
     return epoch_ns_;
 }
 
-auto Instant::value(TimeUnit time_unit) const -> int64_t {
+auto Instant::value(TimeUnit time_unit) const -> uint64_t {
     return convert_nanoseconds(epoch_ns_, time_unit);
 }
 
-Duration::Duration(int64_t duration_ns) :
+Duration::Duration(uint64_t duration_ns) :
     duration_ns_(duration_ns) {}
 
 auto Duration::between(Instant start, Instant end) -> Duration {
@@ -48,10 +35,42 @@ auto Duration::between(Instant start, Instant end) -> Duration {
                Duration(start.nanosecond_value() - end.nanosecond_value());
 }
 
-auto Duration::nanosecond_value() const -> int64_t {
+auto Duration::from(Instant start) -> Duration {
+    return Duration::between(start, Instant::now());
+}
+
+auto Duration::of(uint64_t nanos, TimeUnit time_unit) -> Duration {
+    return {convert_nanoseconds(nanos, time_unit)};
+}
+
+auto Duration::nanosecond_value() const -> uint64_t {
     return duration_ns_;
 }
 
-auto Duration::value(TimeUnit time_unit) const -> int64_t {
+auto Duration::value(TimeUnit time_unit) const -> uint64_t {
     return convert_nanoseconds(duration_ns_, time_unit);
+}
+
+auto common::time::operator==(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() == rhs.nanosecond_value();
+}
+
+auto common::time::operator!=(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() != rhs.nanosecond_value();
+}
+
+auto common::time::operator<(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() < rhs.nanosecond_value();
+}
+
+auto common::time::operator>(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() > rhs.nanosecond_value();
+}
+
+auto common::time::operator<=(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() <= rhs.nanosecond_value();
+}
+
+auto common::time::operator>=(const Duration& lhs, const Duration& rhs) -> bool {
+    return lhs.nanosecond_value() >= rhs.nanosecond_value();
 }

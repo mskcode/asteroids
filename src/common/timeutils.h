@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <stdexcept>
 
 namespace common::time {
 
@@ -15,6 +16,44 @@ enum TimeUnit {
     HOURS,
 };
 
+constexpr auto convert_seconds(uint64_t seconds, TimeUnit time_unit) -> uint64_t {
+    switch (time_unit) {
+    case TimeUnit::NANOSECONDS:
+        return seconds * 1000000000;
+    case TimeUnit::MICROSECONDS:
+        return seconds * 1000000;
+    case TimeUnit::MILLISECONDS:
+        return seconds * 1000;
+    case TimeUnit::SECONDS:
+        return seconds;
+    case TimeUnit::MINUTES:
+        return seconds / 60;
+    case TimeUnit::HOURS:
+        return seconds / 3600;
+    default:
+        throw std::runtime_error("Unsupported time unit");
+    }
+}
+
+constexpr auto convert_nanoseconds(uint64_t nanos, TimeUnit time_unit) -> uint64_t {
+    switch (time_unit) {
+    case TimeUnit::NANOSECONDS:
+        return nanos;
+    case TimeUnit::MICROSECONDS:
+        return nanos / 1000;
+    case TimeUnit::MILLISECONDS:
+        return nanos / 1000000;
+    case TimeUnit::SECONDS:
+        return nanos / 1000000000;
+    case TimeUnit::MINUTES:
+        return nanos / 60000000000;
+    case TimeUnit::HOURS:
+        return nanos / 3600000000000;
+    default:
+        throw std::runtime_error("Unsupported time unit");
+    }
+}
+
 class Instant final {
 public:
     Instant(const Instant& other) = default;
@@ -24,18 +63,16 @@ public:
     auto operator=(const Instant& rhs) -> Instant& = default;
     auto operator=(Instant&& rhs) -> Instant& = default;
 
+    static auto of(uint64_t nanos, TimeUnit time_unit = TimeUnit::NANOSECONDS) -> Instant;
     static auto now() -> Instant;
 
-    [[nodiscard]] auto nanosecond_value() const -> int64_t;
-    [[nodiscard]] auto value(TimeUnit time_unit) const -> int64_t;
+    [[nodiscard]] auto nanosecond_value() const -> uint64_t;
+    [[nodiscard]] auto value(TimeUnit time_unit) const -> uint64_t;
 
 private:
-    // nanosecond precision requires at least 64bit integer: https://en.cppreference.com/w/cpp/chrono/duration
-    // std::chrono::time_point_t.time_since_epoch.count() returns a signed value, that's why epoch_ns_ is also defined
-    // as such
-    int64_t epoch_ns_ = 0;
+    uint64_t epoch_ns_ = 0;
 
-    Instant(int64_t epoch_ns);
+    Instant(uint64_t epoch_ns);
 };
 
 class Duration final {
@@ -47,16 +84,32 @@ public:
     auto operator=(const Duration& rhs) -> Duration& = default;
     auto operator=(Duration&& rhs) -> Duration& = default;
 
-    static auto between(Instant start, Instant end) -> Duration;
+    friend auto operator==(const Duration& lhs, const Duration& rhs) -> bool;
+    friend auto operator!=(const Duration& lhs, const Duration& rhs) -> bool;
+    friend auto operator<(const Duration& lhs, const Duration& rhs) -> bool;
+    friend auto operator>(const Duration& lhs, const Duration& rhs) -> bool;
+    friend auto operator<=(const Duration& lhs, const Duration& rhs) -> bool;
+    friend auto operator>=(const Duration& lhs, const Duration& rhs) -> bool;
 
-    [[nodiscard]] auto nanosecond_value() const -> int64_t;
-    [[nodiscard]] auto value(TimeUnit time_unit) const -> int64_t;
+    static auto between(Instant start, Instant end) -> Duration;
+    static auto from(Instant start) -> Duration;
+    static auto of(uint64_t nanos, TimeUnit time_unit = TimeUnit::NANOSECONDS) -> Duration;
+
+    [[nodiscard]] auto nanosecond_value() const -> uint64_t;
+    [[nodiscard]] auto value(TimeUnit time_unit) const -> uint64_t;
 
 private:
-    int64_t duration_ns_ = 0;
+    uint64_t duration_ns_ = 0;
 
-    Duration(int64_t duration_ns);
+    Duration(uint64_t duration_ns);
 };
+
+auto operator==(const Duration& lhs, const Duration& rhs) -> bool;
+auto operator!=(const Duration& lhs, const Duration& rhs) -> bool;
+auto operator<(const Duration& lhs, const Duration& rhs) -> bool;
+auto operator>(const Duration& lhs, const Duration& rhs) -> bool;
+auto operator<=(const Duration& lhs, const Duration& rhs) -> bool;
+auto operator>=(const Duration& lhs, const Duration& rhs) -> bool;
 
 } // namespace common::time
 
