@@ -67,12 +67,28 @@ public:
     }
 
     RenderableObject(const RenderableObject&) = delete;
-    RenderableObject(RenderableObject&&) = delete;
+
+    RenderableObject(RenderableObject&& other) noexcept :
+        buffer_size_(other.buffer_size_),
+        shader_program_id_(other.shader_program_id_),
+        vao_(std::exchange(other.vao_, 0)),
+        vbo_(std::exchange(other.vbo_, 0)),
+        index_count_(std::exchange(other.index_count_, 0)) {}
 
     ~RenderableObject() { free_gpu_resources(); }
 
     auto operator=(const RenderableObject&) -> RenderableObject& = delete;
-    auto operator=(RenderableObject&&) -> RenderableObject& = delete;
+
+    auto operator=(RenderableObject&& rhs) noexcept -> RenderableObject& {
+        if (this != &rhs) {
+            buffer_size_ = rhs.buffer_size_;
+            shader_program_id_ = rhs.shader_program_id_;
+            vao_ = std::exchange(rhs.vao_, 0);
+            vbo_ = std::exchange(rhs.vbo_, 0);
+            index_count_ = std::exchange(rhs.index_count_, 0);
+        }
+        return *this;
+    }
 
     void render() {
         xassert(index_count_ > 0, "You're trying to render non-existing data");

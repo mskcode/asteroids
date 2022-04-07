@@ -12,13 +12,14 @@ static auto generate_vertex_data(const Coordinates3D& position) -> std::array<op
              {{position.x, position.y + 0.2f, 0.0F}, color}}};      // top
 }
 
-Spaceship::Spaceship() :
-    renderable_object_(ServiceLocator::instance().shader_program_registry(), 0),
+Spaceship::Spaceship(opengl::RenderableObject<opengl::Vertex3D, 3>&& renderable_object,
+                     opengl::KeyEventDispatcher& key_event_dispatcher) :
+    renderable_object_(std::move(renderable_object)),
     position_({0.0f, 0.0f, 0.0f}) {
 
     renderable_object_.update_data(generate_vertex_data(position_));
 
-    ServiceLocator::instance().key_event_dispatcher().register_listener([&](auto event) {
+    key_event_dispatcher.register_listener([&](auto event) {
         if (event.action() == GLFW_PRESS) {
             switch (event.key()) {
             case GLFW_KEY_UP:

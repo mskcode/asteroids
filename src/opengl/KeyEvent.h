@@ -14,11 +14,12 @@ public:
         action_(action),
         mods_(mods) {}
 
-    auto window() const -> GLFWwindow* { return window_; }
-    auto key() const -> int { return key_; }
-    auto scancode() const -> int { return scancode_; }
-    auto action() const -> int { return action_; }
-    auto mods() const -> int { return mods_; }
+    [[nodiscard]] auto window() const -> GLFWwindow* { return window_; }
+    [[nodiscard]] auto key() const -> int { return key_; }
+    [[nodiscard]] auto scancode() const -> int { return scancode_; }
+    [[nodiscard]] auto action() const -> int { return action_; }
+    [[nodiscard]] auto mods() const -> int { return mods_; }
+    [[nodiscard]] auto is_keypress(int key) { return action_ == GLFW_PRESS && key_ == key; }
 
 private:
     GLFWwindow* window_;

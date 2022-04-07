@@ -4,6 +4,7 @@
 #include "Renderable.h"
 #include "opengl/Window.h"
 #include "opengl/opengl.h"
+#include <cstdint>
 #include <vector>
 
 namespace asteroids {
@@ -15,10 +16,13 @@ public:
 
     void add_renderable(Renderable* renderable);
     void render();
+    void toggle_wireframe_rendering();
 
 private:
     const opengl::Window& window_;
     std::vector<Renderable*> renderables_;
+    uint64_t frame_counter_;
+    bool wireframe_rendering_;
 };
 
 } // namespace asteroids

@@ -17,8 +17,22 @@ void Renderer::render() {
     for (auto* renderable : renderables_) {
         renderable->render();
     }
+
+    ++frame_counter_;
 }
 
 void Renderer::add_renderable(Renderable* renderable) {
     renderables_.push_back(renderable);
+}
+
+void Renderer::toggle_wireframe_rendering() {
+    if (wireframe_rendering_) {
+        // normal rendering
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        wireframe_rendering_ = false;
+    } else {
+        // wireframe rendering
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        wireframe_rendering_ = true;
+    }
 }

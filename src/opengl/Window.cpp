@@ -3,7 +3,6 @@
 #include "OpenglException.h"
 #include <cstdio>
 #include <map>
-#include <stdexcept>
 
 using namespace opengl;
 
@@ -42,7 +41,7 @@ static void debug_callback(GLenum source,
                  message);
 }
 
-Window::Window(const std::string_view& title, int width, int height) {
+Window::Window(const std::string_view& title, int width, int height, bool vsync_enabled) {
     dbgln("Initializing window");
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -54,6 +53,9 @@ Window::Window(const std::string_view& title, int width, int height) {
     }
 
     glfwMakeContextCurrent(window_);
+    if (vsync_enabled) {
+        glfwSwapInterval(1);
+    }
 
     // load all OpenGL function pointers
     // needs to come after the glfwMakeContentCurrent call
@@ -88,8 +90,6 @@ Window::Window(const std::string_view& title, int width, int height) {
                 glGetString(GL_RENDERER),
                 glGetString(GL_VERSION),
                 glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-    glfwSwapInterval(1);
 }
 
 Window::~Window() {
@@ -98,6 +98,10 @@ Window::~Window() {
         glfwDestroyWindow(window_);
         window_ = nullptr;
     }
+}
+
+auto Window::should_close() const -> bool {
+    return glfwWindowShouldClose(window_) == 1;
 }
 
 auto Window::window_pointer() const -> GLFWwindow* {
@@ -115,14 +119,4 @@ void Window::run(const std::function<bool(GLFWwindow*)>& render) {
 
 void Window::close() {
     glfwSetWindowShouldClose(window_, GLFW_TRUE);
-}
-
-void Window::toggle_wireframe_rendering() {
-    if (wireframe_rendering_) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // normal rendering
-        wireframe_rendering_ = false;
-    } else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe rendering
-        wireframe_rendering_ = true;
-    }
 }

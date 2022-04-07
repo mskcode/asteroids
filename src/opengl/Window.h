@@ -10,7 +10,7 @@ namespace opengl {
 
 class Window final {
 public:
-    Window(const std::string_view& title, int width, int height);
+    Window(const std::string_view& title, int width, int height, bool vsync_enabled = true);
     Window(const Window&) = delete;
     Window(const Window&&) = delete;
     ~Window();
@@ -18,11 +18,11 @@ public:
     auto operator=(const Window&) -> Window& = delete;
     auto operator=(const Window&&) noexcept -> Window& = delete;
 
+    [[nodiscard]] auto should_close() const -> bool;
     [[nodiscard]] auto window_pointer() const -> GLFWwindow*;
 
     void run(const std::function<bool(GLFWwindow*)>& render);
     void close();
-    void toggle_wireframe_rendering();
 
 private:
     GLFWwindow* window_ = nullptr;
