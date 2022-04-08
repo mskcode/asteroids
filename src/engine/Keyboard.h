@@ -1,10 +1,10 @@
-#ifndef OPENGL_KEYBOARD_H
-#define OPENGL_KEYBOARD_H
+#ifndef ENGINE_KEYBOARD_H
+#define ENGINE_KEYBOARD_H
 
 #include "opengl.h"
 #include <array>
 
-namespace opengl {
+namespace engine {
 
 class KeyState final {
 public:
@@ -33,6 +33,6 @@ private:
     std::array<KeyState, GLFW_KEY_LAST> key_states_;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_KEYBOARD_H
+#endif // ENGINE_KEYBOARD_H

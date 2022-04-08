@@ -1,5 +1,5 @@
-#ifndef COMMON_UTILS_STRUTILS_H
-#define COMMON_UTILS_STRUTILS_H
+#ifndef COMMON_STRUTILS_H
+#define COMMON_STRUTILS_H
 
 #include <cerrno>
 #include <cstring>
@@ -25,4 +25,4 @@ auto format(const std::string& format, Args... args) -> std::string {
 
 } // namespace strutils
 
-#endif // COMMON_UTILS_STRUTILS_H
+#endif //  COMMON_STRUTILS_H

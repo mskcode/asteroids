@@ -1,7 +1,7 @@
-#ifndef OPENGL_GLFWCONTEXT_H
-#define OPENGL_GLFWCONTEXT_H
+#ifndef ENGINE_GLFWCONTEXT_H
+#define ENGINE_GLFWCONTEXT_H
 
-namespace opengl {
+namespace engine {
 
 class GlfwContext final {
 public:
@@ -17,6 +17,6 @@ private:
     bool terminated_ = false;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_GLFWCONTEXT_H
+#endif // ENGINE_GLFWCONTEXT_H

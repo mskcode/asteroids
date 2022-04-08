@@ -1,10 +1,10 @@
-#ifndef OPENGL_SHADERREGISTRY_H
-#define OPENGL_SHADERREGISTRY_H
+#ifndef ENGINE_SHADERREGISTRY_H
+#define ENGINE_SHADERREGISTRY_H
 
 #include "ShaderProgram.h"
 #include <vector>
 
-namespace opengl {
+namespace engine {
 
 class ShaderProgramRegistry final {
 public:
@@ -25,6 +25,6 @@ private:
     int shader_index_currently_in_use_ = 0;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_SHADERREGISTRY_H
+#endif // ENGINE_SHADERREGISTRY_H

@@ -3,10 +3,10 @@
 #include "MoonPhysicsComponent.h"
 #include <memory>
 
-using namespace asteroids;
+using namespace game;
 
-GameObjectFactory::GameObjectFactory(const opengl::Keyboard& keyboard,
-                                     opengl::ShaderProgramRegistry& shader_program_registry) :
+GameObjectFactory::GameObjectFactory(const engine::Keyboard& keyboard,
+                                     engine::ShaderProgramRegistry& shader_program_registry) :
     keyboard_(keyboard),
     shader_program_registry_(shader_program_registry) {}
 
@@ -14,7 +14,7 @@ auto GameObjectFactory::create_spaceship() -> GameActor* {
     auto input = std::make_unique<KeyboardInputComponent>(keyboard_);
     auto physics = std::make_unique<MoonPhysicsComponent>();
 
-    auto r = std::make_unique<opengl::RenderableObject<opengl::Vertex3D, 3>>(shader_program_registry_, 0);
+    auto r = std::make_unique<engine::RenderableObject<engine::Vertex3D, 3>>(shader_program_registry_, 0);
     auto graphics = std::make_unique<GraphicsComponent>(std::move(r));
 
     auto* obj = new GameActor(std::move(input), std::move(physics), std::move(graphics));

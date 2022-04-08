@@ -1,9 +1,9 @@
-#ifndef ASTEROIDS_PHYSICSCOMPONENT_H
-#define ASTEROIDS_PHYSICSCOMPONENT_H
+#ifndef GAME_PHYSICSCOMPONENT_H
+#define GAME_PHYSICSCOMPONENT_H
 
 #include "GameComponent.h"
 
-namespace asteroids {
+namespace game {
 
 class GameActor;
 
@@ -12,6 +12,6 @@ public:
     virtual void update(GameActor& game_actor) = 0;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_PHYSICSCOMPONENT_H
+#endif // GAME_PHYSICSCOMPONENT_H

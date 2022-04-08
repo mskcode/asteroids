@@ -3,13 +3,13 @@
 #include "../common/fileutils.h"
 #include "OpenglException.h"
 
-using namespace opengl;
+using namespace engine;
 
 Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShaderAttribute> attributes) :
     type_(type),
     attributes_(std::move(attributes)) {
     dbgfln("Loading shader type %d from file: %s", type, path.data());
-    auto source = fileutils::read_file(path);
+    auto source = common::file::read_file(path);
 
     id_ = glCreateShader(type);
     dbgfln("Creating shader ID %d (shader_type=%d)", id_, type);

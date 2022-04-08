@@ -4,7 +4,7 @@
 
 ### Cloning repository
 
-    git clone --recurse-submodules https://github.com/mskcode/asteroids.git
+    git clone --recurse-submodules https://github.com/mskcode/game.git
 
 ### Building binaries
 
@@ -14,5 +14,5 @@
     make
 
 After the build completes (`make` in this case), the application executable
-proper (`asteroids`) and unit test executable (`asteroids_test`) can be found
+proper (`game`) and unit test executable (`asteroids_test`) can be found
 from `./bin` directory.

@@ -1,6 +1,6 @@
 #include "Keyboard.h"
 
-using namespace opengl;
+using namespace engine;
 
 auto Keyboard::operator[](int key) -> KeyState& {
     return key_states_[key];

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <map>
 
-using namespace opengl;
+using namespace engine;
 
 static const std::map<GLenum, std::string> g_debug_source_map{{GL_DEBUG_SOURCE_API, "SOURCE_API"},
                                                               {GL_DEBUG_SOURCE_WINDOW_SYSTEM, "WINDOW_SYSTEM"},

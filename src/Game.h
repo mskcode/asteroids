@@ -1,31 +1,31 @@
-#ifndef ASTEROIDS_GAME_H
-#define ASTEROIDS_GAME_H
+#ifndef GAME_GAME_H
+#define GAME_GAME_H
 
 #include "GameObjectFactory.h"
 #include "Renderer.h"
-#include "opengl/KeyEventDispatcher.h"
-#include "opengl/Window.h"
+#include "engine/KeyEventDispatcher.h"
+#include "engine/Window.h"
 #include <memory>
 
-namespace asteroids {
+namespace game {
 
 class Game final {
 public:
-    Game(opengl::Window& window);
+    Game(engine::Window& window);
     ~Game() = default;
 
     void initialize();
     void loop();
 
 private:
-    opengl::Window& window_;
-    opengl::KeyEventDispatcher key_event_dispatcher_;
-    std::unique_ptr<opengl::ShaderProgramRegistry> shader_program_registry_;
+    engine::Window& window_;
+    engine::KeyEventDispatcher key_event_dispatcher_;
+    std::unique_ptr<engine::ShaderProgramRegistry> shader_program_registry_;
     std::unique_ptr<GameObjectFactory> game_object_factory_;
     std::unique_ptr<Renderer> renderer_;
     bool stop_requested_ = false;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_GAME_H
+#endif // GAME_GAME_H

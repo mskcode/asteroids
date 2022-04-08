@@ -1,5 +1,5 @@
-#ifndef COMMON_UTILS_DEBUG_H
-#define COMMON_UTILS_DEBUG_H
+#ifndef COMMON_DEBUG_H
+#define COMMON_DEBUG_H
 
 #include "strutils.h"
 #include <cstdio>
@@ -45,4 +45,4 @@ constexpr auto file_name(const char* path) -> const char* {
 
 #endif // NDEBUG
 
-#endif // COMMON_UTILS_DEBUG_H
+#endif //  COMMON_DEBUG_H

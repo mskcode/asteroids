@@ -1,7 +1,7 @@
 #include "MoonPhysicsComponent.h"
 #include "GameActor.h"
 
-using namespace asteroids;
+using namespace game;
 
 void MoonPhysicsComponent::update(GameActor& game_actor) {
     game_actor.coordinates().x += game_actor.velocity().x_velocity;

@@ -3,7 +3,7 @@
 #include "OpenglException.h"
 #include <string>
 
-using namespace opengl;
+using namespace engine;
 
 ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader) :
     fragment_shader_(std::move(fragment_shader)),

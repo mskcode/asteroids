@@ -1,6 +1,6 @@
 #include "TickLimiter.h"
 
-using namespace asteroids;
+using namespace game;
 using namespace common::time;
 
 TickLimiter::TickLimiter(uint64_t target_ticks_per_second) :

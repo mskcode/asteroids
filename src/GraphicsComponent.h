@@ -1,23 +1,23 @@
-#ifndef ASTEROIDS_GRAPHICSCOMPONENT_H
-#define ASTEROIDS_GRAPHICSCOMPONENT_H
+#ifndef GAME_GRAPHICSCOMPONENT_H
+#define GAME_GRAPHICSCOMPONENT_H
 
 #include "GameComponent.h"
-#include "opengl/RenderableObject.h"
+#include "engine/RenderableObject.h"
 
-namespace asteroids {
+namespace game {
 
 class GameActor;
 
 class GraphicsComponent : public GameComponent {
 public:
-    GraphicsComponent(std::unique_ptr<opengl::RenderableObject<opengl::Vertex3D, 3>> renderable_object);
+    GraphicsComponent(std::unique_ptr<engine::RenderableObject<engine::Vertex3D, 3>> renderable_object);
 
     void render(const GameActor& game_actor);
 
 private:
-    std::unique_ptr<opengl::RenderableObject<opengl::Vertex3D, 3>> renderable_object_;
+    std::unique_ptr<engine::RenderableObject<engine::Vertex3D, 3>> renderable_object_;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_GRAPHICSCOMPONENT_H
+#endif // GAME_GRAPHICSCOMPONENT_H

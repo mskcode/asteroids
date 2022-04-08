@@ -1,7 +1,7 @@
 #include "ShaderProgramRegistry.h"
 #include "../common/debug.h"
 
-using namespace opengl;
+using namespace engine;
 
 ShaderProgramRegistry::ShaderProgramRegistry() :
     shader_index_currently_in_use_(-1) {}

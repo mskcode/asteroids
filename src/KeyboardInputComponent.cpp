@@ -1,9 +1,9 @@
 #include "KeyboardInputComponent.h"
 #include "GameActor.h"
 
-using namespace asteroids;
+using namespace game;
 
-KeyboardInputComponent::KeyboardInputComponent(const opengl::Keyboard& keyboard) :
+KeyboardInputComponent::KeyboardInputComponent(const engine::Keyboard& keyboard) :
     keyboard_(keyboard) {}
 
 void KeyboardInputComponent::update(GameActor& game_actor) {

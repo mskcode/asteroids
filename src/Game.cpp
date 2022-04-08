@@ -2,10 +2,10 @@
 #include "ServiceLocator.h"
 #include "TickLimiter.h"
 
-using namespace asteroids;
+using namespace game;
 
-static auto load_shaders() -> std::unique_ptr<opengl::ShaderProgramRegistry> {
-    using namespace opengl;
+static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
+    using namespace engine;
     dbgln("Loading shaders");
 
     ShaderProgram shader1{
@@ -15,13 +15,13 @@ static auto load_shaders() -> std::unique_ptr<opengl::ShaderProgramRegistry> {
         {GL_FRAGMENT_SHADER, "./resources/shaders/fragment.frag"},
     };
 
-    auto registry = std::make_unique<opengl::ShaderProgramRegistry>();
+    auto registry = std::make_unique<engine::ShaderProgramRegistry>();
     registry->set(0, std::move(shader1));
 
     return registry;
 }
 
-Game::Game(opengl::Window& window) :
+Game::Game(engine::Window& window) :
     window_(window),
     key_event_dispatcher_({window}) {}
 

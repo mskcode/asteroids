@@ -1,13 +1,13 @@
-#ifndef ASTEROIDS_KEYBOARDINPUTCOMPONENT_H
-#define ASTEROIDS_KEYBOARDINPUTCOMPONENT_H
+#ifndef GAME_KEYBOARDINPUTCOMPONENT_H
+#define GAME_KEYBOARDINPUTCOMPONENT_H
 
 #include "InputComponent.h"
-#include "opengl/Keyboard.h"
-namespace asteroids {
+#include "engine/Keyboard.h"
+namespace game {
 
 class KeyboardInputComponent : public InputComponent {
 public:
-    KeyboardInputComponent(const opengl::Keyboard& keyboard);
+    KeyboardInputComponent(const engine::Keyboard& keyboard);
     KeyboardInputComponent(const KeyboardInputComponent&) = delete;
     KeyboardInputComponent(KeyboardInputComponent&&) = delete;
     ~KeyboardInputComponent() override = default;
@@ -15,9 +15,9 @@ public:
     void update(GameActor& game_actor) override;
 
 private:
-    const opengl::Keyboard& keyboard_;
+    const engine::Keyboard& keyboard_;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_KEYBOARDINPUTCOMPONENT_H
+#endif // GAME_KEYBOARDINPUTCOMPONENT_H

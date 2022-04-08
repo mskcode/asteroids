@@ -1,5 +1,5 @@
-#ifndef COMMON_UTILS_SIGNAL_H
-#define COMMON_UTILS_SIGNAL_H
+#ifndef COMMON_SIGNAL_H
+#define COMMON_SIGNAL_H
 
 #include <functional>
 #include <vector>
@@ -34,4 +34,4 @@ private:
 
 } // namespace common
 
-#endif // COMMON_UTILS_SIGNAL_H
+#endif //  COMMON_SIGNAL_H

@@ -1,12 +1,12 @@
-#ifndef OPENGL_RENDERABLEOBJECT_H
-#define OPENGL_RENDERABLEOBJECT_H
+#ifndef ENGINE_RENDERABLEOBJECT_H
+#define ENGINE_RENDERABLEOBJECT_H
 
 #include "../common/debug.h"
 #include "ShaderProgramRegistry.h"
 #include "opengl.h"
 #include <array>
 
-namespace opengl {
+namespace engine {
 
 struct Vertex3DPosition {
     GLfloat x;
@@ -124,6 +124,6 @@ private:
     unsigned int index_count_ = 0;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_RENDERABLEOBJECT_H
+#endif // ENGINE_RENDERABLEOBJECT_H

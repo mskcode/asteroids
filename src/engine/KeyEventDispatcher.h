@@ -1,10 +1,10 @@
-#ifndef OPENGL_KEYEVENTDISPATCHER_H
-#define OPENGL_KEYEVENTDISPATCHER_H
+#ifndef ENGINE_KEYEVENTDISPATCHER_H
+#define ENGINE_KEYEVENTDISPATCHER_H
 
 #include "Keyboard.h"
 #include "Window.h"
 
-namespace opengl {
+namespace engine {
 
 class KeyEventDispatcher final {
 public:
@@ -26,6 +26,6 @@ private:
     std::vector<std::function<void(const KeyEvent&)>> listeners_;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_KEYEVENTDISPATCHER_H
+#endif // ENGINE_KEYEVENTDISPATCHER_H

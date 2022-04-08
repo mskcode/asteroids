@@ -1,6 +1,6 @@
 #include "GameActor.h"
 
-using namespace asteroids;
+using namespace game;
 
 GameActor::GameActor(std::unique_ptr<InputComponent> input,
                      std::unique_ptr<PhysicsComponent> physics,

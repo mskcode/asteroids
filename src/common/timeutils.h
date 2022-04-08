@@ -1,5 +1,5 @@
-#ifndef COMMON_UTILS_TIME_H
-#define COMMON_UTILS_TIME_H
+#ifndef COMMON_TIME_H
+#define COMMON_TIME_H
 
 #include <chrono>
 #include <cstdint>
@@ -113,4 +113,4 @@ auto operator>=(const Duration& lhs, const Duration& rhs) -> bool;
 
 } // namespace common::time
 
-#endif // COMMON_UTILS_TIME_H
+#endif //  COMMON_TIME_H

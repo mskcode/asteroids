@@ -1,10 +1,10 @@
-#ifndef ASTEROIDS_TICKLIMITER_H
-#define ASTEROIDS_TICKLIMITER_H
+#ifndef GAME_TICKLIMITER_H
+#define GAME_TICKLIMITER_H
 
 #include "common/timeutils.h"
 #include <cstdint>
 
-namespace asteroids {
+namespace game {
 
 class TickLimiter final {
 
@@ -19,6 +19,6 @@ private:
     common::time::Instant last_tick_;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_TICKLIMITER_H
+#endif // GAME_TICKLIMITER_H

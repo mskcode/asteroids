@@ -1,12 +1,12 @@
-#ifndef OPENGL_SHADERPROGRAM_H
-#define OPENGL_SHADERPROGRAM_H
+#ifndef ENGINE_SHADERPROGRAM_H
+#define ENGINE_SHADERPROGRAM_H
 
 #include "Shader.h"
 #include "opengl.h"
 #include <string_view>
 #include <vector>
 
-namespace opengl {
+namespace engine {
 
 class ShaderProgram final {
 public:
@@ -32,6 +32,6 @@ private:
     Shader vertex_shader_;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_SHADERPROGRAM_H
+#endif // ENGINE_SHADERPROGRAM_H

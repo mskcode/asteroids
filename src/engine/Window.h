@@ -1,12 +1,12 @@
-#ifndef OPENGL_WINDOW_H
-#define OPENGL_WINDOW_H
+#ifndef ENGINE_WINDOW_H
+#define ENGINE_WINDOW_H
 
 #include "KeyEvent.h"
 #include "opengl.h"
 #include <functional>
 #include <string_view>
 
-namespace opengl {
+namespace engine {
 
 class Window final {
 public:
@@ -29,6 +29,6 @@ private:
     bool wireframe_rendering_ = false;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_WINDOW_H
+#endif // ENGINE_WINDOW_H

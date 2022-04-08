@@ -1,5 +1,5 @@
-#ifndef ASTEROIDS_GAMEACTOR_H
-#define ASTEROIDS_GAMEACTOR_H
+#ifndef GAME_GAMEACTOR_H
+#define GAME_GAMEACTOR_H
 
 #include "GraphicsComponent.h"
 #include "InputComponent.h"
@@ -8,7 +8,7 @@
 #include "Updateable.h"
 #include <memory>
 
-namespace asteroids {
+namespace game {
 
 struct Coordinates2D final {
     float x = 0;
@@ -54,6 +54,6 @@ private:
     Velocity2D velocity_;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_GAMEACTOR_H
+#endif // GAME_GAMEACTOR_H

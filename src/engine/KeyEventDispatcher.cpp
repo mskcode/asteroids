@@ -1,7 +1,7 @@
 #include "KeyEventDispatcher.h"
 #include "../common/debug.h"
 
-using namespace opengl;
+using namespace engine;
 
 static KeyEventDispatcher* g_key_event_dispatcher;
 

@@ -1,13 +1,13 @@
-#ifndef COMMON_UTILS_FILEUTILS_H
-#define COMMON_UTILS_FILEUTILS_H
+#ifndef COMMON_FILEUTILS_H
+#define COMMON_FILEUTILS_H
 
 #include <string>
 #include <string_view>
 
-namespace fileutils {
+namespace common::file {
 
 auto read_file(std::string_view path) -> std::string;
 
-} // namespace fileutils
+} // namespace common::file
 
-#endif // COMMON_UTILS_FILEUTILS_H
+#endif //  COMMON_FILEUTILS_H

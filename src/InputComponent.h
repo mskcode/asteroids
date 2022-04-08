@@ -1,9 +1,9 @@
-#ifndef ASTEROIDS_INPUTCOMPONENT_H
-#define ASTEROIDS_INPUTCOMPONENT_H
+#ifndef GAME_INPUTCOMPONENT_H
+#define GAME_INPUTCOMPONENT_H
 
 #include "GameComponent.h"
 
-namespace asteroids {
+namespace game {
 
 class GameActor;
 
@@ -12,6 +12,6 @@ public:
     virtual void update(GameActor& game_actor) = 0;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_INPUTCOMPONENT_H
+#endif // GAME_INPUTCOMPONENT_H

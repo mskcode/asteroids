@@ -1,12 +1,12 @@
-#ifndef OPENGL_SHADER_H
-#define OPENGL_SHADER_H
+#ifndef ENGINE_SHADER_H
+#define ENGINE_SHADER_H
 
 #include "opengl.h"
 #include <string>
 #include <string_view>
 #include <vector>
 
-namespace opengl {
+namespace engine {
 
 struct VertexShaderAttribute {
     std::string name;
@@ -40,6 +40,6 @@ private:
     std::vector<VertexShaderAttribute> attributes_;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_SHADER_H
+#endif // ENGINE_SHADER_H

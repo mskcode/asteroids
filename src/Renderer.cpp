@@ -1,8 +1,8 @@
 #include "Renderer.h"
 
-using namespace asteroids;
+using namespace game;
 
-Renderer::Renderer(const opengl::Window& window, const GameObjectFactory& game_object_factory) :
+Renderer::Renderer(const engine::Window& window, const GameObjectFactory& game_object_factory) :
     window_(window),
     game_object_factory_(game_object_factory) {}
 

@@ -1,9 +1,9 @@
-#ifndef OPENGL_KEYEVENT_H
-#define OPENGL_KEYEVENT_H
+#ifndef ENGINE_KEYEVENT_H
+#define ENGINE_KEYEVENT_H
 
 #include "opengl.h"
 
-namespace opengl {
+namespace engine {
 
 class KeyEvent final {
 public:
@@ -29,6 +29,6 @@ private:
     int mods_;
 };
 
-} // namespace opengl
+} // namespace engine
 
-#endif // OPENGL_KEYEVENT_H
+#endif // ENGINE_KEYEVENT_H

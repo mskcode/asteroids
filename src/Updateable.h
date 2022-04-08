@@ -1,13 +1,13 @@
-#ifndef ASTEROIDS_UPDATEABLE_H
-#define ASTEROIDS_UPDATEABLE_H
+#ifndef GAME_UPDATEABLE_H
+#define GAME_UPDATEABLE_H
 
-namespace asteroids {
+namespace game {
 
 class Updateable {
 public:
     virtual void update() = 0;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_UPDATEABLE_H
+#endif // GAME_UPDATEABLE_H

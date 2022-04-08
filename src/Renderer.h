@@ -1,18 +1,18 @@
-#ifndef ASTEROIDS_RENDERER_H
-#define ASTEROIDS_RENDERER_H
+#ifndef GAME_RENDERER_H
+#define GAME_RENDERER_H
 
 #include "GameObjectFactory.h"
 #include "Renderable.h"
-#include "opengl/Window.h"
-#include "opengl/opengl.h"
+#include "engine/Window.h"
+#include "engine/opengl.h"
 #include <cstdint>
 #include <vector>
 
-namespace asteroids {
+namespace game {
 
 class Renderer final {
 public:
-    Renderer(const opengl::Window& window, const GameObjectFactory& game_object_factory);
+    Renderer(const engine::Window& window, const GameObjectFactory& game_object_factory);
     ~Renderer() = default;
 
     void add_renderable(Renderable* renderable);
@@ -20,12 +20,12 @@ public:
     void toggle_wireframe_rendering();
 
 private:
-    const opengl::Window& window_;
+    const engine::Window& window_;
     const GameObjectFactory& game_object_factory_;
     uint64_t frame_counter_ = 0;
     bool wireframe_rendering_ = false;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_RENDERER_H
+#endif // GAME_RENDERER_H

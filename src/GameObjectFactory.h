@@ -1,15 +1,15 @@
-#ifndef ASTEROIDS_GAMEOBJECTFACTORY_H
-#define ASTEROIDS_GAMEOBJECTFACTORY_H
+#ifndef GAME_GAMEOBJECTFACTORY_H
+#define GAME_GAMEOBJECTFACTORY_H
 
 #include "GameActor.h"
-#include "opengl/Keyboard.h"
-#include "opengl/ShaderProgramRegistry.h"
+#include "engine/Keyboard.h"
+#include "engine/ShaderProgramRegistry.h"
 
-namespace asteroids {
+namespace game {
 
 class GameObjectFactory final {
 public:
-    GameObjectFactory(const opengl::Keyboard& keyboard, opengl::ShaderProgramRegistry& shader_program_registry);
+    GameObjectFactory(const engine::Keyboard& keyboard, engine::ShaderProgramRegistry& shader_program_registry);
 
     auto create_spaceship() -> GameActor*;
 
@@ -17,13 +17,13 @@ public:
     auto updateables() const -> const std::vector<Updateable*>&;
 
 private:
-    const opengl::Keyboard& keyboard_;
-    const opengl::ShaderProgramRegistry& shader_program_registry_;
+    const engine::Keyboard& keyboard_;
+    const engine::ShaderProgramRegistry& shader_program_registry_;
     std::vector<GameActor*> objects_;
     std::vector<Renderable*> renderables_;
     std::vector<Updateable*> updateables_;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_GAMEOBJECTFACTORY_H
+#endif // GAME_GAMEOBJECTFACTORY_H

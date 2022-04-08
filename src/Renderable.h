@@ -1,13 +1,13 @@
-#ifndef ASTEROIDS_RENDERABLE_H
-#define ASTEROIDS_RENDERABLE_H
+#ifndef GAME_RENDERABLE_H
+#define GAME_RENDERABLE_H
 
-namespace asteroids {
+namespace game {
 
 class Renderable {
 public:
     virtual void render() const = 0;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_RENDERABLE_H
+#endif // GAME_RENDERABLE_H

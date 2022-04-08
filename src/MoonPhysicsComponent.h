@@ -1,9 +1,9 @@
-#ifndef ASTEROIDS_MOONPHYSICSCOMPONENT_H
-#define ASTEROIDS_MOONPHYSICSCOMPONENT_H
+#ifndef GAME_MOONPHYSICSCOMPONENT_H
+#define GAME_MOONPHYSICSCOMPONENT_H
 
 #include "PhysicsComponent.h"
 
-namespace asteroids {
+namespace game {
 
 class GameActor;
 
@@ -12,6 +12,6 @@ public:
     void update(GameActor& game_actor) override;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_MOONPHYSICSCOMPONENT_H
+#endif // GAME_MOONPHYSICSCOMPONENT_H

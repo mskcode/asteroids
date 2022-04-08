@@ -4,7 +4,7 @@
 #include "opengl.h"
 #include <cstdio>
 
-using namespace opengl;
+using namespace engine;
 
 static void error_callback(int error, const char* description) {
     std::fprintf(stderr, "GL ERROR: %d %s\n", error, description);

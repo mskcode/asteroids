@@ -1,13 +1,13 @@
-#ifndef ASTEROIDS_GAMECOMPONENT_H
-#define ASTEROIDS_GAMECOMPONENT_H
+#ifndef GAME_GAMECOMPONENT_H
+#define GAME_GAMECOMPONENT_H
 
-namespace asteroids {
+namespace game {
 
 class GameComponent {
 public:
     virtual ~GameComponent() = default;
 };
 
-} // namespace asteroids
+} // namespace game
 
-#endif // ASTEROIDS_GAMECOMPONENT_H
+#endif // GAME_GAMECOMPONENT_H
