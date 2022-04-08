@@ -23,28 +23,27 @@ static auto load_shaders() -> std::unique_ptr<opengl::ShaderProgramRegistry> {
 
 Game::Game(opengl::Window& window) :
     window_(window),
-    key_event_dispatcher_({window}),
-    renderer_({window_}) {}
+    key_event_dispatcher_({window}) {}
 
 void Game::initialize() {
-    key_event_dispatcher_.register_listener([&](auto event) {
+    key_event_dispatcher_.register_listener([this](auto event) {
         if (event.is_keypress(GLFW_KEY_ESCAPE)) {
-            window_.close();
-        }
-    });
-
-    key_event_dispatcher_.register_listener([&](auto event) {
-        if (event.is_keypress(GLFW_KEY_F12)) {
-            renderer_.toggle_wireframe_rendering();
+            this->window_.close();
         }
     });
 
     shader_program_registry_ = load_shaders();
 
-    opengl::RenderableObject<opengl::Vertex3D, 3> renderable_object{*shader_program_registry_, 0};
-    spaceship_ = new Spaceship(std::move(renderable_object), key_event_dispatcher_);
+    game_object_factory_ =
+        std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(), *shader_program_registry_);
+    game_object_factory_->create_spaceship();
 
-    renderer_.add_renderable(spaceship_);
+    renderer_ = std::make_unique<Renderer>(window_, *game_object_factory_);
+    key_event_dispatcher_.register_listener([this](auto event) {
+        if (event.is_keypress(GLFW_KEY_F12)) {
+            this->renderer_->toggle_wireframe_rendering();
+        }
+    });
 }
 
 void Game::loop() {
@@ -53,12 +52,14 @@ void Game::loop() {
 
     while (!stop_requested_ && !window_.should_close()) {
         if (update_tick_limiter.should_tick()) {
-            spaceship_->update();
+            for (auto* updateable : game_object_factory_->updateables()) {
+                updateable->update();
+            }
             update_tick_limiter.tick();
         }
 
         if (render_tick_limiter.should_tick()) {
-            renderer_.render();
+            renderer_->render();
             glfwSwapBuffers(window_.window_pointer());
             render_tick_limiter.tick();
         }

@@ -2,8 +2,9 @@
 
 using namespace asteroids;
 
-Renderer::Renderer(const opengl::Window& window) :
-    window_(window) {}
+Renderer::Renderer(const opengl::Window& window, const GameObjectFactory& game_object_factory) :
+    window_(window),
+    game_object_factory_(game_object_factory) {}
 
 void Renderer::render() {
     int width;
@@ -14,15 +15,11 @@ void Renderer::render() {
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    for (auto* renderable : renderables_) {
+    for (auto* renderable : game_object_factory_.renderables()) {
         renderable->render();
     }
 
     ++frame_counter_;
-}
-
-void Renderer::add_renderable(Renderable* renderable) {
-    renderables_.push_back(renderable);
 }
 
 void Renderer::toggle_wireframe_rendering() {
