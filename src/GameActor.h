@@ -13,12 +13,6 @@ namespace asteroids {
 struct Coordinates2D final {
     float x = 0;
     float y = 0;
-
-    Coordinates2D() = default;
-
-    Coordinates2D(float a_x, float a_y) :
-        x(a_x),
-        y(a_y) {}
 };
 
 struct Coordinates3D final {
@@ -30,12 +24,6 @@ struct Coordinates3D final {
 struct Velocity2D final {
     float x_velocity = 0;
     float y_velocity = 0;
-
-    Velocity2D() = default;
-
-    Velocity2D(float a_x_velocity, float a_y_velocity) :
-        x_velocity(a_x_velocity),
-        y_velocity(a_y_velocity) {}
 
     void reset() {
         x_velocity = 0;
