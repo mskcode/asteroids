@@ -3,7 +3,7 @@ set(BINARY ${CMAKE_PROJECT_NAME})
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 
 set(SOURCES ${SOURCES})
-set(LINK_LIBRARY_TARGETS dl freetype glad glfw linmath)
+set(LINK_LIBRARY_TARGETS dl freetype glad glfw glm linmath)
 
 add_executable(${BINARY} ${SOURCES})
 target_compile_options(${BINARY} PRIVATE

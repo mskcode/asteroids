@@ -3,6 +3,7 @@
 
 #include "GameObjectFactory.h"
 #include "Renderer.h"
+#include "engine/FontManager.h"
 #include "engine/KeyEventDispatcher.h"
 #include "engine/Window.h"
 #include <memory>
@@ -23,6 +24,7 @@ private:
     std::unique_ptr<engine::ShaderProgramRegistry> shader_program_registry_;
     std::unique_ptr<GameObjectFactory> game_object_factory_;
     std::unique_ptr<Renderer> renderer_;
+    std::unique_ptr<engine::FontBitmapMap> font_bitmap_map_;
     bool stop_requested_ = false;
 };
 

@@ -21,6 +21,15 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
     return registry;
 }
 
+static auto load_fonts() -> std::unique_ptr<engine::FontBitmapMap> {
+    using namespace engine;
+    FontManager font_manager;
+    font_manager.load_font("default", "./resources/fonts/arcadeclassic.ttf");
+    auto font = font_manager.get_font("default");
+    auto font_bitmap_map = FontBitmapMap::from(font);
+    return font_bitmap_map;
+}
+
 Game::Game(engine::Window& window) :
     window_(window),
     key_event_dispatcher_({window}) {}
@@ -33,6 +42,7 @@ void Game::initialize() {
     });
 
     shader_program_registry_ = load_shaders();
+    font_bitmap_map_ = load_fonts();
 
     game_object_factory_ =
         std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(), *shader_program_registry_);
