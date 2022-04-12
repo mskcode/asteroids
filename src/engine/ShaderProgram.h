@@ -3,6 +3,7 @@
 
 #include "Shader.h"
 #include "opengl.h"
+#include <functional>
 #include <string_view>
 #include <vector>
 
@@ -22,8 +23,10 @@ public:
     [[nodiscard]] auto vertex_shader() const -> const Shader&;
     [[nodiscard]] auto fragment_shader() const -> const Shader&;
     [[nodiscard]] auto query_attribute_location(const std::string_view& name) const -> GLint;
+    [[nodiscard]] auto query_uniform_location(const std::string_view& name) const -> GLint;
 
     void bind() const;
+    void customize(std::function<void(ShaderProgram&)> customizer);
     void free_gpu_resources() noexcept;
 
 private:

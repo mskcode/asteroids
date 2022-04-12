@@ -1,6 +1,6 @@
 #include "FontManager.h"
 #include "../common/debug.h"
-#include "FontBitmapMap.h"
+#include "FontBitmapCache.h"
 #include <cstdio>
 
 using namespace engine;
@@ -36,7 +36,7 @@ void FontManager::load_font(const std::string& name, const std::string& path) {
     fonts_by_name_.insert({name, Font::load(library_, path)});
 }
 
-auto FontManager::get_font(const std::string& name) const -> const Font& {
+auto FontManager::get_font(const std::string& name) const -> Font& {
     if (!fonts_by_name_.contains(name)) {
         throw std::runtime_error("Font name '" + name + "' does not exist");
     }

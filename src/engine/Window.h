@@ -3,16 +3,27 @@
 
 #include "KeyEvent.h"
 #include "opengl.h"
+#include "types.h"
 #include <functional>
+#include <string>
 #include <string_view>
 
 namespace engine {
 
+struct WindowOptions final {
+    std::string title{"GLFW Window"};
+    Rectangle window_size{.width = 800, .height = 600};
+    bool vsync_enabled{true};
+    bool resizable{true};
+    int opengl_version_major{4};
+    int opengl_version_minor{6};
+};
+
 class Window final {
 public:
-    Window(const std::string_view& title, int width, int height, bool vsync_enabled = true);
+    Window(const WindowOptions& options);
     Window(const Window&) = delete;
-    Window(const Window&&) = delete;
+    Window(Window&&) = delete;
     ~Window();
 
     auto operator=(const Window&) -> Window& = delete;
@@ -20,13 +31,14 @@ public:
 
     [[nodiscard]] auto should_close() const -> bool;
     [[nodiscard]] auto window_pointer() const -> GLFWwindow*;
+    [[nodiscard]] auto window_size() const -> const Rectangle&;
 
-    void run(const std::function<bool(GLFWwindow*)>& render);
     void close();
+    void update_window_size();
 
 private:
-    GLFWwindow* window_ = nullptr;
-    bool wireframe_rendering_ = false;
+    GLFWwindow* window_{nullptr};
+    Rectangle window_size_{};
 };
 
 } // namespace engine

@@ -26,6 +26,8 @@ static const std::map<GLenum, std::string> g_debug_severity_map{{GL_DEBUG_SEVERI
                                                                 {GL_DEBUG_SEVERITY_LOW, "LOW"},
                                                                 {GL_DEBUG_SEVERITY_NOTIFICATION, "NOTIFICATION"}};
 
+static Window* g_window_instance{nullptr};
+
 static void debug_callback(GLenum source,
                            GLenum type,
                            [[maybe_unused]] GLuint id,
@@ -41,19 +43,35 @@ static void debug_callback(GLenum source,
                  message);
 }
 
-Window::Window(const std::string_view& title, int width, int height, bool vsync_enabled) {
+static void framebuffer_size_callback([[maybe_unused]] GLFWwindow* window,
+                                      [[maybe_unused]] int width,
+                                      [[maybe_unused]] int height) {
+    if (g_window_instance != nullptr) {
+        g_window_instance->update_window_size();
+    }
+}
+
+Window::Window(const WindowOptions& options) {
     dbgln("Initializing window");
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, options.opengl_version_major);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, options.opengl_version_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window_ = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
+    glfwWindowHint(GLFW_RESIZABLE, options.resizable ? GLFW_TRUE : GLFW_FALSE);
+    window_ = glfwCreateWindow(static_cast<int>(options.window_size.width),
+                               static_cast<int>(options.window_size.height),
+                               options.title.data(),
+                               nullptr,
+                               nullptr);
     if (window_ == nullptr) {
         // Window or OpenGL context creation failed
         throw_gl("Window creation failed");
     }
 
+    window_size_ = options.window_size;
+    glfwSetFramebufferSizeCallback(window_, framebuffer_size_callback);
+
     glfwMakeContextCurrent(window_);
-    if (vsync_enabled) {
+    if (options.vsync_enabled) {
         glfwSwapInterval(1);
     }
 
@@ -70,6 +88,10 @@ Window::Window(const std::string_view& title, int width, int height, bool vsync_
         std::cout << "DSA not supported!" << std::endl;
         return -1;
     } */
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 #ifndef NDEBUG
     // This block needs to come way down here or else you get a core dump
@@ -90,6 +112,8 @@ Window::Window(const std::string_view& title, int width, int height, bool vsync_
                 glGetString(GL_RENDERER),
                 glGetString(GL_VERSION),
                 glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    g_window_instance = this;
 }
 
 Window::~Window() {
@@ -108,15 +132,18 @@ auto Window::window_pointer() const -> GLFWwindow* {
     return window_;
 }
 
-void Window::run(const std::function<bool(GLFWwindow*)>& render) {
-    bool continue_render_loop = true;
-    while (continue_render_loop && glfwWindowShouldClose(window_) == 0) {
-        continue_render_loop = render(window_);
-        glfwSwapBuffers(window_);
-        glfwPollEvents();
-    }
+auto Window::window_size() const -> const Rectangle& {
+    return window_size_;
 }
 
 void Window::close() {
     glfwSetWindowShouldClose(window_, GLFW_TRUE);
+}
+
+void Window::update_window_size() {
+    int width{0};
+    int height{0};
+    glfwGetFramebufferSize(window_, &width, &height);
+    window_size_.width = width;
+    window_size_.height = height;
 }

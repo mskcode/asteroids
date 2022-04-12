@@ -2,7 +2,7 @@
 #define ENGINE_FONTMANAGER_H
 
 #include "Font.h"
-#include "FontBitmapMap.h"
+#include "FontBitmapCache.h"
 #include "freetype.h"
 #include <memory>
 #include <string>
@@ -17,7 +17,7 @@ public:
 
     void free() noexcept;
     void load_font(const std::string& name, const std::string& path);
-    auto get_font(const std::string& name) const -> const Font&;
+    auto get_font(const std::string& name) const -> Font&;
 
 private:
     FT_Library library_ = nullptr; // pointer

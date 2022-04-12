@@ -24,7 +24,8 @@ private:
     std::unique_ptr<engine::ShaderProgramRegistry> shader_program_registry_;
     std::unique_ptr<GameObjectFactory> game_object_factory_;
     std::unique_ptr<Renderer> renderer_;
-    std::unique_ptr<engine::FontBitmapMap> font_bitmap_map_;
+    std::unique_ptr<engine::FontBitmapCache> font_bitmap_cache_;
+    std::unique_ptr<engine::RenderableText> renderable_text_;
     bool stop_requested_ = false;
 };
 

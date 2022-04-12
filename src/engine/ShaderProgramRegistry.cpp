@@ -24,6 +24,7 @@ void ShaderProgramRegistry::set(int index, ShaderProgram&& shader) {
 }
 
 auto ShaderProgramRegistry::get(int index) const -> const ShaderProgram& {
+    // TODO add bounds checking
     return registry_[index];
 }
 

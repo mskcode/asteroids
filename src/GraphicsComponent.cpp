@@ -15,7 +15,7 @@ GraphicsComponent::GraphicsComponent(std::unique_ptr<engine::RenderableObject<en
 
 void GraphicsComponent::render(const GameActor& game_actor) {
     auto vertex_data = generate_vertex_data(game_actor.coordinates());
-    // FIXME now we always update the data in GCU even when it hasn't changed
+    // FIXME now we always update the data in GPU even when it hasn't changed
     renderable_object_->update_data(vertex_data);
     renderable_object_->render();
 }

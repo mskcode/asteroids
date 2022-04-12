@@ -14,7 +14,7 @@ auto GameObjectFactory::create_spaceship() -> GameActor* {
     auto input = std::make_unique<KeyboardInputComponent>(keyboard_);
     auto physics = std::make_unique<MoonPhysicsComponent>();
 
-    auto r = std::make_unique<engine::RenderableObject<engine::Vertex3D, 3>>(shader_program_registry_, 0);
+    auto r = std::make_unique<engine::RenderableObject<engine::Vertex3D, 3>>(shader_program_registry_.get(0));
     auto graphics = std::make_unique<GraphicsComponent>(std::move(r));
 
     auto* obj = new GameActor(std::move(input), std::move(physics), std::move(graphics));

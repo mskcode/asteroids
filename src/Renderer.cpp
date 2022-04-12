@@ -1,10 +1,14 @@
 #include "Renderer.h"
 
 using namespace game;
+using namespace engine;
 
-Renderer::Renderer(const engine::Window& window, const GameObjectFactory& game_object_factory) :
+Renderer::Renderer(const Window& window,
+                   const GameObjectFactory& game_object_factory,
+                   RenderableText& renderable_text) :
     window_(window),
-    game_object_factory_(game_object_factory) {}
+    game_object_factory_(game_object_factory),
+    renderable_text_(renderable_text) {}
 
 void Renderer::render() {
     int width;
@@ -18,6 +22,9 @@ void Renderer::render() {
     for (auto* renderable : game_object_factory_.renderables()) {
         renderable->render();
     }
+
+    renderable_text_.set_text("Test FOO", -0.5f, 0.5f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
+    renderable_text_.render();
 
     ++frame_counter_;
 }

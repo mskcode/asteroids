@@ -40,21 +40,22 @@ private:
     glm::ivec2 bearing_{0, 0};
 };
 
-class FontBitmapMap final {
+class FontBitmapCache final {
 public:
-    FontBitmapMap(const FontBitmapMap&) = delete;
-    FontBitmapMap(FontBitmapMap&&) = delete;
-    ~FontBitmapMap() = default;
+    FontBitmapCache(const FontBitmapCache&) = delete;
+    FontBitmapCache(FontBitmapCache&&) = delete;
+    ~FontBitmapCache() = default;
 
-    auto operator=(const FontBitmapMap&) -> FontBitmapMap& = delete;
-    auto operator=(FontBitmapMap&&) -> FontBitmapMap& = delete;
+    auto operator=(const FontBitmapCache&) -> FontBitmapCache& = delete;
+    auto operator=(FontBitmapCache&&) -> FontBitmapCache& = delete;
+    auto operator[](char c) const -> const FontCharacterBitmap&;
 
-    static auto from(const Font& font) -> std::unique_ptr<FontBitmapMap>;
+    static auto from(const Font& font) -> std::unique_ptr<FontBitmapCache>;
 
 private:
     std::unordered_map<uint8_t, FontCharacterBitmap> character_map_;
 
-    FontBitmapMap(std::unordered_map<uint8_t, FontCharacterBitmap>&& character_map);
+    FontBitmapCache(std::unordered_map<uint8_t, FontCharacterBitmap>&& character_map);
 };
 
 } // namespace engine

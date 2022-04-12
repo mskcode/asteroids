@@ -37,22 +37,20 @@ struct Vertex3D {
 template <typename TType, size_t TSize>
 class RenderableObject final {
 public:
-    RenderableObject(const ShaderProgramRegistry& spr, int shader_index) :
+    RenderableObject(const ShaderProgram& shader_program) :
         buffer_size_(sizeof(TType) * TSize),
-        shader_program_id_(spr.get(shader_index).id()),
-        vao_(0),
-        vbo_(0),
-        index_count_(0) {
+        shader_program_id_(shader_program.id()) {
         glCreateBuffers(1, &vbo_);
         glNamedBufferStorage(vbo_, buffer_size_, nullptr, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
-        dbgfln("Created VBO ID %d with size %d", vbo_, buffer_size_);
+        dbgfln("Created VBO ID %d with size %ld", vbo_, buffer_size_);
 
         glCreateVertexArrays(1, &vao_);
 
+        // bind Vertex Buffer Object (VBO) to Vertex Array Object (VAO) index N
         constexpr GLuint vertex_array_binding_point = 0;
-        glVertexArrayVertexBuffer(vao_, vertex_array_binding_point, vbo_, /*offset*/ 0, sizeof(Vertex3D));
+        glVertexArrayVertexBuffer(vao_, vertex_array_binding_point, vbo_, /*offset*/ 0, sizeof(TType));
 
-        auto& shader_program = spr.get(shader_index);
+        // bind shader attributes (input variables) to VAO
         auto& vertex_shader = shader_program.vertex_shader();
         for (auto& attr : vertex_shader.attributes()) {
             auto location = shader_program.query_attribute_location(attr.name);
@@ -95,7 +93,8 @@ public:
         glUseProgram(shader_program_id_);
         glBindVertexArray(vao_);
         glDrawArrays(GL_TRIANGLES, 0, index_count_);
-        glBindVertexArray(0); // unbind
+        glBindVertexArray(0); // unbind VAO
+        glUseProgram(0);      // unbind shader
     }
 
     void update_data(const std::array<TType, TSize>& data) {
@@ -117,7 +116,7 @@ public:
     }
 
 private:
-    unsigned int buffer_size_ = 0;
+    size_t buffer_size_ = 0;
     unsigned int shader_program_id_ = 0;
     GLuint vao_ = 0;
     GLuint vbo_ = 0;

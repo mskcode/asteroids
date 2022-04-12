@@ -12,7 +12,7 @@ Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShad
     auto source = common::file::read_file(path);
 
     id_ = glCreateShader(type);
-    dbgfln("Creating shader ID %d (shader_type=%d)", id_, type);
+    dbgfln("Creating shader ID %d (shader_type=%d, attributes=%ld)", id_, type, attributes_.size());
     const char* const p = source.c_str();
     glShaderSource(id_, 1, &p, nullptr);
     glCompileShader(id_);

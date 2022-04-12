@@ -10,10 +10,10 @@ namespace engine {
 
 struct VertexShaderAttribute {
     std::string name;
-    GLint size;
-    GLenum type;
-    bool normalized;
-    GLuint relative_offset;
+    GLint size{0};
+    GLenum type{0};
+    bool normalized{false};
+    GLuint relative_offset{0};
 };
 
 class Shader final {
@@ -35,9 +35,9 @@ public:
     void free_gpu_resources() noexcept;
 
 private:
-    GLenum type_ = 0;
-    GLuint id_ = 0;
-    std::vector<VertexShaderAttribute> attributes_;
+    GLenum type_{0};
+    GLuint id_{0};
+    std::vector<VertexShaderAttribute> attributes_{};
 };
 
 } // namespace engine

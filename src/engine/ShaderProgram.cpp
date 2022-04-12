@@ -20,8 +20,8 @@ ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader) :
     glLinkProgram(program_);
 
     // we can free the shader GPU resources after attaching it
-    vertex_shader_.free_gpu_resources();
-    fragment_shader_.free_gpu_resources();
+    // vertex_shader_.free_gpu_resources();
+    // fragment_shader_.free_gpu_resources();
 
     int success;
     glGetProgramiv(program_, GL_LINK_STATUS, &success);
@@ -39,16 +39,16 @@ ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
     vertex_shader_(std::move(other.vertex_shader_)) {}
 
 ShaderProgram::~ShaderProgram() {
+    dbgfln("Deleting shader program ID %d", program_);
     free_gpu_resources();
 }
 
 auto ShaderProgram::operator=(ShaderProgram&& rhs) noexcept -> ShaderProgram& {
     if (this != &rhs) {
         free_gpu_resources();
-        program_ = rhs.program_;
+        program_ = std::exchange(rhs.program_, 0);
         fragment_shader_ = std::move(rhs.fragment_shader_);
         vertex_shader_ = std::move(rhs.vertex_shader_);
-        rhs.program_ = 0;
     }
     return *this;
 }
@@ -73,8 +73,22 @@ auto ShaderProgram::query_attribute_location(const std::string_view& name) const
     return location;
 }
 
+auto ShaderProgram::query_uniform_location(const std::string_view& name) const -> GLint {
+    auto location = glGetUniformLocation(program_, name.data());
+    if (location < 0) {
+        throw_gl("Attribute " + std::string(name) + " not found");
+    }
+    return location;
+}
+
 void ShaderProgram::bind() const {
     glUseProgram(program_);
+}
+
+void ShaderProgram::customize(std::function<void(ShaderProgram&)> customizer) {
+    glUseProgram(program_);
+    customizer(*this);
+    glUseProgram(0);
 }
 
 void ShaderProgram::free_gpu_resources() noexcept {

@@ -15,7 +15,11 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
     common::SignalHandler signal_handler;
 
     try {
-        engine::Window window("Asteroids", 1024, 768);
+        engine::Window window({
+            .title = "Moonlander 2.5D",
+            .window_size = {.width = 1024, .height = 768},
+            .resizable = false,
+        });
         signal_handler.register_listener([&window]([[maybe_unused]] auto signal) -> void { window.close(); },
                                          {SIGINT, SIGTERM});
 

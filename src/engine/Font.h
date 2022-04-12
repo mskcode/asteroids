@@ -9,7 +9,12 @@ namespace engine {
 
 class Font final {
 public:
+    Font(const Font&) = delete;
+    Font(Font&&) = delete;
     ~Font();
+
+    auto operator=(const Font&) -> Font& = delete;
+    auto operator=(Font&&) noexcept -> Font& = delete;
 
     static auto load(FT_Library library, const std::string& path) -> std::unique_ptr<Font>;
 
