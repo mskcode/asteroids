@@ -2,6 +2,7 @@
 #define ENGINE_SHADERPROGRAM_H
 
 #include "Shader.h"
+#include "glm/vec3.hpp"
 #include "opengl.h"
 #include <functional>
 #include <string_view>
@@ -24,6 +25,8 @@ public:
     [[nodiscard]] auto fragment_shader() const -> const Shader&;
     [[nodiscard]] auto query_attribute_location(const std::string_view& name) const -> GLint;
     [[nodiscard]] auto query_uniform_location(const std::string_view& name) const -> GLint;
+
+    void set_uniform(const std::string_view& name, glm::vec3 vec3) const;
 
     void bind() const;
     void customize(std::function<void(ShaderProgram&)> customizer);

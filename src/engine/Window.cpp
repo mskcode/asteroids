@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "../common/debug.h"
-#include "OpenglException.h"
+#include "openglerror.h"
 #include <cstdio>
 #include <map>
 

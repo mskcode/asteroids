@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace strutils {
+namespace common::str {
 
 template <typename... Args>
 auto format(const std::string& format, Args... args) -> std::string {
@@ -23,6 +23,6 @@ auto format(const std::string& format, Args... args) -> std::string {
     return {buf.get(), buf.get() + size - 1}; // ee don't want the '\0' inside
 }
 
-} // namespace strutils
+} // namespace common::str
 
 #endif //  COMMON_STRUTILS_H

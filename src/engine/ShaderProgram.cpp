@@ -1,6 +1,6 @@
 #include "ShaderProgram.h"
 #include "../common/debug.h"
-#include "OpenglException.h"
+#include "openglerror.h"
 #include <string>
 
 using namespace engine;
@@ -79,6 +79,11 @@ auto ShaderProgram::query_uniform_location(const std::string_view& name) const -
         throw_gl("Attribute " + std::string(name) + " not found");
     }
     return location;
+}
+
+void ShaderProgram::set_uniform(const std::string_view& name, glm::vec3 vec3) const {
+    auto location = this->query_uniform_location(name);
+    GL_CHECK(glUniform3f(location, vec3.r, vec3.g, vec3.b));
 }
 
 void ShaderProgram::bind() const {

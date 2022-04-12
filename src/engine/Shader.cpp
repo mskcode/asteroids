@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include "../common/debug.h"
 #include "../common/fileutils.h"
-#include "OpenglException.h"
+#include "openglerror.h"
 
 using namespace engine;
 

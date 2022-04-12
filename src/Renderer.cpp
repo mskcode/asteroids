@@ -23,8 +23,7 @@ void Renderer::render() {
         renderable->render();
     }
 
-    renderable_text_.set_text("Test FOO", -0.5f, 0.5f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
-    renderable_text_.render();
+    renderable_text_.set_text("Test FOO", 100.0f, 100.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
 
     ++frame_counter_;
 }

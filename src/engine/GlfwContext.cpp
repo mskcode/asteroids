@@ -1,7 +1,7 @@
 #include "GlfwContext.h"
 #include "../common/debug.h"
-#include "OpenglException.h"
 #include "opengl.h"
+#include "openglerror.h"
 #include <cstdio>
 
 using namespace engine;

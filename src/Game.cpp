@@ -41,7 +41,7 @@ static auto load_fonts() -> std::unique_ptr<engine::FontBitmapCache> {
     FontManager font_manager;
     font_manager.load_font("default", "./resources/fonts/arcadeclassic.ttf");
     auto& font = font_manager.get_font("default");
-    font.set_pixel_sizes(48);
+    font.set_pixel_sizes(24);
     auto font_bitmap_cache = FontBitmapCache::from(font);
     return font_bitmap_cache;
 }

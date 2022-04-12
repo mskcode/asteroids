@@ -39,7 +39,7 @@ constexpr auto file_name(const char* path) -> const char* {
 // clang-format off
 
 #define xassert(exp, msg)       if (!(exp)) { throw AssertionError(msg, file_name(__FILE__), __LINE__); }
-#define xassertf(exp, fmt, ...) if (!(exp)) { throw AssertionError(strutils::format(fmt, __VA_ARGS__), file_name(__FILE__), __LINE__); }
+#define xassertf(exp, fmt, ...) if (!(exp)) { throw AssertionError(common::str::format(fmt, __VA_ARGS__), file_name(__FILE__), __LINE__); }
 
 // clang-format on
 
