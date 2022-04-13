@@ -3,6 +3,8 @@
 
 using namespace common::time;
 
+const Instant Instant::UnixEpoch{0};
+
 Instant::Instant(uint64_t epoch_ns) :
     epoch_ns_(epoch_ns) {}
 
@@ -73,4 +75,15 @@ auto common::time::operator<=(const Duration& lhs, const Duration& rhs) -> bool 
 
 auto common::time::operator>=(const Duration& lhs, const Duration& rhs) -> bool {
     return lhs.nanosecond_value() >= rhs.nanosecond_value();
+}
+
+StopWatch::StopWatch(Instant start_time) :
+    start_time_(start_time) {}
+
+auto StopWatch::start() -> StopWatch {
+    return {Instant::now()};
+}
+
+auto StopWatch::split() -> Duration {
+    return Duration::from(start_time_);
 }
