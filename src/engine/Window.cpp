@@ -89,10 +89,6 @@ Window::Window(const WindowOptions& options) {
         return -1;
     } */
 
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 #ifndef NDEBUG
     // This block needs to come way down here or else you get a core dump
     dbgln("Enabling OpenGL debug output");

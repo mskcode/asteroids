@@ -72,8 +72,11 @@ auto FontBitmapCache::operator[](char c) const -> const FontCharacterBitmap& {
     return character_map_.at(static_cast<uint8_t>(c));
 }
 
-auto FontBitmapCache::from(const Font& font) -> std::unique_ptr<FontBitmapCache> {
+auto FontBitmapCache::from(Font& font, FT_UInt font_size_height, FT_UInt font_size_width)
+    -> std::unique_ptr<FontBitmapCache> {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+
+    font.set_pixel_sizes(font_size_height, font_size_width);
 
     auto* face = font.face();
     std::unordered_map<uint8_t, FontCharacterBitmap> character_map;

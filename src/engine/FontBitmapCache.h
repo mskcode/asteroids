@@ -50,7 +50,8 @@ public:
     auto operator=(FontBitmapCache&&) -> FontBitmapCache& = delete;
     auto operator[](char c) const -> const FontCharacterBitmap&;
 
-    static auto from(const Font& font) -> std::unique_ptr<FontBitmapCache>;
+    static auto from(Font& font, FT_UInt font_size_height, FT_UInt font_size_width = 0)
+        -> std::unique_ptr<FontBitmapCache>;
 
 private:
     std::unordered_map<uint8_t, FontCharacterBitmap> character_map_;

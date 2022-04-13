@@ -3,12 +3,23 @@
 using namespace game;
 using namespace engine;
 
-Renderer::Renderer(const Window& window,
-                   const GameObjectFactory& game_object_factory,
-                   RenderableText& renderable_text) :
+Renderer::Renderer(const Window& window, const GameObjectFactory& game_object_factory, TextRenderer& renderable_text) :
     window_(window),
     game_object_factory_(game_object_factory),
-    renderable_text_(renderable_text) {}
+    renderable_text_(renderable_text) {
+
+    // enable polygon culling; this doesn't specify which polygons should be
+    // culled, only enables it:
+    // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glCullFace.xml
+    glEnable(GL_CULL_FACE);
+
+    // enable pixel blending and configure the blend function; according to
+    // OpenGL documentation, transparency is best achieved using blend function
+    // (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA):
+    // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBlendFunc.xhtml
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
 
 void Renderer::render() {
     int width;
@@ -23,7 +34,7 @@ void Renderer::render() {
         renderable->render();
     }
 
-    renderable_text_.set_text("Test FOO", 100.0f, 100.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
+    renderable_text_.draw_text("Test FOO", 100.0f, 100.0f, 0.5f);
 
     ++frame_counter_;
 }

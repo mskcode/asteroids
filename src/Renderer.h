@@ -3,7 +3,7 @@
 
 #include "GameObjectFactory.h"
 #include "Renderable.h"
-#include "engine/RenderableText.h"
+#include "engine/TextRenderer.h"
 #include "engine/Window.h"
 #include "engine/opengl.h"
 #include <cstdint>
@@ -15,7 +15,7 @@ class Renderer final {
 public:
     Renderer(const engine::Window& window,
              const GameObjectFactory& game_object_factory,
-             engine::RenderableText& renderable_text);
+             engine::TextRenderer& renderable_text);
     ~Renderer() = default;
 
     void render();
@@ -26,7 +26,7 @@ private:
     const GameObjectFactory& game_object_factory_;
     uint64_t frame_counter_{0};
     bool wireframe_rendering_{false};
-    engine::RenderableText& renderable_text_;
+    engine::TextRenderer& renderable_text_;
 };
 
 } // namespace game

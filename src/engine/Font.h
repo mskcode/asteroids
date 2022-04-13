@@ -21,7 +21,7 @@ public:
     [[nodiscard]] auto face() const -> FT_Face;
 
     void free() noexcept;
-    void set_pixel_sizes(FT_UInt pixel_width = 48, FT_UInt pixel_height = 0);
+    void set_pixel_sizes(FT_UInt pixel_height, FT_UInt pixel_width = 0);
 
 private:
     FT_Face face_ = nullptr; // pointer
