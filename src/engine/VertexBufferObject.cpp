@@ -37,6 +37,10 @@ auto VertexBufferObject::element_size() const -> GLsizei {
     return element_size_;
 }
 
+auto VertexBufferObject::element_count() const -> GLsizei {
+    return element_count_;
+}
+
 auto VertexBufferObject::is_valid() const -> bool {
     return vbo_id_ > 0;
 }

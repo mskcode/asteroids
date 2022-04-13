@@ -3,6 +3,7 @@
 
 #include "../common/debug.h"
 #include "ShaderProgramRegistry.h"
+#include "VertexArrayObject.h"
 #include "opengl.h"
 #include <array>
 
@@ -34,93 +35,33 @@ struct Vertex3D {
     }
 };
 
-template <typename TType, size_t TSize>
 class RenderableObject final {
 public:
-    RenderableObject(const ShaderProgram& shader_program) :
-        buffer_size_(sizeof(TType) * TSize),
-        shader_program_id_(shader_program.id()) {
-        glCreateBuffers(1, &vbo_);
-        glNamedBufferStorage(vbo_, buffer_size_, nullptr, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
-        dbgfln("Created VBO ID %d with size %ld", vbo_, buffer_size_);
-
-        glCreateVertexArrays(1, &vao_);
-
-        // bind Vertex Buffer Object (VBO) to Vertex Array Object (VAO) index N
-        constexpr GLuint vertex_array_binding_point = 0;
-        glVertexArrayVertexBuffer(vao_, vertex_array_binding_point, vbo_, /*offset*/ 0, sizeof(TType));
-
-        // bind shader attributes (input variables) to VAO
-        auto& vertex_shader = shader_program.vertex_shader();
-        for (auto& attr : vertex_shader.attributes()) {
-            auto location = shader_program.query_attribute_location(attr.name);
-            dbgfln("Binding shader attribute '%s' to location %d with offset %d",
-                   attr.name.data(),
-                   location,
-                   attr.relative_offset);
-            glEnableVertexArrayAttrib(vao_, location);
-            glVertexArrayAttribFormat(vao_, location, attr.size, attr.type, attr.normalized, attr.relative_offset);
-            glVertexArrayAttribBinding(vao_, location, vertex_array_binding_point);
-        }
+    RenderableObject(const ShaderProgram& shader_program) {
+        vao_ = VertexArrayObject::create(&shader_program);
+        vbo_ = vao_.create_vbo(1024, sizeof(Vertex3D), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
     }
 
     RenderableObject(const RenderableObject&) = delete;
-
-    RenderableObject(RenderableObject&& other) noexcept :
-        buffer_size_(other.buffer_size_),
-        shader_program_id_(other.shader_program_id_),
-        vao_(std::exchange(other.vao_, 0)),
-        vbo_(std::exchange(other.vbo_, 0)),
-        index_count_(std::exchange(other.index_count_, 0)) {}
-
-    ~RenderableObject() { free_gpu_resources(); }
+    RenderableObject(RenderableObject&&) noexcept = delete;
+    ~RenderableObject() = default;
 
     auto operator=(const RenderableObject&) -> RenderableObject& = delete;
+    auto operator=(RenderableObject&&) noexcept -> RenderableObject& = delete;
 
-    auto operator=(RenderableObject&& rhs) noexcept -> RenderableObject& {
-        if (this != &rhs) {
-            buffer_size_ = rhs.buffer_size_;
-            shader_program_id_ = rhs.shader_program_id_;
-            vao_ = std::exchange(rhs.vao_, 0);
-            vbo_ = std::exchange(rhs.vbo_, 0);
-            index_count_ = std::exchange(rhs.index_count_, 0);
-        }
-        return *this;
+    [[nodiscard]] auto vbo() -> VertexBufferObject& {
+        return vbo_;
     }
 
     void render() {
-        xassert(index_count_ > 0, "You're trying to render non-existing data");
-        glUseProgram(shader_program_id_);
-        glBindVertexArray(vao_);
-        glDrawArrays(GL_TRIANGLES, 0, index_count_);
-        glBindVertexArray(0); // unbind VAO
-        glUseProgram(0);      // unbind shader
-    }
-
-    void update_data(const std::array<TType, TSize>& data) {
-        glNamedBufferSubData(vbo_, 0, buffer_size_, data.data());
-        index_count_ = data.size();
-    }
-
-    void free_gpu_resources() noexcept {
-        if (vao_ > 0) {
-            GLuint arrays[] = {vao_};
-            glDeleteVertexArrays(1, arrays);
-            vao_ = 0;
-        }
-        if (vbo_ > 0) {
-            GLuint buffers[] = {vbo_};
-            glDeleteBuffers(1, buffers);
-            vbo_ = 0;
-        }
+        vao_.bind();
+        glDrawArrays(GL_TRIANGLES, 0, vbo_.element_count());
+        vao_.unbind();
     }
 
 private:
-    size_t buffer_size_ = 0;
-    unsigned int shader_program_id_ = 0;
-    GLuint vao_ = 0;
-    GLuint vbo_ = 0;
-    unsigned int index_count_ = 0;
+    VertexArrayObject vao_;
+    VertexBufferObject vbo_;
 };
 
 } // namespace engine
