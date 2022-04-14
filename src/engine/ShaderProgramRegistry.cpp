@@ -23,6 +23,11 @@ void ShaderProgramRegistry::set(int index, ShaderProgram&& shader) {
     registry_.insert(registry_.begin() + index, std::move(shader));
 }
 
+auto ShaderProgramRegistry::get(int index) -> ShaderProgram& {
+    // TODO add bounds checking
+    return registry_[index];
+}
+
 auto ShaderProgramRegistry::get(int index) const -> const ShaderProgram& {
     // TODO add bounds checking
     return registry_[index];

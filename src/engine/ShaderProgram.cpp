@@ -1,6 +1,7 @@
 #include "ShaderProgram.h"
 #include "../common/debug.h"
 #include "openglerror.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 using namespace engine;
@@ -86,8 +87,17 @@ void ShaderProgram::set_uniform(const std::string_view& name, glm::vec3 vec3) co
     GL_CHECK(glUniform3f(location, vec3.r, vec3.g, vec3.b));
 }
 
+void ShaderProgram::set_uniform(const std::string_view& name, glm::mat4 mat4) const {
+    auto location = this->query_uniform_location(name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
+}
+
 void ShaderProgram::bind() const {
     glUseProgram(program_);
+}
+
+void ShaderProgram::unbind() const {
+    glUseProgram(0);
 }
 
 void ShaderProgram::customize(std::function<void(ShaderProgram&)> customizer) {

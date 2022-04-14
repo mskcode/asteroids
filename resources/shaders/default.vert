@@ -5,8 +5,10 @@ layout (location = 1) in vec3 color;
 
 out vec3 vertex_color;
 
+uniform mat4 camera_matrix;
+
 void main()
 {
     vertex_color = color;
-    gl_Position = vec4(position.x, position.y, position.z, 1.0f);
+    gl_Position = camera_matrix * vec4(position.x, position.y, position.z, 1.0f);
 }

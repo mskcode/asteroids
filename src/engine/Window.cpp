@@ -128,7 +128,7 @@ auto Window::window_pointer() const -> GLFWwindow* {
     return window_;
 }
 
-auto Window::window_size() const -> const Rectangle& {
+auto Window::window_size() const -> const Dimensions2D& {
     return window_size_;
 }
 

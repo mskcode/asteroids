@@ -17,6 +17,7 @@ public:
     auto operator=(ShaderProgramRegistry&&) noexcept -> ShaderProgramRegistry&;
 
     void set(int index, ShaderProgram&& shader);
+    [[nodiscard]] auto get(int index) -> ShaderProgram&;
     [[nodiscard]] auto get(int index) const -> const ShaderProgram&;
     void use(int index);
 

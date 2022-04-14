@@ -5,8 +5,12 @@
 using namespace game;
 using namespace engine;
 
-Renderer::Renderer(const Window& window, const GameObjectFactory& game_object_factory, TextRenderer& renderable_text) :
+Renderer::Renderer(const Window& window,
+                   Camera& camera,
+                   const GameObjectFactory& game_object_factory,
+                   TextRenderer& renderable_text) :
     window_(window),
+    camera_(camera),
     game_object_factory_(game_object_factory),
     renderable_text_(renderable_text) {
 
@@ -21,6 +25,11 @@ Renderer::Renderer(const Window& window, const GameObjectFactory& game_object_fa
     // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBlendFunc.xhtml
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // enable depth testing:
+    // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml
+    // FIXME enabling this breaks pretty much all rendering currently
+    // glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::render() {
@@ -35,6 +44,8 @@ void Renderer::render() {
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    camera_.update_shader_matrix();
+
     for (auto* renderable : game_object_factory_.renderables()) {
         renderable->render();
     }
@@ -47,6 +58,8 @@ void Renderer::render() {
 
     duration_histogram_.sample(sw.split());
     fps_counter_.inc();
+
+    glfwSwapBuffers(window_.window_pointer());
 }
 
 void Renderer::toggle_wireframe_rendering() {

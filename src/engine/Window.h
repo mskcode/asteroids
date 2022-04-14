@@ -12,7 +12,7 @@ namespace engine {
 
 struct WindowOptions final {
     std::string title{"GLFW Window"};
-    Rectangle window_size{.width = 800, .height = 600};
+    Dimensions2D window_size{.width = 800, .height = 600};
     bool vsync_enabled{true};
     bool resizable{true};
     int opengl_version_major{4};
@@ -31,14 +31,14 @@ public:
 
     [[nodiscard]] auto should_close() const -> bool;
     [[nodiscard]] auto window_pointer() const -> GLFWwindow*;
-    [[nodiscard]] auto window_size() const -> const Rectangle&;
+    [[nodiscard]] auto window_size() const -> const Dimensions2D&;
 
     void close();
     void update_window_size();
 
 private:
     GLFWwindow* window_{nullptr};
-    Rectangle window_size_{};
+    Dimensions2D window_size_{};
 };
 
 } // namespace engine

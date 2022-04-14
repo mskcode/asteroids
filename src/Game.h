@@ -26,6 +26,7 @@ private:
     std::unique_ptr<Renderer> renderer_;
     std::unique_ptr<engine::FontBitmapCache> font_bitmap_cache_;
     std::unique_ptr<engine::TextRenderer> renderable_text_;
+    std::unique_ptr<Camera> camera_;
     bool stop_requested_ = false;
 };
 

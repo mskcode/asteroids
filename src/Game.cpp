@@ -12,9 +12,9 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
 
     ShaderProgram shader1{
         {GL_VERTEX_SHADER,
-         "./resources/shaders/vertex.vert",
+         "./resources/shaders/default.vert",
          {{"position", 3, GL_FLOAT, false, 0}, {"color", 3, GL_FLOAT, false, sizeof(float) * 3}}},
-        {GL_FRAGMENT_SHADER, "./resources/shaders/fragment.frag"},
+        {GL_FRAGMENT_SHADER, "./resources/shaders/default.frag"},
     };
 
     ShaderProgram shader2{
@@ -64,7 +64,21 @@ void Game::initialize() {
         std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(), *shader_program_registry_);
     game_object_factory_->create_spaceship();
 
-    renderer_ = std::make_unique<Renderer>(window_, *game_object_factory_, *renderable_text_);
+    camera_ = std::make_unique<Camera>(shader_program_registry_->get(0), "camera_matrix");
+    camera_->set_window_dimensions(window_.window_size());
+
+    key_event_dispatcher_.register_listener([this](auto event) {
+        if (event.is_keypress(GLFW_KEY_KP_ADD)) { // zoom in
+            auto p = this->camera_->position();
+            this->camera_->set_position({p.x, p.y, p.z - 0.1f});
+        }
+        if (event.is_keypress(GLFW_KEY_KP_SUBTRACT)) { // zoom out
+            auto p = this->camera_->position();
+            this->camera_->set_position({p.x, p.y, p.z + 0.1f});
+        }
+    });
+
+    renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);
     key_event_dispatcher_.register_listener([this](auto event) {
         if (event.is_keypress(GLFW_KEY_F12)) {
             this->renderer_->toggle_wireframe_rendering();
@@ -86,7 +100,6 @@ void Game::loop() {
 
         if (render_tick_limiter.should_tick()) {
             renderer_->render();
-            glfwSwapBuffers(window_.window_pointer());
             render_tick_limiter.tick();
         }
 

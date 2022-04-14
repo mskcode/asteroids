@@ -5,6 +5,7 @@
 #include "glm/vec3.hpp"
 #include "opengl.h"
 #include <functional>
+#include <glm/mat4x4.hpp>
 #include <string_view>
 #include <vector>
 
@@ -27,8 +28,10 @@ public:
     [[nodiscard]] auto query_uniform_location(const std::string_view& name) const -> GLint;
 
     void set_uniform(const std::string_view& name, glm::vec3 vec3) const;
+    void set_uniform(const std::string_view& name, glm::mat4 mat4) const;
 
     void bind() const;
+    void unbind() const;
     void customize(std::function<void(ShaderProgram&)> customizer);
     void free_gpu_resources() noexcept;
 

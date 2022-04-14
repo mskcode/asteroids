@@ -7,11 +7,19 @@
 
 namespace engine {
 
-struct Rectangle final {
+struct Point2D final {
     uint32_t x{0};
     uint32_t y{0};
+};
+
+struct Dimensions2D final {
     uint32_t width{0};
     uint32_t height{0};
+};
+
+struct Rectangle final {
+    Point2D point;
+    Dimensions2D dimensions;
 };
 
 struct Color final {
