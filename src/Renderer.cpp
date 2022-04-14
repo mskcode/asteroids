@@ -39,12 +39,14 @@ void Renderer::render() {
         renderable->render();
     }
 
-    auto text = str::format("Render AVG %" PRIu64 " mu",
-                                    duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
+    auto text = str::format("RT AVG %" PRIu64 " us", duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
     renderable_text_.draw_text(text, 100.0f, 100.0f, 0.5f);
 
+    auto text2 = str::format("FPS %.0f", fps_counter_.hertz());
+    renderable_text_.draw_text(text2, 100.0f, 120.0f, 0.5f);
+
     duration_histogram_.sample(sw.split());
-    ++frame_counter_;
+    fps_counter_.inc();
 }
 
 void Renderer::toggle_wireframe_rendering() {

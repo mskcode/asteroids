@@ -120,10 +120,7 @@ auto operator>=(const Duration& lhs, const Duration& rhs) -> bool;
 template <size_t TSize = 100>
 class DurationHistogram {
 public:
-    [[nodiscard]] auto avg() const -> Duration {
-        auto avg = double(duration_sum_ns_) / TSize;
-        return Duration::of(uint64_t(avg));
-    }
+    [[nodiscard]] auto avg() const -> Duration { return Duration::of(uint64_t(compute_avg())); }
 
     void sample(const Duration& duration) {
         // we're going to replace the value at index_ so subtract it off from
@@ -145,6 +142,8 @@ private:
     std::array<uint64_t, TSize> durations_{}; // 0 initialize the array
     uint64_t duration_sum_ns_{0};
     size_t index_{0};
+
+    [[nodiscard]] constexpr auto compute_avg() const -> double { return double(duration_sum_ns_) / TSize; }
 };
 
 class StopWatch final {
