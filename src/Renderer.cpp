@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "common/timeutils.h"
+#include <cinttypes>
 
 using namespace game;
 using namespace engine;
@@ -23,7 +24,8 @@ Renderer::Renderer(const Window& window, const GameObjectFactory& game_object_fa
 }
 
 void Renderer::render() {
-    auto sw = common::time::StopWatch::start();
+    using namespace common;
+    auto sw = time::StopWatch::start();
 
     int width;
     int height;
@@ -37,7 +39,8 @@ void Renderer::render() {
         renderable->render();
     }
 
-    auto text = common::str::format("Avg render time: %ld ns", duration_histogram_.avg().nanosecond_value());
+    auto text = str::format("Render AVG %" PRIu64 " mu",
+                                    duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
     renderable_text_.draw_text(text, 100.0f, 100.0f, 0.5f);
 
     duration_histogram_.sample(sw.split());

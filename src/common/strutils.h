@@ -20,7 +20,7 @@ auto format(const std::string& format, Args... args) -> std::string {
     auto size = static_cast<size_t>(size_s);
     std::unique_ptr<char[]> buf(new char[size]);
     std::snprintf(buf.get(), size, format.c_str(), args...);
-    return {buf.get(), buf.get() + size - 1}; // ee don't want the '\0' inside
+    return {buf.get(), buf.get() + size - 1}; // exclude the trailing '\0'
 }
 
 } // namespace common::str

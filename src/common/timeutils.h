@@ -142,7 +142,7 @@ public:
     }
 
 private:
-    std::array<uint64_t, TSize> durations_;
+    std::array<uint64_t, TSize> durations_{}; // 0 initialize the array
     uint64_t duration_sum_ns_{0};
     size_t index_{0};
 };
