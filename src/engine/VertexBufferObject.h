@@ -30,6 +30,7 @@ public:
 
     template <typename TType, size_t TSize>
     void set_data(std::array<TType, TSize> data, GLintptr offset = 0) {
+        // TODO validate that we don't overflow the buffer
         glNamedBufferSubData(vbo_id_, offset, sizeof(data), data.data());
         element_count_ = data.size();
     }

@@ -58,9 +58,15 @@ auto VertexArrayObject::shader_program() const -> const ShaderProgram& {
 
 auto VertexArrayObject::create_vbo(GLsizeiptr buffer_size, GLsizei element_size, GLbitfield flags)
     -> VertexBufferObject {
+    // create VBO
     GLuint vbo_id;
     GL_CHECK(glCreateBuffers(1, &vbo_id));
+
+    // allocate memory to VBO
     GL_CHECK(glNamedBufferStorage(vbo_id, buffer_size, nullptr, flags));
+
+    // attach VBO to this VAO; a VAO can have multiple VBOs attached hence we
+    // have the running index indicating the attachment point
     GL_CHECK(glVertexArrayVertexBuffer(vao_id_, binding_index_, vbo_id, /*offset*/ 0, element_size));
 
     // bind shader attributes (input variables) to VAO
@@ -72,7 +78,21 @@ auto VertexArrayObject::create_vbo(GLsizeiptr buffer_size, GLsizei element_size,
 
     ++binding_index_;
 
-    return VertexBufferObject{vbo_id, buffer_size, element_size};
+    return {vbo_id, buffer_size, element_size};
+}
+
+auto VertexArrayObject::create_ebo(GLsizeiptr buffer_size, GLbitfield flags) -> ElementBufferObject {
+    // create EBO
+    GLuint ebo_id;
+    GL_CHECK(glCreateBuffers(1, &ebo_id));
+
+    // allocate memory to EBO
+    GL_CHECK(glNamedBufferStorage(ebo_id, buffer_size, nullptr, flags));
+
+    // attach EBO to this VAO; only single EBO can be attached per VAO
+    GL_CHECK(glVertexArrayElementBuffer(vao_id_, ebo_id));
+
+    return {ebo_id, buffer_size};
 }
 
 void VertexArrayObject::free_gpu_resources() noexcept {

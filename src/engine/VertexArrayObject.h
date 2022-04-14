@@ -1,6 +1,7 @@
 #ifndef ENGINE_VERTEXARRAYOBJECT_H
 #define ENGINE_VERTEXARRAYOBJECT_H
 
+#include "ElementBufferObject.h"
 #include "ShaderProgram.h"
 #include "VertexBufferObject.h"
 #include "opengl.h"
@@ -24,6 +25,8 @@ public:
     [[nodiscard]] auto shader_program() const -> const ShaderProgram&;
 
     auto create_vbo(GLsizeiptr buffer_size, GLsizei element_size, GLbitfield flags) -> VertexBufferObject;
+    auto create_ebo(GLsizeiptr buffer_size, GLbitfield flags) -> ElementBufferObject;
+
     void free_gpu_resources() noexcept;
     void bind();
     void unbind();

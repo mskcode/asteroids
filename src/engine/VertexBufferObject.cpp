@@ -9,7 +9,9 @@ VertexBufferObject::VertexBufferObject(GLuint vbo_id, GLsizeiptr buffer_size, GL
     element_size_(element_size) {}
 
 VertexBufferObject::VertexBufferObject(VertexBufferObject&& other) noexcept :
-    vbo_id_(std::exchange(other.vbo_id_, 0)) {}
+    vbo_id_(std::exchange(other.vbo_id_, 0)),
+    buffer_size_(std::exchange(other.buffer_size_, 0)),
+    element_size_(std::exchange(other.element_size_, 0)) {}
 
 VertexBufferObject::~VertexBufferObject() {
     free_gpu_resources();
