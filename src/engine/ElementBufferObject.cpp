@@ -32,6 +32,10 @@ auto ElementBufferObject::is_valid() const -> bool {
     return ebo_id_ > 0;
 }
 
+auto ElementBufferObject::indice_count() const -> GLsizei {
+    return indice_count_;
+}
+
 void ElementBufferObject::free_gpu_resources() {
     if (ebo_id_ > 0) {
         glDeleteBuffers(1, &ebo_id_);

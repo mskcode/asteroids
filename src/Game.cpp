@@ -64,19 +64,9 @@ void Game::initialize() {
         std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(), *shader_program_registry_);
     game_object_factory_->create_spaceship();
 
-    camera_ = std::make_unique<Camera>(shader_program_registry_->get(0), "camera_matrix");
+    camera_ =
+        std::make_unique<Camera>(key_event_dispatcher_.keyboard(), shader_program_registry_->get(0), "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());
-
-    key_event_dispatcher_.register_listener([this](auto event) {
-        if (event.is_keypress(GLFW_KEY_KP_ADD)) { // zoom in
-            auto p = this->camera_->position();
-            this->camera_->set_position({p.x, p.y, p.z - 0.1f});
-        }
-        if (event.is_keypress(GLFW_KEY_KP_SUBTRACT)) { // zoom out
-            auto p = this->camera_->position();
-            this->camera_->set_position({p.x, p.y, p.z + 0.1f});
-        }
-    });
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);
     key_event_dispatcher_.register_listener([this](auto event) {
@@ -92,6 +82,7 @@ void Game::loop() {
 
     while (!stop_requested_ && !window_.should_close()) {
         if (update_tick_limiter.should_tick()) {
+            camera_->update();
             for (auto* updateable : game_object_factory_->updateables()) {
                 updateable->update();
             }

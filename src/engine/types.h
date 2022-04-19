@@ -1,6 +1,7 @@
 #ifndef ENGINE_TYPES_H
 #define ENGINE_TYPES_H
 
+#include "opengl.h"
 #include <cstdint>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -23,15 +24,15 @@ struct Rectangle final {
 };
 
 struct Color final {
-    float r{0};
-    float g{0};
-    float b{0};
-    float a{0};
+    GLfloat r{0};
+    GLfloat g{0};
+    GLfloat b{0};
+    GLfloat a{0};
 
-    [[nodiscard]] auto red() const -> float { return r; }
-    [[nodiscard]] auto green() const -> float { return g; }
-    [[nodiscard]] auto blue() const -> float { return b; }
-    [[nodiscard]] auto alpha() const -> float { return a; }
+    [[nodiscard]] auto red() const -> GLfloat { return r; }
+    [[nodiscard]] auto green() const -> GLfloat { return g; }
+    [[nodiscard]] auto blue() const -> GLfloat { return b; }
+    [[nodiscard]] auto alpha() const -> GLfloat { return a; }
     [[nodiscard]] auto to_vec3() const -> glm::vec3 { return {r, g, b}; }
     [[nodiscard]] auto to_vec4() const -> glm::vec4 { return {r, g, b, a}; }
 };
@@ -39,6 +40,17 @@ struct Color final {
 class Colors final {
 public:
     static constexpr Color NeonGreen{0.5f, 0.8f, 0.2f};
+};
+
+struct Point3D {
+    GLfloat x{0};
+    GLfloat y{0};
+    GLfloat z{0};
+};
+
+struct Vertex {
+    Point3D point;
+    Color color;
 };
 
 } // namespace engine
