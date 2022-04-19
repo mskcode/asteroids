@@ -33,8 +33,10 @@ private:
     const std::string shader_camera_matrix_name_;
     engine::Dimensions2D window_dimensions_;
     glm::vec3 position_{0.0f, 0.0f, 2.0f};
-    glm::vec3 orientation_{0.0f, 0.0f, -1.0f};
-    const glm::vec3 up_{0.0f, 1.0f, 0.0f};
+    glm::vec3 front_{0.0f, 0.0f, -1.0f};
+    glm::vec3 up_{0.0f, 1.0f, 0.0f};
+    glm::vec3 world_up_{0.0f, 1.0f, 0.0f};
+    glm::vec3 right_{0.0f, 0.0f, 0.0f};
     float pitch_{0.0f};
     float yaw_{-90.0f};
     float field_of_view_degrees_{45.0f};

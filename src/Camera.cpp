@@ -1,7 +1,6 @@
 #include "Camera.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
-#include <cmath>
 #include <glm/mat4x4.hpp>
 
 using namespace game;
@@ -17,36 +16,42 @@ void Camera::update() {
     constexpr float velocity = 0.05f;
     constexpr float turn_velocity = 1.0f;
     if (keyboard_[GLFW_KEY_W].is_down()) { // move forward
-        position_.z -= velocity;
-        shader_update_needed_ = true;
+        position_ += front_ * velocity;
     }
     if (keyboard_[GLFW_KEY_S].is_down()) { // move backward
-        position_.z += velocity;
-        shader_update_needed_ = true;
+        position_ -= front_ * velocity;
     }
     if (keyboard_[GLFW_KEY_Q].is_down()) { // strafe left
-        // cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-        position_ -= glm::normalize(glm::cross(orientation_, up_)) * velocity;
-        shader_update_needed_ = true;
+        position_ -= right_ * velocity;
     }
     if (keyboard_[GLFW_KEY_E].is_down()) { // strafe right
-        position_ += glm::normalize(glm::cross(orientation_, up_)) * velocity;
-        shader_update_needed_ = true;
+        position_ += right_ * velocity;
     }
     if (keyboard_[GLFW_KEY_A].is_down()) { // turn camera left
         yaw_ -= turn_velocity;
-        shader_update_needed_ = true;
     }
     if (keyboard_[GLFW_KEY_D].is_down()) { // turn camera right
         yaw_ += turn_velocity;
-        shader_update_needed_ = true;
+    }
+    if (keyboard_[GLFW_KEY_SPACE].is_down()) { // ascend
+        position_ += up_ * velocity;
+    }
+    if (keyboard_[GLFW_KEY_LEFT_CONTROL].is_down()) { // descend
+        position_ -= up_ * velocity;
     }
 
-    glm::vec3 direction;
-    direction.x = std::cos(glm::radians(yaw_)) * std::cos(glm::radians(pitch_));
-    direction.y = std::sin(glm::radians(pitch_));
-    direction.z = std::sin(glm::radians(yaw_)) * std::cos(glm::radians(pitch_));
-    orientation_ = glm::normalize(direction);
+    glm::vec3 front;
+    front.x = glm::cos(glm::radians(yaw_)) * glm::cos(glm::radians(pitch_));
+    front.y = glm::sin(glm::radians(pitch_));
+    front.z = glm::sin(glm::radians(yaw_)) * glm::cos(glm::radians(pitch_));
+    front_ = glm::normalize(front);
+
+    right_ =
+        glm::normalize(glm::cross(front_, world_up_)); // normalize the vectors, because their length gets closer to 0
+                                                       // the more you look up or down which results in slower movement.
+    up_ = glm::normalize(glm::cross(right_, front_));
+
+    shader_update_needed_ = true;
 }
 
 /**
@@ -58,7 +63,7 @@ void Camera::update_shader_matrix() {
     }
 
     // set camera direction
-    auto view = glm::lookAt(position_, position_ + orientation_, up_);
+    auto view = glm::lookAt(position_, position_ + front_, up_);
 
     // add perspective to scene
     auto aspect_ratio = float(window_dimensions_.width) / window_dimensions_.height;
