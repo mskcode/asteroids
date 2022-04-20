@@ -47,7 +47,8 @@ static auto load_fonts() -> std::unique_ptr<engine::FontBitmapCache> {
 
 Game::Game(engine::Window& window) :
     window_(window),
-    key_event_dispatcher_({window}) {}
+    key_event_dispatcher_(window),
+    mouse_event_dispatcher_(window) {}
 
 void Game::initialize() {
     key_event_dispatcher_.register_listener([this](auto event) {
