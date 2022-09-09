@@ -1,5 +1,6 @@
 #include "ShaderProgramRegistry.h"
 #include "../common/debug.h"
+#include <utility>
 
 using namespace engine;
 

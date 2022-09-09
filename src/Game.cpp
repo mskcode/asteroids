@@ -25,8 +25,10 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
         const auto screen_width = 1024;
         const auto screen_height = 768;
         auto location = shader.query_uniform_location("projection");
-        glm::mat4 projection =
-            glm::ortho(0.0f, static_cast<float>(screen_width), 0.0f, static_cast<float>(screen_height));
+        glm::mat4 projection = glm::ortho(0.0f,
+                                          static_cast<float>(screen_width),
+                                          0.0f,
+                                          static_cast<float>(screen_height));
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(projection));
     });
 
@@ -61,12 +63,14 @@ void Game::initialize() {
     font_bitmap_cache_ = load_fonts();
     renderable_text_ = std::make_unique<engine::TextRenderer>(*font_bitmap_cache_, shader_program_registry_->get(1));
 
-    game_object_factory_ =
-        std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(), *shader_program_registry_);
+    game_object_factory_ = std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(),
+                                                               *shader_program_registry_);
+
     game_object_factory_->create_spaceship();
 
-    camera_ =
-        std::make_unique<Camera>(key_event_dispatcher_.keyboard(), shader_program_registry_->get(0), "camera_matrix");
+    camera_ = std::make_unique<Camera>(key_event_dispatcher_.keyboard(),
+                                       shader_program_registry_->get(0),
+                                       "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);

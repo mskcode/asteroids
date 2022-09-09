@@ -9,11 +9,10 @@ namespace engine {
 class KeyState final {
 public:
     [[nodiscard]] auto is_down() const -> bool { return down_; }
-
     void set_down(bool down) { down_ = down; }
 
 private:
-    bool down_ = false;
+    bool down_{false};
 };
 
 class Keyboard final {

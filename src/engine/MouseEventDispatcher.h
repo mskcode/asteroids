@@ -1,7 +1,9 @@
 #ifndef ENGINE_MOUSEEVENTDISPATCHER_H
 #define ENGINE_MOUSEEVENTDISPATCHER_H
 
+#include "Mouse.h"
 #include "Window.h"
+#include <functional>
 
 namespace engine {
 
@@ -32,9 +34,9 @@ public:
         xpos_(xpos),
         ypos_(ypos) {}
 
-    [[nodiscard]] auto get_window() const -> GLFWwindow* { return window_; }
-    [[nodiscard]] auto get_xpos() const -> double { return xpos_; }
-    [[nodiscard]] auto get_ypos() const -> double { return ypos_; }
+    [[nodiscard]] auto window() const -> GLFWwindow* { return window_; }
+    [[nodiscard]] auto xpos() const -> double { return xpos_; }
+    [[nodiscard]] auto ypos() const -> double { return ypos_; }
 
 private:
     GLFWwindow* window_;
@@ -52,11 +54,15 @@ public:
     auto operator=(const MouseEventDispatcher&) -> MouseEventDispatcher& = delete;
     auto operator=(MouseEventDispatcher&&) noexcept -> MouseEventDispatcher& = delete;
 
+    void register_listener(std::function<void(const MouseButtonEvent&)> listener);
+    void register_listener(std::function<void(const MousePositionEvent&)> listener);
     void dispatch_event(const MouseButtonEvent& event);
     void dispatch_event(const MousePositionEvent& event);
 
 private:
+    Mouse mouse_;
     std::vector<std::function<void(const MouseButtonEvent&)>> button_listeners_;
+    std::vector<std::function<void(const MousePositionEvent&)>> position_listeners_;
 };
 
 } // namespace engine

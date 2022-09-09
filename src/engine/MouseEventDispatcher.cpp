@@ -28,6 +28,29 @@ MouseEventDispatcher::MouseEventDispatcher(const Window& window) {
     g_mouse_event_dispatcher = this;
 }
 
-void MouseEventDispatcher::dispatch_event([[maybe_unused]] const MouseButtonEvent& event) {}
+void MouseEventDispatcher::register_listener(std::function<void(const MouseButtonEvent&)> listener) {
+    button_listeners_.push_back(listener);
+}
 
-void MouseEventDispatcher::dispatch_event([[maybe_unused]] const MousePositionEvent& event) {}
+void MouseEventDispatcher::register_listener(std::function<void(const MousePositionEvent&)> listener) {
+    position_listeners_.push_back(listener);
+}
+
+void MouseEventDispatcher::dispatch_event(const MouseButtonEvent& event) {
+    if (event.action() == GLFW_PRESS) {
+        mouse_[event.button()].set_down(true);
+    } else if (event.action() == GLFW_RELEASE) {
+        mouse_[event.button()].set_down(false);
+    }
+
+    for (auto& listener : button_listeners_) {
+        listener(event);
+    }
+}
+
+void MouseEventDispatcher::dispatch_event(const MousePositionEvent& event) {
+    mouse_.set_position(event.xpos(), event.ypos());
+    for (auto& listener : position_listeners_) {
+        listener(event);
+    }
+}
