@@ -30,15 +30,9 @@ MouseEventDispatcher::MouseEventDispatcher(const Window& window) {
         glfwSetInputMode(window.window_pointer(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
 
+    // register callbacks
     glfwSetCursorPosCallback(window.window_pointer(), ::mouse_position_callback);
     glfwSetMouseButtonCallback(window.window_pointer(), ::mouse_button_callback);
-
-    {
-        double x;
-        double y;
-        glfwGetCursorPos(window.window_pointer(), &x, &y);
-        mouse_.set_initial_position({x, y});
-    }
 
     g_mouse_event_dispatcher = this;
 }
@@ -68,6 +62,13 @@ void MouseEventDispatcher::dispatch_event(const MouseButtonEvent& event) {
 }
 
 void MouseEventDispatcher::dispatch_event(const MousePositionEvent& event) {
+    // the first mouse movements can jump wildly due to unknown reasons;
+    // ignore the first few events just because of this
+    ++position_event_count_;
+    if (position_event_count_ < 3) {
+        return;
+    }
+
     mouse_.set_position({event.xpos(), event.ypos()});
     for (auto& listener : position_listeners_) {
         listener(event);

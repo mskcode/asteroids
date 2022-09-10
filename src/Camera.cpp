@@ -5,11 +5,17 @@
 
 using namespace game;
 
-static auto compute_camera_direction_offset(engine::Point2DD last, engine::Point2DD current) -> engine::Point2DD {
-    double x_offset = current.x - last.x;
-    double y_offset = last.y - current.y; // reversed since y-coords range from bottom to top
+static auto compute_camera_direction_offset(engine::Point2DL last, engine::Point2DL current, float sensitivity)
+    -> engine::Point2DF {
+    if (last.x == 0 && last.y == 0) {
+        // when last position if dead zero, assume that the (mouse) position
+        // hasn't been updated correctly yet
+        return {0.0f, 0.0f};
+    }
 
-    constexpr float sensitivity = 0.01f;
+    auto x_offset = static_cast<float>(current.x - last.x);
+    auto y_offset = static_cast<float>(last.y - current.y); // reversed since y-coords range from bottom to top
+
     x_offset = x_offset * sensitivity;
     y_offset = y_offset * sensitivity;
 
@@ -38,10 +44,10 @@ Camera::Camera(const engine::Keyboard& keyboard,
 
 void Camera::update() {
     auto current_mouse_position = mouse_.position();
-    auto offset = compute_camera_direction_offset(last_mouse_position_, current_mouse_position);
+    auto offset = compute_camera_direction_offset(last_mouse_position_, current_mouse_position, sensitivity_);
     last_mouse_position_ = current_mouse_position;
 
-    yaw_ += (float)offset.x;
+    yaw_ += offset.x;
     pitch_ += (float)offset.y;
     pitch_ = clamp(pitch_, -89.0f, 89.0f);
 

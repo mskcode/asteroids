@@ -31,17 +31,17 @@ class MousePositionEvent final {
 public:
     MousePositionEvent(GLFWwindow* window, double xpos, double ypos) :
         window_(window),
-        xpos_(xpos),
-        ypos_(ypos) {}
+        x_(xpos),
+        y_(ypos) {}
 
     [[nodiscard]] auto window() const -> GLFWwindow* { return window_; }
-    [[nodiscard]] auto xpos() const -> double { return xpos_; }
-    [[nodiscard]] auto ypos() const -> double { return ypos_; }
+    [[nodiscard]] auto xpos() const -> long { return x_; }
+    [[nodiscard]] auto ypos() const -> long { return y_; }
 
 private:
     GLFWwindow* window_;
-    double xpos_;
-    double ypos_;
+    long x_;
+    long y_;
 };
 
 class MouseEventDispatcher final {
@@ -65,6 +65,7 @@ private:
     Mouse mouse_;
     std::vector<std::function<void(const MouseButtonEvent&)>> button_listeners_;
     std::vector<std::function<void(const MousePositionEvent&)>> position_listeners_;
+    uint64_t position_event_count_{0};
 };
 
 } // namespace engine

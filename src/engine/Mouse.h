@@ -29,14 +29,11 @@ public:
     auto operator[](int key) -> MouseButtonState&;
     auto operator[](int key) const -> const MouseButtonState&;
 
-    [[nodiscard]] auto position() const -> Point2DD;
-
-    void set_initial_position(Point2DD point);
-    void set_position(Point2DD point);
+    [[nodiscard]] auto position() const -> Point2DL;
+    void set_position(Point2DL point);
 
 private:
-    Point2DD initial_; // position when program starts
-    Point2DD current_; // current position
+    Point2DL current_; // current position
     std::array<MouseButtonState, GLFW_MOUSE_BUTTON_LAST> button_states_;
 };
 

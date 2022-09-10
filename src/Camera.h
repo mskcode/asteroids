@@ -46,7 +46,8 @@ private:
     float near_plane_{0.1f};
     float far_plane_{100.0f};
     bool shader_update_needed_{true};
-    engine::Point2DD last_mouse_position_;
+    engine::Point2DL last_mouse_position_;
+    float sensitivity_{0.05f};
 };
 
 } // namespace game

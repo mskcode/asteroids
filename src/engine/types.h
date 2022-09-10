@@ -9,8 +9,13 @@
 namespace engine {
 
 struct Point2D final {
-    uint32_t x{0};
-    uint32_t y{0};
+    int32_t x{0};
+    int32_t y{0};
+};
+
+struct Point2DF final {
+    float x{0};
+    float y{0};
 };
 
 struct Point2DD final {
@@ -18,9 +23,14 @@ struct Point2DD final {
     double y{0};
 };
 
+struct Point2DL final {
+    int64_t x{0};
+    int64_t y{0};
+};
+
 struct Dimensions2D final {
-    uint32_t width{0};
-    uint32_t height{0};
+    int32_t width{0};
+    int32_t height{0};
 };
 
 struct Rectangle final {
