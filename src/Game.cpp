@@ -69,6 +69,7 @@ void Game::initialize() {
     game_object_factory_->create_spaceship();
 
     camera_ = std::make_unique<Camera>(key_event_dispatcher_.keyboard(),
+                                       mouse_event_dispatcher_.mouse(),
                                        shader_program_registry_->get(0),
                                        "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());

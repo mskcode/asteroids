@@ -54,6 +54,8 @@ public:
     auto operator=(const MouseEventDispatcher&) -> MouseEventDispatcher& = delete;
     auto operator=(MouseEventDispatcher&&) noexcept -> MouseEventDispatcher& = delete;
 
+    [[nodiscard]] auto mouse() const -> const Mouse&;
+
     void register_listener(std::function<void(const MouseButtonEvent&)> listener);
     void register_listener(std::function<void(const MousePositionEvent&)> listener);
     void dispatch_event(const MouseButtonEvent& event);

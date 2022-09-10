@@ -9,12 +9,12 @@ static MouseEventDispatcher* g_mouse_event_dispatcher;
 namespace {
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
+    // dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
     g_mouse_event_dispatcher->dispatch_event({window, xpos, ypos});
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    dbgfln("Mouse button event: button=%d, action=%d, mods=%d", button, action, mods);
+    // dbgfln("Mouse button event: button=%d, action=%d, mods=%d", button, action, mods);
     g_mouse_event_dispatcher->dispatch_event({window, button, action, mods});
 }
 
@@ -26,6 +26,10 @@ MouseEventDispatcher::MouseEventDispatcher(const Window& window) {
     glfwSetCursorPosCallback(window.window_pointer(), ::mouse_position_callback);
     glfwSetMouseButtonCallback(window.window_pointer(), ::mouse_button_callback);
     g_mouse_event_dispatcher = this;
+}
+
+auto MouseEventDispatcher::mouse() const -> const Mouse& {
+    return mouse_;
 }
 
 void MouseEventDispatcher::register_listener(std::function<void(const MouseButtonEvent&)> listener) {

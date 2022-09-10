@@ -13,6 +13,11 @@ struct Point2D final {
     uint32_t y{0};
 };
 
+struct Point2DD final {
+    double x{0};
+    double y{0};
+};
+
 struct Dimensions2D final {
     uint32_t width{0};
     uint32_t height{0};
@@ -42,14 +47,14 @@ public:
     static constexpr Color NeonGreen{0.5f, 0.8f, 0.2f};
 };
 
-struct Point3D {
+struct Point3DF {
     GLfloat x{0};
     GLfloat y{0};
     GLfloat z{0};
 };
 
 struct Vertex {
-    Point3D point;
+    Point3DF point;
     Color color;
 };
 

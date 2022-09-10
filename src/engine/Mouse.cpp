@@ -10,6 +10,10 @@ auto Mouse::operator[](int key) const -> const MouseButtonState& {
     return button_states_[key];
 }
 
+auto Mouse::position() const -> Point2DD {
+    return {x_position_, y_position_};
+}
+
 auto Mouse::x_position() const -> double {
     return x_position_;
 }

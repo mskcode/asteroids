@@ -3,6 +3,7 @@
 
 #include "Updateable.h"
 #include "engine/Keyboard.h"
+#include "engine/Mouse.h"
 #include "engine/ShaderProgram.h"
 #include "engine/types.h"
 #include <glm/vec3.hpp>
@@ -14,6 +15,7 @@ namespace game {
 class Camera final : public Updateable {
 public:
     Camera(const engine::Keyboard& keyboard,
+           const engine::Mouse& mouse,
            const engine::ShaderProgram& shader_program,
            std::string shader_camera_matrix_name);
     Camera(const Camera&) = delete;
@@ -29,6 +31,7 @@ public:
 
 private:
     const engine::Keyboard& keyboard_;
+    const engine::Mouse& mouse_;
     const engine::ShaderProgram& shader_program_;
     const std::string shader_camera_matrix_name_;
     engine::Dimensions2D window_dimensions_;
@@ -37,12 +40,13 @@ private:
     glm::vec3 up_{0.0f, 1.0f, 0.0f};
     glm::vec3 world_up_{0.0f, 1.0f, 0.0f};
     glm::vec3 right_{0.0f, 0.0f, 0.0f};
-    float pitch_{0.0f};
-    float yaw_{-90.0f};
+    float pitch_{0.0f}; // how much we're looking up or down
+    float yaw_{-90.0f}; // magnitude of looking left or right
     float field_of_view_degrees_{45.0f};
     float near_plane_{0.1f};
     float far_plane_{100.0f};
     bool shader_update_needed_{true};
+    engine::Point2DD last_mouse_position_;
 };
 
 } // namespace game

@@ -2,6 +2,7 @@
 #define ENGINE_MOUSE_H
 
 #include "opengl.h"
+#include "types.h"
 #include <array>
 
 namespace engine {
@@ -28,6 +29,7 @@ public:
     auto operator[](int key) -> MouseButtonState&;
     auto operator[](int key) const -> const MouseButtonState&;
 
+    [[nodiscard]] auto position() const -> Point2DD;
     [[nodiscard]] auto x_position() const -> double;
     [[nodiscard]] auto y_position() const -> double;
 
