@@ -10,7 +10,7 @@
 
     mkdir -p build/debug
     cd build/debug
-    cmake ../.. -DCMAKE_BUILD_TYPE=Debug
+    cmake ../.. -DCMAKE_BUILD_TYPE=Debug -G "Ninja"
     make
 
 After the build completes (`make` in this case), the application executable
