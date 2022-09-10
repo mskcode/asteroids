@@ -9,7 +9,7 @@ static MouseEventDispatcher* g_mouse_event_dispatcher;
 namespace {
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    // dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
+    dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
     g_mouse_event_dispatcher->dispatch_event({window, xpos, ypos});
 }
 
@@ -21,10 +21,25 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 } // namespace
 
 MouseEventDispatcher::MouseEventDispatcher(const Window& window) {
-    // capture mouse pointer
+    // hide mouse pointer
     glfwSetInputMode(window.window_pointer(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // enable raw mouse input when supported
+    if (glfwRawMouseMotionSupported() == GLFW_TRUE) {
+        dbgln("Enabling raw mouse input");
+        glfwSetInputMode(window.window_pointer(), GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
+
     glfwSetCursorPosCallback(window.window_pointer(), ::mouse_position_callback);
     glfwSetMouseButtonCallback(window.window_pointer(), ::mouse_button_callback);
+
+    {
+        double x;
+        double y;
+        glfwGetCursorPos(window.window_pointer(), &x, &y);
+        mouse_.set_initial_position({x, y});
+    }
+
     g_mouse_event_dispatcher = this;
 }
 
@@ -53,7 +68,7 @@ void MouseEventDispatcher::dispatch_event(const MouseButtonEvent& event) {
 }
 
 void MouseEventDispatcher::dispatch_event(const MousePositionEvent& event) {
-    mouse_.set_position(event.xpos(), event.ypos());
+    mouse_.set_position({event.xpos(), event.ypos()});
     for (auto& listener : position_listeners_) {
         listener(event);
     }

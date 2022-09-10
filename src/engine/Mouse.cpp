@@ -11,18 +11,16 @@ auto Mouse::operator[](int key) const -> const MouseButtonState& {
 }
 
 auto Mouse::position() const -> Point2DD {
-    return {x_position_, y_position_};
+    return current_;
 }
 
-auto Mouse::x_position() const -> double {
-    return x_position_;
+void Mouse::set_initial_position(Point2DD point) {
+    initial_ = point;
 }
 
-auto Mouse::y_position() const -> double {
-    return y_position_;
-}
-
-void Mouse::set_position(double x, double y) {
-    x_position_ = x;
-    y_position_ = y;
+void Mouse::set_position(Point2DD point) {
+    // compute the normalized position
+    // the origin point is { 0, 0 }
+    current_.x = -(initial_.x - point.x);
+    current_.y = -(initial_.y - point.y);
 }
