@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "ServiceLocator.h"
 #include "TickLimiter.h"
+#include "engine/MouseKeyboardCameraDirector.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -67,11 +68,11 @@ void Game::initialize() {
                                                                *shader_program_registry_);
 
     game_object_factory_->create_spaceship();
+    
+    camera_director_ = std::make_unique<engine::MouseKeyboardCameraDirector>(mouse_event_dispatcher_.mouse(),
+                                                                             key_event_dispatcher_.keyboard());
 
-    camera_ = std::make_unique<Camera>(key_event_dispatcher_.keyboard(),
-                                       mouse_event_dispatcher_.mouse(),
-                                       shader_program_registry_->get(0),
-                                       "camera_matrix");
+    camera_ = std::make_unique<Camera>(*camera_director_, shader_program_registry_->get(0), "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);
@@ -88,7 +89,7 @@ void Game::loop() {
 
     while (!stop_requested_ && !window_.should_close()) {
         if (update_tick_limiter.should_tick()) {
-            camera_->update();
+            camera_director_->update();
             for (auto* updateable : game_object_factory_->updateables()) {
                 updateable->update();
             }

@@ -3,6 +3,7 @@
 
 #include "GameObjectFactory.h"
 #include "Renderer.h"
+#include "engine/CameraDirector.h"
 #include "engine/FontManager.h"
 #include "engine/KeyEventDispatcher.h"
 #include "engine/MouseEventDispatcher.h"
@@ -29,6 +30,7 @@ private:
     std::unique_ptr<engine::FontBitmapCache> font_bitmap_cache_;
     std::unique_ptr<engine::TextRenderer> renderable_text_;
     std::unique_ptr<Camera> camera_;
+    std::unique_ptr<engine::CameraDirector> camera_director_;
     bool stop_requested_ = false;
 };
 

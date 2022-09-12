@@ -29,7 +29,7 @@ private:
 
 class MousePositionEvent final {
 public:
-    MousePositionEvent(GLFWwindow* window, double xpos, double ypos) :
+    MousePositionEvent(GLFWwindow* window, long xpos, long ypos) :
         window_(window),
         x_(xpos),
         y_(ypos) {}
