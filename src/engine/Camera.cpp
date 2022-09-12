@@ -1,12 +1,12 @@
 #include "Camera.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
-#include <glm/mat4x4.hpp>
+#include "glm/mat4x4.hpp"
 
-using namespace game;
+using namespace engine;
 
-Camera::Camera(const engine::CameraDirector& camera_director,
-               const engine::ShaderProgram& shader_program,
+Camera::Camera(const CameraDirector& camera_director,
+               const ShaderProgram& shader_program,
                std::string shader_camera_matrix_name) :
     camera_director_(camera_director),
     shader_program_(shader_program),
@@ -33,6 +33,6 @@ void Camera::update_shader_matrix() {
     shader_program_.unbind();
 }
 
-void Camera::set_window_dimensions(engine::Dimensions2D window_dimensions) {
+void Camera::set_window_dimensions(Dimensions2D window_dimensions) {
     window_dimensions_ = window_dimensions;
 }
