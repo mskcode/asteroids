@@ -4,16 +4,20 @@
 
 ### Cloning repository
 
-    git clone --recurse-submodules https://github.com/mskcode/game.git
+```shell
+git clone --recurse-submodules https://github.com/mskcode/game.git
+```
 
 ### Building binaries
 
-    mkdir -p build/debug
-    cd build/debug
-    cmake ../.. -DCMAKE_BUILD_TYPE=Debug -G "Ninja"
-    make
+```shell
+mkdir -p build/debug
+cd build/debug
+cmake ../.. -DCMAKE_BUILD_TYPE=Debug -G "Ninja"
+ninja
+```
 
-After the build completes (`make` in this case), the application executable
+After the build completes (`ninja` in this case), the application executable
 proper (`game`) and unit test executable (`asteroids_test`) can be found
 from `./bin` directory.
 
