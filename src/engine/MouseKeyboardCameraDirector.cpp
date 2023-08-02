@@ -8,7 +8,7 @@ namespace {
 static auto compute_camera_direction_offset(engine::Point2DL last, engine::Point2DL current, float sensitivity)
     -> engine::Point2DF {
     if (last.x == 0 && last.y == 0) {
-        // when last position if dead zero, assume that the (mouse) position
+        // when last position is dead zero, assume that the (mouse) position
         // hasn't been updated correctly yet
         return {0.0f, 0.0f};
     }
