@@ -8,23 +8,25 @@ set(LINK_LIBRARY_TARGETS dl freetype glad glfw glm linmath)
 add_executable(${BINARY} ${SOURCES})
 target_compile_options(${BINARY} PRIVATE
         -Wall
+        -Wno-unused
         -Werror
         -Wextra
         -Wpedantic
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
-        )
+)
 target_link_libraries(${BINARY} PUBLIC ${LINK_LIBRARY_TARGETS})
 
 add_library(${BINARY}_lib STATIC ${SOURCES})
 target_compile_options(${BINARY}_lib PRIVATE
         -Wall
+        -Wno-unused
         -Werror
         -Wextra
         -Wpedantic
         $<$<CONFIG:Debug>:-O0>
         $<$<CONFIG:Release>:-O3>
-        )
+)
 target_link_libraries(${BINARY}_lib PUBLIC ${LINK_LIBRARY_TARGETS})
 
 add_custom_command(TARGET ${BINARY} PRE_BUILD
