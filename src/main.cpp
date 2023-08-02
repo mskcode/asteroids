@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <exception>
 
-auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
+auto main(int argc, char** argv) -> int {
     using namespace game;
 
     engine::GlfwContext glfw_context;
@@ -20,8 +20,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) -> int {
             .window_size = {.width = 1024, .height = 768},
             .resizable = false,
         });
-        signal_handler.register_listener([&window]([[maybe_unused]] auto signal) -> void { window.close(); },
-                                         {SIGINT, SIGTERM});
+        signal_handler.register_listener([&window](auto signal) -> void { window.close(); }, {SIGINT, SIGTERM});
 
         Game game{window};
         game.initialize();

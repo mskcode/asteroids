@@ -5,6 +5,7 @@ Checks: >
   clang-analyzer-*,
   bugprone-*,
   -bugprone-easily-swappable-parameters,modernize-*,
+  -misc-unused-parameters,
   performance-*,
   readability-*,
   -readability-identifier-length,
