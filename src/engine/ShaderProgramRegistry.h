@@ -1,5 +1,4 @@
-#ifndef ENGINE_SHADERREGISTRY_H
-#define ENGINE_SHADERREGISTRY_H
+#pragma once
 
 #include "ShaderProgram.h"
 #include <vector>
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_SHADERREGISTRY_H

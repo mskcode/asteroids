@@ -1,5 +1,4 @@
-#ifndef GAME_RENDERER_H
-#define GAME_RENDERER_H
+#pragma once
 
 #include "GameObjectFactory.h"
 #include "Renderable.h"
@@ -37,5 +36,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_RENDERER_H

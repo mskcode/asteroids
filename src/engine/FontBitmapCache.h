@@ -1,5 +1,4 @@
-#ifndef ENGINE_FONTBITMAPMAP_H
-#define ENGINE_FONTBITMAPMAP_H
+#pragma once
 
 #include "Font.h"
 #include "freetype.h"
@@ -60,5 +59,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_FONTBITMAPMAP_H

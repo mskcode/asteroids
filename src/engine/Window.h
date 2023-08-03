@@ -1,5 +1,4 @@
-#ifndef ENGINE_WINDOW_H
-#define ENGINE_WINDOW_H
+#pragma once
 
 #include "KeyEvent.h"
 #include "opengl.h"
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_WINDOW_H

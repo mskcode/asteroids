@@ -1,5 +1,4 @@
-#ifndef GAME_TICKLIMITER_H
-#define GAME_TICKLIMITER_H
+#pragma once
 
 #include "common/timeutils.h"
 #include <cstdint>
@@ -20,5 +19,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_TICKLIMITER_H

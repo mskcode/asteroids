@@ -1,5 +1,4 @@
-#ifndef ENGINE_FONTMANAGER_H
-#define ENGINE_FONTMANAGER_H
+#pragma once
 
 #include "Font.h"
 #include "FontBitmapCache.h"
@@ -25,5 +24,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_FONTMANAGER_H

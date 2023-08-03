@@ -1,5 +1,4 @@
-#ifndef GAME_RENDERABLE_H
-#define GAME_RENDERABLE_H
+#pragma once
 
 namespace game {
 
@@ -9,5 +8,3 @@ public:
 };
 
 } // namespace game
-
-#endif // GAME_RENDERABLE_H

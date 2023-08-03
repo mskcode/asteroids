@@ -1,5 +1,4 @@
-#ifndef ENGINE_OPENGLEXCEPTION_H
-#define ENGINE_OPENGLEXCEPTION_H
+#pragma once
 
 #include <exception>
 #include <stdexcept>
@@ -24,12 +23,15 @@ inline void check_error(const char* statement, const char* filename, int line) {
     if (glGetError() == GL_NO_ERROR) {
         return;
     }
-    
+
     GLenum status;
     std::string error_message;
     while ((status = glGetError()) != GL_NO_ERROR) {
-        error_message +=
-            common::str::format("OpenGL error %08x, at %s:%i - for %s\n", status, filename, line, statement);
+        error_message += common::str::format("OpenGL error %08x, at %s:%i - for %s\n",
+                                             status,
+                                             filename,
+                                             line,
+                                             statement);
     }
     throw OpenglException(error_message, filename, line);
 }
@@ -46,5 +48,3 @@ inline void check_error(const char* statement, const char* filename, int line) {
 #endif
 
 } // namespace engine::opengl
-
-#endif // ENGINE_OPENGLEXCEPTION_H

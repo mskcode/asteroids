@@ -1,5 +1,4 @@
-#ifndef GAME_PHYSICSCOMPONENT_H
-#define GAME_PHYSICSCOMPONENT_H
+#pragma once
 
 #include "GameComponent.h"
 
@@ -13,5 +12,3 @@ public:
 };
 
 } // namespace game
-
-#endif // GAME_PHYSICSCOMPONENT_H

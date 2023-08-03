@@ -1,5 +1,4 @@
-#ifndef GAME_SERVICELOCATOR_H
-#define GAME_SERVICELOCATOR_H
+#pragma once
 
 #include "engine/KeyEventDispatcher.h"
 #include "engine/ShaderProgramRegistry.h"
@@ -24,5 +23,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_SERVICELOCATOR_H

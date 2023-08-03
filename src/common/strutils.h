@@ -1,5 +1,4 @@
-#ifndef COMMON_STRUTILS_H
-#define COMMON_STRUTILS_H
+#pragma once
 
 #include <cerrno>
 #include <cstring>
@@ -24,5 +23,3 @@ auto format(const std::string& format, Args... args) -> std::string {
 }
 
 } // namespace common::str
-
-#endif //  COMMON_STRUTILS_H

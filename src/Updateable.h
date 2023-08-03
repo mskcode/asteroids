@@ -1,5 +1,4 @@
-#ifndef GAME_UPDATEABLE_H
-#define GAME_UPDATEABLE_H
+#pragma once
 
 namespace game {
 
@@ -9,5 +8,3 @@ public:
 };
 
 } // namespace game
-
-#endif // GAME_UPDATEABLE_H

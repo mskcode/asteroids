@@ -1,5 +1,4 @@
-#ifndef ENGINE_FONT_H
-#define ENGINE_FONT_H
+#pragma once
 
 #include "freetype.h"
 #include <memory>
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_FONT_H

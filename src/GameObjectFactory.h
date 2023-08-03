@@ -1,5 +1,4 @@
-#ifndef GAME_GAMEOBJECTFACTORY_H
-#define GAME_GAMEOBJECTFACTORY_H
+#pragma once
 
 #include "GameActor.h"
 #include "engine/Keyboard.h"
@@ -25,5 +24,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_GAMEOBJECTFACTORY_H

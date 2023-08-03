@@ -1,5 +1,4 @@
-#ifndef ENGINE_KEYBOARD_H
-#define ENGINE_KEYBOARD_H
+#pragma once
 
 #include "opengl.h"
 #include <array>
@@ -33,5 +32,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_KEYBOARD_H

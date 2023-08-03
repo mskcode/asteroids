@@ -1,5 +1,4 @@
-#ifndef ENGINE_SHADERPROGRAM_H
-#define ENGINE_SHADERPROGRAM_H
+#pragma once
 
 #include "Shader.h"
 #include "glm/vec3.hpp"
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_SHADERPROGRAM_H

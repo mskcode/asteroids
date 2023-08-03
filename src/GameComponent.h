@@ -1,5 +1,4 @@
-#ifndef GAME_GAMECOMPONENT_H
-#define GAME_GAMECOMPONENT_H
+#pragma once
 
 namespace game {
 
@@ -9,5 +8,3 @@ public:
 };
 
 } // namespace game
-
-#endif // GAME_GAMECOMPONENT_H

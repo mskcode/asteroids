@@ -1,8 +1,8 @@
-#ifndef GAME_KEYBOARDINPUTCOMPONENT_H
-#define GAME_KEYBOARDINPUTCOMPONENT_H
+#pragma once
 
 #include "InputComponent.h"
 #include "engine/Keyboard.h"
+
 namespace game {
 
 class KeyboardInputComponent : public InputComponent {
@@ -19,5 +19,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_KEYBOARDINPUTCOMPONENT_H

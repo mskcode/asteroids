@@ -1,5 +1,4 @@
-#ifndef ENGINE_KEYEVENTDISPATCHER_H
-#define ENGINE_KEYEVENTDISPATCHER_H
+#pragma once
 
 #include "Keyboard.h"
 #include "Window.h"
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_KEYEVENTDISPATCHER_H

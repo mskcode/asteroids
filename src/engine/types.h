@@ -1,5 +1,4 @@
-#ifndef ENGINE_TYPES_H
-#define ENGINE_TYPES_H
+#pragma once
 
 #include "opengl.h"
 #include <cstdint>
@@ -69,5 +68,3 @@ struct Vertex {
 };
 
 } // namespace engine
-
-#endif // ENGINE_TYPES_H

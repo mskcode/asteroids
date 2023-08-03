@@ -1,5 +1,4 @@
-#ifndef ENGINE_CAMERA_H
-#define ENGINE_CAMERA_H
+#pragma once
 
 #include "CameraDirector.h"
 #include "Keyboard.h"
@@ -38,5 +37,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_CAMERA_H

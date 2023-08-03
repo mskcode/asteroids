@@ -1,5 +1,4 @@
-#ifndef ENGINE_RENDERABLEOBJECT_H
-#define ENGINE_RENDERABLEOBJECT_H
+#pragma once
 
 #include "../common/debug.h"
 #include "ShaderProgramRegistry.h"
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_RENDERABLEOBJECT_H

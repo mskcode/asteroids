@@ -1,5 +1,4 @@
-#ifndef ENGINE_VERTEXBUFFEROBJECT_H
-#define ENGINE_VERTEXBUFFEROBJECT_H
+#pragma once
 
 #include "opengl.h"
 #include <array>
@@ -45,5 +44,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_VERTEXBUFFEROBJECT_H

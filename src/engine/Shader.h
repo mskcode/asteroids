@@ -1,5 +1,4 @@
-#ifndef ENGINE_SHADER_H
-#define ENGINE_SHADER_H
+#pragma once
 
 #include "opengl.h"
 #include <string>
@@ -41,5 +40,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_SHADER_H

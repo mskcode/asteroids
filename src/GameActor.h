@@ -1,5 +1,4 @@
-#ifndef GAME_GAMEACTOR_H
-#define GAME_GAMEACTOR_H
+#pragma once
 
 #include "GraphicsComponent.h"
 #include "InputComponent.h"
@@ -55,5 +54,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_GAMEACTOR_H

@@ -1,5 +1,4 @@
-#ifndef GAME_MOONPHYSICSCOMPONENT_H
-#define GAME_MOONPHYSICSCOMPONENT_H
+#pragma once
 
 #include "PhysicsComponent.h"
 
@@ -13,5 +12,3 @@ public:
 };
 
 } // namespace game
-
-#endif // GAME_MOONPHYSICSCOMPONENT_H

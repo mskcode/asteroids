@@ -1,5 +1,4 @@
-#ifndef ENGINE_GLFWCONTEXT_H
-#define ENGINE_GLFWCONTEXT_H
+#pragma once
 
 namespace engine {
 
@@ -18,5 +17,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_GLFWCONTEXT_H

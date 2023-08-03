@@ -1,5 +1,4 @@
-#ifndef ENGINE_CAMERADIRECTOR_H
-#define ENGINE_CAMERADIRECTOR_H
+#pragma once
 
 #include <glm/vec3.hpp>
 
@@ -15,9 +14,6 @@ public:
     [[nodiscard]] virtual auto right() const -> glm::vec3 = 0;
     [[nodiscard]] virtual auto up() const -> glm::vec3 = 0;
     [[nodiscard]] virtual auto position() const -> glm::vec3 = 0;
-
 };
 
 } // namespace engine
-
-#endif // ENGINE_CAMERADIRECTOR_H

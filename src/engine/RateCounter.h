@@ -1,5 +1,4 @@
-#ifndef ENGINE_RATECOUNTER_H
-#define ENGINE_RATECOUNTER_H
+#pragma once
 
 #include "../common/timeutils.h"
 #include <cstdint>
@@ -19,5 +18,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_RATECOUNTER_H

@@ -1,5 +1,4 @@
-#ifndef COMMON_TIME_H
-#define COMMON_TIME_H
+#pragma once
 
 #include <array>
 #include <chrono>
@@ -159,5 +158,3 @@ private:
 };
 
 } // namespace common::time
-
-#endif //  COMMON_TIME_H

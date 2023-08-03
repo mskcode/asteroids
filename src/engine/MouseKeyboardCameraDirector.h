@@ -1,5 +1,4 @@
-#ifndef ENGINE_MOUSEKEYBOARDCAMERADIRECTOR_H
-#define ENGINE_MOUSEKEYBOARDCAMERADIRECTOR_H
+#pragma once
 
 #include "CameraDirector.h"
 #include "Keyboard.h"
@@ -34,5 +33,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_MOUSEKEYBOARDCAMERADIRECTOR_H

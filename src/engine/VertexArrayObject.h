@@ -1,5 +1,4 @@
-#ifndef ENGINE_VERTEXARRAYOBJECT_H
-#define ENGINE_VERTEXARRAYOBJECT_H
+#pragma once
 
 #include "ElementBufferObject.h"
 #include "ShaderProgram.h"
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_VERTEXARRAYOBJECT_H

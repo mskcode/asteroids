@@ -1,5 +1,4 @@
-#ifndef COMMON_DEBUG_H
-#define COMMON_DEBUG_H
+#pragma once
 
 #include "strutils.h"
 #include <cstdio>
@@ -44,5 +43,3 @@ constexpr auto file_name(const char* path) -> const char* {
 // clang-format on
 
 #endif // NDEBUG
-
-#endif //  COMMON_DEBUG_H

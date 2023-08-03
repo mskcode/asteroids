@@ -1,5 +1,4 @@
-#ifndef GAME_GRAPHICSCOMPONENT_H
-#define GAME_GRAPHICSCOMPONENT_H
+#pragma once
 
 #include "GameComponent.h"
 #include "engine/RenderableObject.h"
@@ -19,5 +18,3 @@ private:
 };
 
 } // namespace game
-
-#endif // GAME_GRAPHICSCOMPONENT_H

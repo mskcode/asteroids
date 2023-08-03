@@ -1,5 +1,4 @@
-#ifndef ENGINE_MOUSE_H
-#define ENGINE_MOUSE_H
+#pragma once
 
 #include "opengl.h"
 #include "types.h"
@@ -38,5 +37,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_MOUSE_H

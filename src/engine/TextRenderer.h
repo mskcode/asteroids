@@ -1,5 +1,4 @@
-#ifndef ENGINE_TEXTRENDERER_H
-#define ENGINE_TEXTRENDERER_H
+#pragma once
 
 #include "../common/debug.h"
 #include "FontBitmapCache.h"
@@ -28,5 +27,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_TEXTRENDERER_H

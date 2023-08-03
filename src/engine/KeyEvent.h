@@ -1,5 +1,4 @@
-#ifndef ENGINE_KEYEVENT_H
-#define ENGINE_KEYEVENT_H
+#pragma once
 
 #include "opengl.h"
 
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_KEYEVENT_H

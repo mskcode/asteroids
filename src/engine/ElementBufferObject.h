@@ -1,5 +1,4 @@
-#ifndef ENGINE_ELEMENTBUFFEROBJECT_H
-#define ENGINE_ELEMENTBUFFEROBJECT_H
+#pragma once
 
 #include "opengl.h"
 #include <array>
@@ -42,5 +41,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_ELEMENTBUFFEROBJECT_H

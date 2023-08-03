@@ -1,5 +1,4 @@
-#ifndef ENGINE_MOUSEEVENTDISPATCHER_H
-#define ENGINE_MOUSEEVENTDISPATCHER_H
+#pragma once
 
 #include "Mouse.h"
 #include "Window.h"
@@ -69,5 +68,3 @@ private:
 };
 
 } // namespace engine
-
-#endif // ENGINE_MOUSEEVENTDISPATCHER_H
