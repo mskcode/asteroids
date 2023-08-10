@@ -1,10 +1,10 @@
 #include "fileutils.h"
-#include "debug.h"
+#include "assertions.h"
 #include <fstream>
 
 auto common::file::read_file(const std::string_view path) -> std::string {
     auto stream = std::ifstream(path.data());
-    xassertf(stream.good(), "Could not open file %s", path.data());
+    XASSERTF(stream.good(), "Could not open file %s", path.data());
     stream.exceptions(std::ios_base::badbit);
 
     constexpr auto read_size = std::size_t(4096);
