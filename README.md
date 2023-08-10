@@ -21,6 +21,15 @@ After the build completes (`ninja` in this case), the application executable
 proper (`game`) and unit test executable (`asteroids_test`) can be found
 from `./bin` directory.
 
+### Adding Git submodules
+
+```shell
+cd submodules
+git submodule add <repository_url>
+```
+
+Add the newly added submodule to `CMakeLists.txt` file in this root directory.
+
 ## TODO
 
 * [ ] Some kind of logging setup would be nice.
