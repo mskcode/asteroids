@@ -1,10 +1,17 @@
 #pragma once
 
+#include "../common/strutils.h"
 #include <exception>
+#include <fmt/core.h>
 #include <stdexcept>
 #include <string>
 
+// clang-format off
+
 #define throw_gl(msg) throw engine::opengl::OpenglException(msg, __FILE__, __LINE__)
+#define throwf_gl(msg, ...) throw engine::opengl::OpenglException(fmt::format(msg, __VA_ARGS__), __FILE__, __LINE__)
+
+// clang-format on
 
 namespace engine::opengl {
 
