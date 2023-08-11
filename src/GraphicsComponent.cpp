@@ -27,14 +27,14 @@ static auto generate_vertex_data(const Coordinates2D& position) -> std::array<en
 
     return {{
         {{position.x, position.y, 0.0f}, color1, texture_coordinates[0]},               // front, bottom, left
-        {{position.x + 0.2f, position.y, 0.0f}, color1, texture_coordinates[0]},        // front, bottom, right
-        {{position.x + 0.2f, position.y + 0.2f, 0.0f}, color1, texture_coordinates[0]}, // front, top, right
-        {{position.x, position.y + 0.2f, 0.0f}, color1, texture_coordinates[0]},        // front, top, left
+        {{position.x + 0.2f, position.y, 0.0f}, color1, texture_coordinates[1]},        // front, bottom, right
+        {{position.x + 0.2f, position.y + 0.2f, 0.0f}, color1, texture_coordinates[2]}, // front, top, right
+        {{position.x, position.y + 0.2f, 0.0f}, color1, texture_coordinates[3]},        // front, top, left
 
-        {{position.x, position.y, -0.2f}, color2, texture_coordinates[0]},               // back, bottom, left
-        {{position.x + 0.2f, position.y, -0.2f}, color2, texture_coordinates[0]},        // back, bottom, right
-        {{position.x + 0.2f, position.y + 0.2f, -0.2f}, color2, texture_coordinates[0]}, // back, top, right
-        {{position.x, position.y + 0.2f, -0.2f}, color2, texture_coordinates[0]},        // back, top, left
+        {{position.x, position.y, -0.2f}, color2, texture_coordinates[4]},               // back, bottom, left
+        {{position.x + 0.2f, position.y, -0.2f}, color2, texture_coordinates[5]},        // back, bottom, right
+        {{position.x + 0.2f, position.y + 0.2f, -0.2f}, color2, texture_coordinates[6]}, // back, top, right
+        {{position.x, position.y + 0.2f, -0.2f}, color2, texture_coordinates[7]},        // back, top, left
     }};
 }
 
