@@ -62,9 +62,15 @@ struct Point3DF {
     GLfloat z{0};
 };
 
+struct TextureCoordinates final {
+    GLfloat s{0};
+    GLfloat t{0};
+};
+
 struct Vertex {
     Point3DF point;
     Color color;
+    TextureCoordinates texture_coordinates;
 };
 
 } // namespace engine

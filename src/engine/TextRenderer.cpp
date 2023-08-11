@@ -2,7 +2,7 @@
 
 using namespace engine;
 
-struct TextureCoordinates {
+struct FontTextureCoordinates {
     GLfloat position_x = 0; // screen vertex X
     GLfloat position_y = 0; // screen vertex Y
     GLfloat texture_x = 0;  // texture vertex X
@@ -12,7 +12,7 @@ struct TextureCoordinates {
 TextRenderer::TextRenderer(const FontBitmapCache& font_bitmap_cache, const ShaderProgram& shader_program) :
     font_bitmap_cache_(font_bitmap_cache) {
     vao_ = VertexArrayObject::create(&shader_program);
-    vbo_ = vao_.create_vbo(1024, sizeof(TextureCoordinates), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
+    vbo_ = vao_.create_vbo(1024, sizeof(FontTextureCoordinates), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
     this->set_color(Colors::NeonGreen);
 }
 
@@ -35,7 +35,7 @@ void TextRenderer::draw_text(const std::string& text, float x, float y, float sc
         float w = character_bitmap.size().x * scale;
         float h = character_bitmap.size().y * scale;
 
-        std::array<TextureCoordinates, 6> vertices{{{xpos, ypos + h, 0.0f, 0.0f},
+        std::array<FontTextureCoordinates, 6> vertices{{{xpos, ypos + h, 0.0f, 0.0f},
                                                     {xpos, ypos, 0.0f, 1.0f},
                                                     {xpos + w, ypos, 1.0f, 1.0f},
                                                     {xpos, ypos + h, 0.0f, 0.0f},

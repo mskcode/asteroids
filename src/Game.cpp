@@ -15,7 +15,8 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
         {GL_VERTEX_SHADER,
          "./resources/shaders/default_vert.glsl",
          {{"in_position", 3, GL_FLOAT, false, 0},
-          {"in_vertex_color", 4, GL_FLOAT, false, sizeof(float) * 3}}},
+          {"in_vertex_color", 4, GL_FLOAT, false, sizeof(float) * 3},
+          {"in_texture_coordinates", 2, GL_FLOAT, false, sizeof(float) * 7}}},
         {GL_FRAGMENT_SHADER, "./resources/shaders/default_frag.glsl"},
     };
 

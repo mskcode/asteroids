@@ -13,16 +13,28 @@ static auto generate_vertex_data(const Coordinates2D& position) -> std::array<en
              {{position.x, position.y + 0.2f, 0.0F}, color}}};      // top
     */
 
-    return {{
-        {{position.x, position.y, 0.0f}, color1},               // front, bottom, left
-        {{position.x + 0.2f, position.y, 0.0f}, color1},        // front, bottom, right
-        {{position.x + 0.2f, position.y + 0.2f, 0.0f}, color1}, // front, top, right
-        {{position.x, position.y + 0.2f, 0.0f}, color1},        // front, top, left
+    constexpr std::array<engine::TextureCoordinates, 8> texture_coordinates{{
+        {0.0f, 0.0f}, // front, bottom, left
+        {1.0f, 0.0f}, // front, bottom, right
+        {1.0f, 1.0f}, // front, top, right
+        {0.0f, 1.0f}, // front, top, left
 
-        {{position.x, position.y, -0.2f}, color2},               // back, bottom, left
-        {{position.x + 0.2f, position.y, -0.2f}, color2},        // back, bottom, right
-        {{position.x + 0.2f, position.y + 0.2f, -0.2f}, color2}, // back, top, right
-        {{position.x, position.y + 0.2f, -0.2f}, color2},        // back, top, left
+        {0.0f, 0.0f}, // back, bottom, left
+        {1.0f, 0.0f}, // back, bottom, right
+        {1.0f, 1.0f}, // back, top, right
+        {0.0f, 1.0f}, // back, top, left
+    }};
+
+    return {{
+        {{position.x, position.y, 0.0f}, color1, texture_coordinates[0]},               // front, bottom, left
+        {{position.x + 0.2f, position.y, 0.0f}, color1, texture_coordinates[0]},        // front, bottom, right
+        {{position.x + 0.2f, position.y + 0.2f, 0.0f}, color1, texture_coordinates[0]}, // front, top, right
+        {{position.x, position.y + 0.2f, 0.0f}, color1, texture_coordinates[0]},        // front, top, left
+
+        {{position.x, position.y, -0.2f}, color2, texture_coordinates[0]},               // back, bottom, left
+        {{position.x + 0.2f, position.y, -0.2f}, color2, texture_coordinates[0]},        // back, bottom, right
+        {{position.x + 0.2f, position.y + 0.2f, -0.2f}, color2, texture_coordinates[0]}, // back, top, right
+        {{position.x, position.y + 0.2f, -0.2f}, color2, texture_coordinates[0]},        // back, top, left
     }};
 }
 

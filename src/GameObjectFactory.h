@@ -18,6 +18,7 @@ public:
 private:
     const engine::Keyboard& keyboard_;
     const engine::ShaderProgramRegistry& shader_program_registry_;
+    engine::TextureRegistry texture_registry_;
     std::vector<GameActor*> objects_;
     std::vector<Renderable*> renderables_;
     std::vector<Updateable*> updateables_;

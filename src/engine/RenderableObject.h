@@ -2,6 +2,7 @@
 
 #include "../common/debug.h"
 #include "ShaderProgramRegistry.h"
+#include "Texture.h"
 #include "VertexArrayObject.h"
 #include "opengl.h"
 #include "types.h"
@@ -11,10 +12,11 @@ namespace engine {
 
 class RenderableObject final {
 public:
-    RenderableObject(const ShaderProgram& shader_program) {
+    RenderableObject(const ShaderProgram& shader_program, Texture texture) {
         vao_ = VertexArrayObject::create(&shader_program);
         vbo_ = vao_.create_vbo(1024, sizeof(Vertex), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
         ebo_ = vao_.create_ebo(1024, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
+        texture_ = texture;
     }
 
     RenderableObject(const RenderableObject&) = delete;
@@ -28,16 +30,21 @@ public:
     [[nodiscard]] auto ebo() -> ElementBufferObject& { return ebo_; }
 
     void render() {
+        texture_.bind();
         vao_.bind();
+
         // glDrawArrays(GL_TRIANGLES, 0, vbo_.element_count());
         glDrawElements(GL_TRIANGLES, ebo_.indice_count(), GL_UNSIGNED_INT, nullptr);
+
         vao_.unbind();
+        texture_.unbind();
     }
 
 private:
     VertexArrayObject vao_;
     VertexBufferObject vbo_;
     ElementBufferObject ebo_;
+    Texture texture_;
 };
 
 } // namespace engine
