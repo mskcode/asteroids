@@ -29,8 +29,9 @@ Renderer::Renderer(const Window& window,
 
     // enable depth testing:
     // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml
-    // FIXME enabling this breaks pretty much all rendering currently
-    // glEnable(GL_DEPTH_TEST);
+    //
+    // remember to glClear(... | GL_DEPTH_BUFFER_BIT) when doing this
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::render() {
@@ -43,7 +44,7 @@ void Renderer::render() {
     glViewport(0, 0, width, height);
 
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     camera_.update_shader_matrix();
 
