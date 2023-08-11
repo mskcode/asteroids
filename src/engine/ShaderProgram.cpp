@@ -1,4 +1,5 @@
 #include "ShaderProgram.h"
+#include "../common/assertions.h"
 #include "../common/debug.h"
 #include "openglerror.h"
 #include <glm/gtc/type_ptr.hpp>
@@ -10,8 +11,8 @@ using namespace engine;
 ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader) :
     fragment_shader_(std::move(fragment_shader)),
     vertex_shader_(std::move(vertex_shader)) {
-    xassertf(fragment_shader_.is_fragment_shader(), "Shader ID %d not a fragment shader", fragment_shader_.id());
-    xassertf(vertex_shader_.is_vertex_shader(), "Shader ID %d is not a vertex shader", vertex_shader_.id());
+    XASSERTF(fragment_shader_.is_fragment_shader(), "Shader ID %d not a fragment shader", fragment_shader_.id());
+    XASSERTF(vertex_shader_.is_vertex_shader(), "Shader ID %d is not a vertex shader", vertex_shader_.id());
 
     program_ = glCreateProgram();
     dbgfln("Creating shader program ID %d", program_);

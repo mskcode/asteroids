@@ -2,6 +2,7 @@
 
 #include "GameComponent.h"
 #include "engine/RenderableObject.h"
+#include <memory>
 
 namespace game {
 

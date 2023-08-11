@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "common/strutils.h"
 #include "common/timeutils.h"
 #include <cinttypes>
 

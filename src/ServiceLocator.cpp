@@ -1,4 +1,5 @@
 #include "ServiceLocator.h"
+#include "common/assertions.h"
 #include "common/debug.h"
 
 using namespace game;
@@ -24,11 +25,11 @@ auto ServiceLocator::set_shader_program_registry(engine::ShaderProgramRegistry* 
 }
 
 auto ServiceLocator::key_event_dispatcher() const -> engine::KeyEventDispatcher& {
-    xassert(key_event_dispatcher_ != nullptr, "key_event_dispatcher_ is not set");
+    XASSERT(key_event_dispatcher_ != nullptr, "key_event_dispatcher_ is not set");
     return *key_event_dispatcher_;
 }
 
 auto ServiceLocator::shader_program_registry() const -> engine::ShaderProgramRegistry& {
-    xassert(shader_program_registry_ != nullptr, "shader_program_registry_ is not set");
+    XASSERT(shader_program_registry_ != nullptr, "shader_program_registry_ is not set");
     return *shader_program_registry_;
 }
