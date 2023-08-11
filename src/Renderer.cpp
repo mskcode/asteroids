@@ -15,12 +15,13 @@ Renderer::Renderer(const Window& window,
     game_object_factory_(game_object_factory),
     renderable_text_(renderable_text) {
 
-    // enable polygon culling; this doesn't specify which polygons should be
-    // culled, only enables it:
+    // enable polygon culling and set the culling mode:
     // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glCullFace.xml
-    // FIXME this face culling currently breaks rendering so that we see
-    //   inside the cube
-    // glEnable(GL_CULL_FACE);
+    //
+    // NOTICE currently we're using GL_FRONT as the culling mode since the
+    //   default GL_BACK didn't work in our case
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
     // enable pixel blending and configure the blend function; according to
     // OpenGL documentation, transparency is best achieved using blend function

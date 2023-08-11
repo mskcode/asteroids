@@ -53,10 +53,14 @@ static void framebuffer_size_callback([[maybe_unused]] GLFWwindow* window,
 
 Window::Window(const WindowOptions& options) {
     dbgln("Initializing window");
+
+    // https://www.glfw.org/docs/latest/window_guide.html#window_hints_wnd
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, options.opengl_version_major);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, options.opengl_version_minor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, options.resizable ? GLFW_TRUE : GLFW_FALSE);
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+
     window_ = glfwCreateWindow(static_cast<int>(options.window_size.width),
                                static_cast<int>(options.window_size.height),
                                options.title.data(),
