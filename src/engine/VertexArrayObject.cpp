@@ -1,4 +1,5 @@
 #include "VertexArrayObject.h"
+#include "../common/assertions.h"
 #include "../common/debug.h"
 #include "openglerror.h"
 #include <memory>
@@ -37,7 +38,13 @@ auto VertexArrayObject::create(ShaderProgram const* shader_program) -> VertexArr
     // attribute binding when we create VBOs
     auto& vertex_shader = shader_program->vertex_shader();
     for (auto& attr : vertex_shader.attributes()) {
-        auto location = shader_program->query_attribute_location(attr.name);
+        auto location = attr.location;
+        if (location < 0) {
+            XASSERTF(!attr.name.empty(),
+                     "Shader program '%s' attribute is missing both location and name",
+                     shader_program->name().c_str());
+            location = shader_program->query_attribute_location(attr.name);
+        }
         glEnableVertexArrayAttrib(vao_id, location);
         glVertexArrayAttribFormat(vao_id, location, attr.size, attr.type, attr.normalized, attr.relative_offset);
     }
@@ -73,7 +80,13 @@ auto VertexArrayObject::create_vbo(GLsizeiptr buffer_size, GLsizei element_size,
     // bind shader attributes (input variables) to VAO
     auto& vertex_shader = shader_program_->vertex_shader();
     for (auto& attr : vertex_shader.attributes()) {
-        auto location = shader_program_->query_attribute_location(attr.name);
+        auto location = attr.location;
+        if (location < 0) {
+            XASSERTF(!attr.name.empty(),
+                     "Shader program '%s' attribute is missing both location and name",
+                     shader_program_->name().c_str());
+            location = shader_program_->query_attribute_location(attr.name);
+        }
         GL_CHECK(glVertexArrayAttribBinding(vao_id_, location, binding_index_));
     }
 

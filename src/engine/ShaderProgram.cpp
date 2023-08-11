@@ -8,7 +8,8 @@
 
 using namespace engine;
 
-ShaderProgram::ShaderProgram(Shader vertex_shader, Shader fragment_shader) :
+ShaderProgram::ShaderProgram(std::string&& name, Shader vertex_shader, Shader fragment_shader) :
+    name_(std::move(name)),
     fragment_shader_(std::move(fragment_shader)),
     vertex_shader_(std::move(vertex_shader)) {
     XASSERTF(fragment_shader_.is_fragment_shader(), "Shader ID %d not a fragment shader", fragment_shader_.id());

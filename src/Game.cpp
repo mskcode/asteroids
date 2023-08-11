@@ -12,16 +12,40 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
     dbgln("Loading shaders");
 
     ShaderProgram shader1{
+        "default",
         {GL_VERTEX_SHADER,
          "./resources/shaders/default_vert.glsl",
-         {{"in_position", 3, GL_FLOAT, false, 0},
-          {"in_vertex_color", 4, GL_FLOAT, false, sizeof(float) * 3},
-          {"in_texture_coordinates", 2, GL_FLOAT, false, sizeof(float) * 7}}},
+         {{.location = 0,
+           .name = "in_position",
+           .size = 3,
+           .type = GL_FLOAT,
+           .normalized = false,
+           .relative_offset = 0},
+          {.location = 1,
+           .name = "in_vertex_color",
+           .size = 4,
+           .type = GL_FLOAT,
+           .normalized = false,
+           .relative_offset = sizeof(float) * 3},
+          {.location = 2,
+           .name = "in_texture_coordinates",
+           .size = 2,
+           .type = GL_FLOAT,
+           .normalized = false,
+           .relative_offset = sizeof(float) * 7}}},
         {GL_FRAGMENT_SHADER, "./resources/shaders/default_frag.glsl"},
     };
 
     ShaderProgram shader2{
-        {GL_VERTEX_SHADER, "./resources/shaders/glyph_vert.glsl", {{"in_vertex", 4, GL_FLOAT, false, 0}}},
+        "glyph",
+        {GL_VERTEX_SHADER,
+         "./resources/shaders/glyph_vert.glsl",
+         {{.location = 0,
+           .name = "in_vertex",
+           .size = 4,
+           .type = GL_FLOAT,
+           .normalized = false,
+           .relative_offset = 0}}},
         {GL_FRAGMENT_SHADER, "./resources/shaders/glyph_frag.glsl"},
     };
     shader2.customize([](auto& shader) -> void {

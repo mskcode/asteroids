@@ -5,6 +5,7 @@
 #include "opengl.h"
 #include <functional>
 #include <glm/mat4x4.hpp>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -12,7 +13,7 @@ namespace engine {
 
 class ShaderProgram final {
 public:
-    ShaderProgram(Shader vertex_shader, Shader fragment_shader);
+    ShaderProgram(std::string&& name, Shader vertex_shader, Shader fragment_shader);
     ShaderProgram(const ShaderProgram&) = delete;
     ShaderProgram(ShaderProgram&& other) noexcept;
     ~ShaderProgram();
@@ -20,6 +21,7 @@ public:
     auto operator=(const ShaderProgram&) -> ShaderProgram& = delete;
     auto operator=(ShaderProgram&& rhs) noexcept -> ShaderProgram&;
 
+    [[nodiscard]] auto name() const -> const std::string& { return name_; }
     [[nodiscard]] auto id() const -> GLuint;
     [[nodiscard]] auto vertex_shader() const -> const Shader&;
     [[nodiscard]] auto fragment_shader() const -> const Shader&;
@@ -35,6 +37,7 @@ public:
     void free_gpu_resources() noexcept;
 
 private:
+    std::string name_;
     GLuint program_ = 0;
     Shader fragment_shader_;
     Shader vertex_shader_;

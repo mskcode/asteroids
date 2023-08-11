@@ -7,7 +7,12 @@
 
 namespace engine {
 
+/**
+ * When defining shader attributes you can alternatively use either location,
+ * name or both. When both are defined, location has precedence.
+ */
 struct VertexShaderAttribute {
+    GLint location{-1};
     std::string name;
     GLint size{0};
     GLenum type{0};
