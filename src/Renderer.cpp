@@ -15,13 +15,6 @@ Renderer::Renderer(const Window& window,
     game_object_factory_(game_object_factory),
     renderable_text_(renderable_text) {
 
-    // enable polygon culling; this doesn't specify which polygons should be
-    // culled, only enables it:
-    // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glCullFace.xml
-    // FIXME this face culling currently breaks rendering so that we see
-    //   inside the cube
-    // glEnable(GL_CULL_FACE);
-
     // enable pixel blending and configure the blend function; according to
     // OpenGL documentation, transparency is best achieved using blend function
     // (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA):
@@ -40,6 +33,10 @@ void Renderer::render() {
     using namespace common;
     auto sw = time::StopWatch::start();
 
+    // ======================================================================
+    // prepare for new render cycle
+    // ======================================================================
+
     int width;
     int height;
     glfwGetFramebufferSize(window_.window_pointer(), &width, &height);
@@ -47,6 +44,19 @@ void Renderer::render() {
 
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // ======================================================================
+    // render models
+    // ======================================================================
+
+    // enable polygon culling; this doesn't specify which polygons should be
+    // culled, only enables it:
+    // https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glCullFace.xml
+    //
+    // NOTICE the default culling mode GL_BACK ended up rendering our cube so
+    //   that we could see inside it
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
     if (wireframe_rendering_) {
         // wireframe rendering
@@ -62,7 +72,11 @@ void Renderer::render() {
         renderable->render();
     }
 
+    // ======================================================================
     // render text
+    // ======================================================================
+
+    glDisable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     auto text = str::format("RT AVG %" PRIu64 " us", duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
