@@ -6,7 +6,7 @@ using namespace engine;
 static KeyEventDispatcher* g_key_event_dispatcher;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    dbgfln("Key event: key=%d, scancode=%d, action=%d, mods=%d", key, scancode, action, mods);
+    // dbgfln("Key event: key=%d, scancode=%d, action=%d, mods=%d", key, scancode, action, mods);
     g_key_event_dispatcher->dispatch_event({window, key, scancode, action, mods});
 }
 

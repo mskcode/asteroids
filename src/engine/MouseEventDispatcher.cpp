@@ -9,7 +9,7 @@ static MouseEventDispatcher* g_mouse_event_dispatcher;
 namespace {
 
 void mouse_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
+    // dbgfln("Mouse position event: xpos=%f, ypos=%f", xpos, ypos);
     g_mouse_event_dispatcher->dispatch_event({window, (long)xpos, (long)ypos});
 }
 
