@@ -43,7 +43,7 @@ void TextRenderer::draw_text(const std::string& text, float x, float y, float sc
                                                     {xpos + w, ypos + h, 1.0f, 0.0f}}};
 
         // bind the texture to given unit and activate it; this is used in
-        // the glyph.frag shader
+        // the glyph_frag.glsl shader
         glBindTextureUnit(0, character_bitmap.texture_id());
 
         // store the vertex data to VBO and render the triangles

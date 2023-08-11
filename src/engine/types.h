@@ -41,7 +41,7 @@ struct Color final {
     GLfloat r{0};
     GLfloat g{0};
     GLfloat b{0};
-    GLfloat a{0};
+    GLfloat a{1};
 
     [[nodiscard]] auto red() const -> GLfloat { return r; }
     [[nodiscard]] auto green() const -> GLfloat { return g; }
