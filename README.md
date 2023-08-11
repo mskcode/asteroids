@@ -5,10 +5,19 @@
 ### Cloning repository
 
 ```shell
-git clone --recurse-submodules https://github.com/mskcode/game.git
+git clone --recurse-submodules https://github.com/mskcode/asteroids.git
 ```
 
 ### Building binaries
+
+The fast way to test if project builds and runs is to run `build-and-run.sh`
+with or without optional `--clean` parameter.
+
+```shell
+./build-and-run.sh
+```
+
+You can also do you by running CMake manually and go from there.
 
 ```shell
 mkdir -p build/debug

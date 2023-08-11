@@ -55,16 +55,15 @@ parse_arguments "$@"
 
 readonly target_build_directory="./${_build_directory}/${opt_build_target,,}"
 
-if [[ ${opt_clean} == "yes" ]]; then
-  #if [[ -d ${target_build_directory} ]]; then
-    rm -fr ${target_build_directory} || die "Could not remove ${target_build_directory} directory"
-  #fi
+if [[ ! -d ${target_build_directory} || ${opt_clean} == "yes" ]]; then
+  rm -fr ${target_build_directory} || die "Could not remove ${target_build_directory} directory"
   mkdir -p "${target_build_directory}" || die "Could not create ${target_build_directory} directory"
 
   pushd .
   cd "${target_build_directory}" || die "Could not change directory into ${target_build_directory}"
   already_inside_build_directory=yes
 
+  echo ">>> Running CMake..."
   cmake ../.. -DCMAKE_BUILD_TYPE="${opt_build_target}" -G"${opt_build_tool}"
 fi
 
@@ -74,6 +73,7 @@ if [[ ${already_inside_build_directory} != "yes" ]]; then
 fi
 
 # build binaries / executables
+echo ">>> Building binaries..."
 ${opt_build_tool,,} || die "Building binaries failed"
 
 # run main executable
