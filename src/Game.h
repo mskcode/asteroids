@@ -24,7 +24,6 @@ private:
     engine::Window& window_;
     engine::KeyEventDispatcher key_event_dispatcher_;
     engine::MouseEventDispatcher mouse_event_dispatcher_;
-    std::unique_ptr<engine::ShaderProgramRegistry> shader_program_registry_;
     std::unique_ptr<GameObjectFactory> game_object_factory_;
     std::unique_ptr<Renderer> renderer_;
     std::unique_ptr<engine::FontBitmapCache> font_bitmap_cache_;

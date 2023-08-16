@@ -1,76 +1,144 @@
 #include "Shader.h"
+#include "../common/assertions.h"
 #include "../common/debug.h"
 #include "../common/fileutils.h"
 #include "openglerror.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <string>
 #include <utility>
 
 using namespace engine;
 
-Shader::Shader(GLenum type, const std::string_view& path, std::vector<VertexShaderAttribute> attributes) :
+Shader::Shader(OpenGlObject obj, GLenum type, const std::vector<VertexShaderAttribute>& attributes) :
+    obj_(obj),
     type_(type),
-    attributes_(std::move(attributes)) {
+    attributes_(attributes) {}
+
+auto Shader::create(GLenum type, const std::string_view& path, std::vector<VertexShaderAttribute> attributes)
+    -> Shader {
+
     dbgfln("Loading shader type %d from file: %s", type, path.data());
     auto source = common::file::read_file(path);
 
-    id_ = glCreateShader(type);
-    dbgfln("Creating shader ID %d (shader_type=%d, attributes=%ld)", id_, type, attributes_.size());
+    auto shader = OpenGlObjectManager::instance().allocate(OpenGlObjectType::SHADER, type);
+
+    dbgfln("Creating shader ID %d (shader_type=%d, attributes=%ld)", shader.ogl_id(), type, attributes.size());
     const char* const p = source.c_str();
-    glShaderSource(id_, 1, &p, nullptr);
-    glCompileShader(id_);
+    glShaderSource(shader.ogl_id(), 1, &p, nullptr);
+    glCompileShader(shader.ogl_id());
 
     int success;
-    glGetShaderiv(id_, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(shader.ogl_id(), GL_COMPILE_STATUS, &success);
     if (success != GL_TRUE) {
         constexpr size_t buffer_size{512};
         char log[buffer_size];
-        glGetShaderInfoLog(id_, buffer_size, nullptr, log);
+        glGetShaderInfoLog(shader.ogl_id(), buffer_size, nullptr, log);
         throw_gl("Compiling shader " + std::string(path) + " failed: " + std::string(log));
     }
+
+    return {shader, type, attributes};
 }
 
-Shader::Shader(Shader&& other) noexcept :
-    type_(other.type_),
-    id_(std::exchange(other.id_, 0)),
-    attributes_(std::move(other.attributes_)) {}
+ShaderProgram::ShaderProgram(OpenGlObject obj,
+                             const std::string& name,
+                             const Shader& vertex_shader,
+                             const Shader& fragment_shader) :
+    obj_(obj),
+    name_(name),
+    vertex_shader_(vertex_shader),
+    fragment_shader_(fragment_shader) {}
 
-Shader::~Shader() {
-    free_gpu_resources();
-}
+auto ShaderProgram::create(const std::string& name, const Shader& vertex_shader, const Shader& fragment_shader)
+    -> ShaderProgram {
+    XASSERTF(fragment_shader.is_fragment_shader(),
+             "Shader ID {} not a fragment shader",
+             fragment_shader.object().ogl_id());
+    XASSERTF(vertex_shader.is_vertex_shader(), "Shader ID {} is not a vertex shader", vertex_shader.object().ogl_id());
 
-auto Shader::operator=(Shader&& rhs) noexcept -> Shader& {
-    if (this != &rhs) {
-        free_gpu_resources();
-        id_ = std::exchange(rhs.id_, 0);
-        type_ = rhs.type_;
-        attributes_ = std::move(rhs.attributes_);
+    auto program = OpenGlObjectManager::instance().allocate(OpenGlObjectType::SHADER_PROGRAM);
+
+    dbgfln("Creating shader program ID %d", program.ogl_id());
+    glAttachShader(program.ogl_id(), vertex_shader.object().ogl_id());
+    glAttachShader(program.ogl_id(), fragment_shader.object().ogl_id());
+
+    dbgfln("Linking shader program ID %d", program.ogl_id());
+    glLinkProgram(program.ogl_id());
+
+    // we can free the shader GPU resources after attaching it
+    // vertex_shader_.free_gpu_resources();
+    // fragment_shader_.free_gpu_resources();
+
+    int success;
+    glGetProgramiv(program.ogl_id(), GL_LINK_STATUS, &success);
+    if (success != GL_TRUE) {
+        constexpr size_t buffer_size{512};
+        char log[buffer_size];
+        glGetProgramInfoLog(program.ogl_id(), buffer_size, nullptr, log);
+        throw_gl("Linking shaders failed: " + std::string(log));
     }
-    return *this;
+
+    return {program, name, vertex_shader, fragment_shader};
 }
 
-auto Shader::id() const -> GLuint {
-    return id_;
-}
-
-auto Shader::type() const -> GLenum {
-    return type_;
-}
-
-auto Shader::attributes() const -> const std::vector<VertexShaderAttribute>& {
-    return attributes_;
-}
-
-auto Shader::is_vertex_shader() const -> bool {
-    return type_ == GL_VERTEX_SHADER;
-}
-
-auto Shader::is_fragment_shader() const -> bool {
-    return type_ == GL_FRAGMENT_SHADER;
-}
-
-void Shader::free_gpu_resources() noexcept {
-    if (id_ != 0) {
-        dbgfln("Freeing shader ID %d", id_);
-        glDeleteShader(id_);
-        id_ = 0;
+auto ShaderProgram::query_attribute_location(const std::string_view& name) const -> GLint {
+    auto location = glGetAttribLocation(obj_.ogl_id(), name.data());
+    if (location < 0) {
+        throw_gl("Attribute " + std::string(name) + " not found");
     }
+    return location;
+}
+
+auto ShaderProgram::query_uniform_location(const std::string_view& name) const -> GLint {
+    auto location = glGetUniformLocation(obj_.ogl_id(), name.data());
+    if (location < 0) {
+        throw_gl("Attribute " + std::string(name) + " not found");
+    }
+    return location;
+}
+
+void ShaderProgram::set_uniform(const std::string_view& name, glm::vec3 vec3) const {
+    auto location = this->query_uniform_location(name);
+    GL_CHECK(glUniform3f(location, vec3.r, vec3.g, vec3.b));
+}
+
+void ShaderProgram::set_uniform(const std::string_view& name, glm::mat4 mat4) const {
+    auto location = this->query_uniform_location(name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
+}
+
+void ShaderProgram::bind() const {
+    XASSERT(obj_.is_valid());
+    glUseProgram(obj_.ogl_id());
+}
+
+void ShaderProgram::unbind() const {
+    glUseProgram(0);
+}
+
+void ShaderProgram::customize(std::function<void(ShaderProgram&)> customizer) {
+    bind();
+    customizer(*this);
+    unbind();
+}
+
+ShaderProgramRegistry::~ShaderProgramRegistry() {
+    free_all();
+}
+
+auto ShaderProgramRegistry::instance() -> ShaderProgramRegistry& {
+    static ShaderProgramRegistry the_instance;
+    return the_instance;
+}
+
+void ShaderProgramRegistry::set(u32 index, const ShaderProgram& shader_program) {
+    dbgfln("Consuming shader program ID %d to registry index %d", shader_program.object().ogl_id(), index);
+    shader_program_map_.insert({index, shader_program});
+}
+
+auto ShaderProgramRegistry::get(u32 index) -> ShaderProgram& {
+    XASSERT(shader_program_map_.contains(index));
+    return shader_program_map_[index];
+}
+auto ShaderProgramRegistry::free_all() -> void {
+    // TODO implement me
 }

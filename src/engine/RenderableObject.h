@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../common/debug.h"
-#include "ShaderProgramRegistry.h"
+#include "Shader.h"
 #include "Texture.h"
 #include "VertexArrayObject.h"
 #include "opengl.h"
@@ -13,7 +13,7 @@ namespace engine {
 class RenderableObject final {
 public:
     RenderableObject(const ShaderProgram& shader_program, Texture texture) {
-        vao_ = VertexArrayObject::create(&shader_program);
+        vao_ = VertexArrayObject::create(shader_program);
         vbo_ = vao_.create_vbo(1024, sizeof(Vertex), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
         ebo_ = vao_.create_ebo(1024, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
         texture_ = texture;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/KeyEventDispatcher.h"
-#include "engine/ShaderProgramRegistry.h"
+#include "engine/Shader.h"
 
 namespace game {
 

@@ -2,13 +2,13 @@
 
 #include "GameActor.h"
 #include "engine/Keyboard.h"
-#include "engine/ShaderProgramRegistry.h"
+#include "engine/Shader.h"
 
 namespace game {
 
 class GameObjectFactory final {
 public:
-    GameObjectFactory(const engine::Keyboard& keyboard, engine::ShaderProgramRegistry& shader_program_registry);
+    GameObjectFactory(const engine::Keyboard& keyboard);
 
     auto create_spaceship() -> GameActor*;
 
@@ -17,7 +17,6 @@ public:
 
 private:
     const engine::Keyboard& keyboard_;
-    const engine::ShaderProgramRegistry& shader_program_registry_;
     engine::TextureRegistry texture_registry_;
     std::vector<GameActor*> objects_;
     std::vector<Renderable*> renderables_;

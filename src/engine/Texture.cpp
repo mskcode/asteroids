@@ -23,12 +23,12 @@ auto Texture::free_gpu_resources() -> void {
     }
 }
 auto Texture::bind() const -> void {
-    XASSERT(texture_id_.is_valid(), "Trying to bind invalid texture");
+    XASSERTM(texture_id_.is_valid(), "Trying to bind invalid texture");
     glBindTexture(GL_TEXTURE_2D, texture_id_.ogl_id());
 }
 
 auto Texture::unbind() const -> void {
-    XASSERT(texture_id_.is_valid(), "Trying to unbind invalid texture");
+    XASSERTM(texture_id_.is_valid(), "Trying to unbind invalid texture");
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

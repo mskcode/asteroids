@@ -1,40 +1,57 @@
 #pragma once
 
+#include "fileutils.h"
 #include "panic.h"
 #include <fmt/core.h>
+#include <iostream>
 #include <stdexcept>
 
-namespace common {
+// ==========================================================================
+// ASSERTION MACROS
+// Compiled out in Release-mode
+// ==========================================================================
 
-class AssertionError final : public std::runtime_error {
-public:
-    explicit AssertionError(const std::string& msg, const char* file = nullptr, unsigned int line = 0) :
-        std::runtime_error("ASSERT FAILED " + std::string(file) + ":" + std::to_string(line) + " " + msg) {}
-};
+#ifdef DEBUG
 
-constexpr auto file_name(const char* path) -> const char* {
-    const char* file = path;
-    while (*path != 0) {
-        if (*path++ == '/') {
-            file = path;
-        }
+#define XASSERT_PRINT_LOCATION() std::cout << "ASSERT[" << common::file::file_name(__FILE__) << "@" << __LINE__ << "]: "
+#define XASSERT_EXIT() PANIC_SILENT()
+
+#define XASSERT(expr)                                                                                                  \
+    if (!static_cast<bool>(expr)) {                                                                                    \
+        XASSERT_PRINT_LOCATION();                                                                                      \
+        std::cout << "Assertion " << #expr << " failed\n";                                                             \
+        XASSERT_EXIT();                                                                                                \
     }
-    return file;
-}
 
-} // namespace common
+#define XASSERTM(expr, msg)                                                                                            \
+    if (!static_cast<bool>(expr)) {                                                                                    \
+        XASSERT_PRINT_LOCATION();                                                                                      \
+        std::cout << msg << '\n';                                                                                      \
+        XASSERT_EXIT();                                                                                                \
+    }
 
-// clang-format off
+#define XASSERTF(expr, msg, ...)                                                                                       \
+    if (!static_cast<bool>(expr)) {                                                                                    \
+        XASSERT_PRINT_LOCATION();                                                                                      \
+        std::cout << fmt::format(msg, __VA_ARGS__) << '\n';                                                            \
+        XASSERT_EXIT();                                                                                                \
+    }
 
-#define XASSERT(exp, msg)       if (!(exp)) { throw common::AssertionError(msg, common::file_name(__FILE__), __LINE__); }
-#define XASSERTF(exp, fmt2, ...) if (!(exp)) { throw common::AssertionError(fmt::format(fmt2, __VA_ARGS__), common::file_name(__FILE__), __LINE__); }
+#else
+#define XASSERT(exp)
+#define XASSERTM(exp, msg)
+#define XASSERTF(exp, msg, ...)
+#endif
 
-// clang-format on
+// ==========================================================================
+// VERIFY MACROS
+// Always in program regardless of release/debug mode
+// ==========================================================================
 
 #define VERIFY(expr)                                                                                                   \
     do {                                                                                                               \
         if (!static_cast<bool>(expr)) {                                                                                \
-            PANIC("Verification failed: " #expr);                                                                      \
+            PANIC("Verification failed: " #expr "\n");                                                                 \
         }                                                                                                              \
     } while (0)
 

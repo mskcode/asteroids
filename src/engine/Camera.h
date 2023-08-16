@@ -3,7 +3,7 @@
 #include "CameraDirector.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 #include "glm/vec3.hpp"
 #include "types.h"
 #include <memory>
@@ -28,7 +28,7 @@ public:
 
 private:
     const CameraDirector& camera_director_;
-    const ShaderProgram& shader_program_;
+    ShaderProgram shader_program_;
     const std::string shader_camera_matrix_name_;
     Dimensions2D window_dimensions_;
     float field_of_view_degrees_{45.0f};

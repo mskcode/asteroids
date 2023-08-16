@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "common/SignalHandler.h"
+#include "common/assertions.h"
 #include "common/debug.h"
 #include "engine/GlfwContext.h"
 #include "engine/Window.h"
@@ -29,6 +30,10 @@ auto main(int argc, char** argv) -> int {
         std::fprintf(stderr, "ERROR: %s\n", e.what());
         std::exit(1);
     }
+
+    // trying to free OpenGL objects after the GLFW context has been destroyed
+    // causes core dump
+    engine::OpenGlObjectManager::instance().free_all();
 
     dbgln("Exiting program");
     return 0;

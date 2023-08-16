@@ -1,53 +1,52 @@
 #include "Game.h"
+#include "ResourceId.h"
 #include "ServiceLocator.h"
 #include "TickLimiter.h"
 #include "engine/MouseKeyboardCameraDirector.h"
+#include "engine/Shader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace game;
 
-static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
+static auto load_shaders() -> void {
     using namespace engine;
     dbgln("Loading shaders");
 
-    ShaderProgram shader1{
-        "default",
-        {GL_VERTEX_SHADER,
-         "./resources/shaders/default_vert.glsl",
-         {{.location = 0,
-           .name = "in_position",
-           .size = 3,
-           .type = GL_FLOAT,
-           .normalized = false,
-           .relative_offset = 0},
-          {.location = 1,
-           .name = "in_vertex_color",
-           .size = 4,
-           .type = GL_FLOAT,
-           .normalized = false,
-           .relative_offset = sizeof(float) * 3},
-          {.location = 2,
-           .name = "in_texture_coordinates",
-           .size = 2,
-           .type = GL_FLOAT,
-           .normalized = false,
-           .relative_offset = sizeof(float) * 7}}},
-        {GL_FRAGMENT_SHADER, "./resources/shaders/default_frag.glsl"},
-    };
+    auto shader1 = ShaderProgram::create("default",
+                                         Shader::create(GL_VERTEX_SHADER,
+                                                        "./resources/shaders/default_vert.glsl",
+                                                        {{.location = 0,
+                                                          .name = "in_position",
+                                                          .size = 3,
+                                                          .type = GL_FLOAT,
+                                                          .normalized = false,
+                                                          .relative_offset = 0},
+                                                         {.location = 1,
+                                                          .name = "in_vertex_color",
+                                                          .size = 4,
+                                                          .type = GL_FLOAT,
+                                                          .normalized = false,
+                                                          .relative_offset = sizeof(float) * 3},
+                                                         {.location = 2,
+                                                          .name = "in_texture_coordinates",
+                                                          .size = 2,
+                                                          .type = GL_FLOAT,
+                                                          .normalized = false,
+                                                          .relative_offset = sizeof(float) * 7}}),
+                                         Shader::create(GL_FRAGMENT_SHADER, "./resources/shaders/default_frag.glsl"));
 
-    ShaderProgram shader2{
-        "glyph",
-        {GL_VERTEX_SHADER,
-         "./resources/shaders/glyph_vert.glsl",
-         {{.location = 0,
-           .name = "in_vertex",
-           .size = 4,
-           .type = GL_FLOAT,
-           .normalized = false,
-           .relative_offset = 0}}},
-        {GL_FRAGMENT_SHADER, "./resources/shaders/glyph_frag.glsl"},
-    };
+    auto shader2 = ShaderProgram::create("glyph",
+                                         Shader::create(GL_VERTEX_SHADER,
+                                                        "./resources/shaders/glyph_vert.glsl",
+                                                        {{.location = 0,
+                                                          .name = "in_vertex",
+                                                          .size = 4,
+                                                          .type = GL_FLOAT,
+                                                          .normalized = false,
+                                                          .relative_offset = 0}}),
+                                         Shader::create(GL_FRAGMENT_SHADER, "./resources/shaders/glyph_frag.glsl"));
+
     shader2.customize([](auto& shader) -> void {
         const auto screen_width = 1024;
         const auto screen_height = 768;
@@ -59,10 +58,8 @@ static auto load_shaders() -> std::unique_ptr<engine::ShaderProgramRegistry> {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(projection));
     });
 
-    auto registry = std::make_unique<engine::ShaderProgramRegistry>();
-    registry->set(0, std::move(shader1));
-    registry->set(1, std::move(shader2));
-    return registry;
+    ShaderProgramRegistry::instance().set((u32)ShaderProgramId::DEFAULT, shader1);
+    ShaderProgramRegistry::instance().set((u32)ShaderProgramId::GLYPH, shader2);
 }
 
 static auto load_fonts() -> std::unique_ptr<engine::FontBitmapCache> {
@@ -86,19 +83,24 @@ void Game::initialize() {
         }
     });
 
-    shader_program_registry_ = load_shaders();
-    font_bitmap_cache_ = load_fonts();
-    renderable_text_ = std::make_unique<engine::TextRenderer>(*font_bitmap_cache_, shader_program_registry_->get(1));
+    load_shaders();
 
-    game_object_factory_ = std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard(),
-                                                               *shader_program_registry_);
+    font_bitmap_cache_ = load_fonts();
+    renderable_text_ = std::make_unique<engine::TextRenderer>(
+        *font_bitmap_cache_,
+        engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::GLYPH));
+
+    game_object_factory_ = std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard());
 
     game_object_factory_->create_spaceship();
 
     camera_director_ = std::make_unique<engine::MouseKeyboardCameraDirector>(mouse_event_dispatcher_.mouse(),
                                                                              key_event_dispatcher_.keyboard());
 
-    camera_ = std::make_unique<engine::Camera>(*camera_director_, shader_program_registry_->get(0), "camera_matrix");
+    camera_ = std::make_unique<engine::Camera>(
+        *camera_director_,
+        engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::DEFAULT),
+        "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);

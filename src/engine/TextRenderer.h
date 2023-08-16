@@ -2,7 +2,7 @@
 
 #include "../common/debug.h"
 #include "FontBitmapCache.h"
-#include "ShaderProgram.h"
+#include "Shader.h"
 #include "VertexArrayObject.h"
 #include "opengl.h"
 #include "types.h"

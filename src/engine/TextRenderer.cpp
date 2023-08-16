@@ -11,15 +11,16 @@ struct FontTextureCoordinates {
 
 TextRenderer::TextRenderer(const FontBitmapCache& font_bitmap_cache, const ShaderProgram& shader_program) :
     font_bitmap_cache_(font_bitmap_cache) {
-    vao_ = VertexArrayObject::create(&shader_program);
+    vao_ = VertexArrayObject::create(shader_program);
     vbo_ = vao_.create_vbo(1024, sizeof(FontTextureCoordinates), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
     this->set_color(Colors::NeonGreen);
 }
 
 void TextRenderer::set_color(Color color) {
     auto& shader = vao_.shader_program();
-    glUseProgram(shader.id());
+    shader.bind();
     shader.set_uniform("texture_color", color.to_vec3());
+    shader.unbind();
 }
 
 void TextRenderer::draw_text(const std::string& text, float x, float y, float scale) {
@@ -36,11 +37,11 @@ void TextRenderer::draw_text(const std::string& text, float x, float y, float sc
         float h = character_bitmap.size().y * scale;
 
         std::array<FontTextureCoordinates, 6> vertices{{{xpos, ypos + h, 0.0f, 0.0f},
-                                                    {xpos, ypos, 0.0f, 1.0f},
-                                                    {xpos + w, ypos, 1.0f, 1.0f},
-                                                    {xpos, ypos + h, 0.0f, 0.0f},
-                                                    {xpos + w, ypos, 1.0f, 1.0f},
-                                                    {xpos + w, ypos + h, 1.0f, 0.0f}}};
+                                                        {xpos, ypos, 0.0f, 1.0f},
+                                                        {xpos + w, ypos, 1.0f, 1.0f},
+                                                        {xpos, ypos + h, 0.0f, 0.0f},
+                                                        {xpos + w, ypos, 1.0f, 1.0f},
+                                                        {xpos + w, ypos + h, 1.0f, 0.0f}}};
 
         // bind the texture to given unit and activate it; this is used in
         // the glyph_frag.glsl shader

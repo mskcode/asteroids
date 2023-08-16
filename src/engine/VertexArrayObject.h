@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ElementBufferObject.h"
-#include "ShaderProgram.h"
+#include "OpenGlObject.h"
+#include "Shader.h"
 #include "VertexBufferObject.h"
 #include "opengl.h"
 
@@ -10,32 +11,30 @@ namespace engine {
 class VertexArrayObject final {
 public:
     VertexArrayObject() = default;
-    VertexArrayObject(const VertexArrayObject&) = delete;
-    VertexArrayObject(VertexArrayObject&& other) noexcept;
-    ~VertexArrayObject();
+    VertexArrayObject(const VertexArrayObject&) = default;
+    VertexArrayObject(VertexArrayObject&& other) noexcept = default;
+    ~VertexArrayObject() = default;
 
-    auto operator=(const VertexArrayObject&) -> VertexArrayObject& = delete;
-    auto operator=(VertexArrayObject&& rhs) noexcept -> VertexArrayObject&;
+    auto operator=(const VertexArrayObject&) -> VertexArrayObject& = default;
+    auto operator=(VertexArrayObject&&) noexcept -> VertexArrayObject& = default;
 
-    static auto create(ShaderProgram const* shader_program) -> VertexArrayObject;
+    static auto create(const ShaderProgram& shader_program) -> VertexArrayObject;
 
-    [[nodiscard]] auto id() const -> GLuint;
-    [[nodiscard]] auto is_valid() const -> bool;
-    [[nodiscard]] auto shader_program() const -> const ShaderProgram&;
+    [[nodiscard]] auto object() const -> OpenGlObject { return vao_; }
+    [[nodiscard]] auto shader_program() const -> const ShaderProgram& { return shader_program_; }
 
     auto create_vbo(GLsizeiptr buffer_size, GLsizei element_size, GLbitfield flags) -> VertexBufferObject;
     auto create_ebo(GLsizeiptr buffer_size, GLbitfield flags) -> ElementBufferObject;
 
-    void free_gpu_resources() noexcept;
     void bind();
     void unbind();
 
 private:
-    GLuint vao_id_{0};
-    ShaderProgram const* shader_program_{nullptr};
-    GLuint binding_index_{0};
+    VertexArrayObject(OpenGlObject vao, const ShaderProgram& shader_program);
 
-    VertexArrayObject(GLuint vao_id, ShaderProgram const* shader_program);
+    OpenGlObject vao_;
+    ShaderProgram shader_program_;
+    GLuint binding_index_{0};
 };
 
 } // namespace engine
