@@ -52,7 +52,8 @@ auto OpenGlObject::free() noexcept -> void {
     }
 
     // let's invalidate the object since we have the guard on top
-    invalidate();
+    ext_id_ = 0;
+    ogl_id_ = 0;
 }
 
 OpenGlObjectManager::~OpenGlObjectManager() noexcept {
@@ -156,9 +157,8 @@ auto OpenGlObjectManager::free(OpenGlObject obj) noexcept -> void {
 
     // remove object from map
     auto it = map.find(obj.ext_id());
-    if (it != map.end()) {
-        map.erase(it);
-    }
+    XASSERTF(it != map.end(), "object %u doesn't exist", obj.ext_id())
+    map.erase(it);
 
     // free object
     obj.free();

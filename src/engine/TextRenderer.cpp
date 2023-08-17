@@ -9,8 +9,7 @@ struct FontTextureCoordinates {
     GLfloat texture_y = 0;  // texture vertex Y
 };
 
-TextRenderer::TextRenderer(const FontBitmapCache& font_bitmap_cache, const ShaderProgram& shader_program) :
-    font_bitmap_cache_(font_bitmap_cache) {
+TextRenderer::TextRenderer(const ShaderProgram& shader_program) {
     vao_ = VertexArrayObject::create(shader_program);
     vbo_ = vao_.create_vbo(1024, sizeof(FontTextureCoordinates), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
     this->set_color(Colors::NeonGreen);
@@ -26,9 +25,12 @@ void TextRenderer::set_color(Color color) {
 void TextRenderer::draw_text(const std::string& text, float x, float y, float scale) {
     vao_.bind();
 
+    u32 font_bitmap_cache_id = 1; // TODO
+    auto fbc = FontBitmapCacheRegistry::instance().find(font_bitmap_cache_id);
+
     auto current_x = x;
     for (size_t ix = 0; ix < text.size(); ++ix) {
-        auto& character_bitmap = font_bitmap_cache_[text[ix]];
+        auto& character_bitmap = fbc[text[ix]];
 
         float xpos = current_x + character_bitmap.bearing().x * scale;
         float ypos = y - (character_bitmap.size().y - character_bitmap.bearing().y) * scale;
@@ -45,7 +47,7 @@ void TextRenderer::draw_text(const std::string& text, float x, float y, float sc
 
         // bind the texture to given unit and activate it; this is used in
         // the glyph_frag.glsl shader
-        glBindTextureUnit(0, character_bitmap.texture_id());
+        glBindTextureUnit(0, character_bitmap.object().ogl_id());
 
         // store the vertex data to VBO and render the triangles
         vbo_.set_data(vertices);

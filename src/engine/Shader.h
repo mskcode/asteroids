@@ -96,7 +96,7 @@ public:
     ShaderProgramRegistry() = default;
     ShaderProgramRegistry(const ShaderProgramRegistry&) = delete;
     ShaderProgramRegistry(ShaderProgramRegistry&&) noexcept = delete;
-    ~ShaderProgramRegistry();
+    ~ShaderProgramRegistry() = default;
 
     auto operator=(const ShaderProgramRegistry&) -> ShaderProgramRegistry& = delete;
     auto operator=(ShaderProgramRegistry&&) noexcept -> ShaderProgramRegistry& = delete;
@@ -107,8 +107,6 @@ public:
     auto get(u32 index) -> ShaderProgram&;
 
 private:
-    auto free_all() -> void;
-
     std::unordered_map<u32, ShaderProgram> shader_program_map_;
 };
 

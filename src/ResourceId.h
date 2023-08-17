@@ -13,4 +13,14 @@ enum class TextureId {
     SMILEY,
 };
 
+enum class FontId {
+    UNKNOWN = 0,
+    ARCADE,
+};
+
+enum class FontBitmapCacheId {
+    UNKNOWN = 0,
+    ARCADE_48,
+};
+
 } // namespace game

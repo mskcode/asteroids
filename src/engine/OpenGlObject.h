@@ -38,7 +38,6 @@ private:
     OpenGlObject(OpenGlObjectType type, u32 ext_id, GLuint ogl_id);
 
     auto free() noexcept -> void;
-    auto invalidate() noexcept -> void { ogl_id_ = 0; }
 
     OpenGlObjectType type_{0};
     u32 ext_id_{0};

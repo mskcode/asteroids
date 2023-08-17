@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "engine/Camera.h"
 #include "engine/CameraDirector.h"
-#include "engine/FontManager.h"
+#include "engine/FontBitmapCache.h"
 #include "engine/KeyEventDispatcher.h"
 #include "engine/MouseEventDispatcher.h"
 #include "engine/Window.h"

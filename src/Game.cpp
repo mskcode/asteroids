@@ -62,13 +62,13 @@ static auto load_shaders() -> void {
     ShaderProgramRegistry::instance().set((u32)ShaderProgramId::GLYPH, shader2);
 }
 
-static auto load_fonts() -> std::unique_ptr<engine::FontBitmapCache> {
+static auto load_fonts() -> void {
     using namespace engine;
-    FontManager font_manager;
-    font_manager.load_font("default", "./resources/fonts/arcadeclassic.ttf");
-    auto& font = font_manager.get_font("default");
-    auto font_bitmap_cache = FontBitmapCache::from(font, 48);
-    return font_bitmap_cache;
+    auto& font_manager = FontManager::instance();
+    auto& font_bitmap_cache_registry = FontBitmapCacheRegistry::instance();
+
+    auto font = font_manager.load((u32)FontId::ARCADE, "./resources/fonts/arcadeclassic.ttf");
+    font_bitmap_cache_registry.create((u32)FontBitmapCacheId::ARCADE_48, font, {48, 0});
 }
 
 Game::Game(engine::Window& window) :
@@ -84,10 +84,9 @@ void Game::initialize() {
     });
 
     load_shaders();
+    load_fonts();
 
-    font_bitmap_cache_ = load_fonts();
     renderable_text_ = std::make_unique<engine::TextRenderer>(
-        *font_bitmap_cache_,
         engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::GLYPH));
 
     game_object_factory_ = std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard());

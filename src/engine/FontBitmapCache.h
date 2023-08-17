@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Font.h"
+#include "OpenGlObject.h"
 #include "freetype.h"
 #include "opengl.h"
 #include <cstdint>
@@ -9,53 +10,77 @@
 
 namespace engine {
 
+class FontBitmapCache;
+
 class FontCharacterBitmap final {
+    friend class FontBitmapCache;
+
 public:
-    FontCharacterBitmap(uint8_t character,
-                        GLuint texture_id,
+    FontCharacterBitmap() = default;
+    FontCharacterBitmap(const FontCharacterBitmap&) = default;
+    FontCharacterBitmap(FontCharacterBitmap&&) noexcept = default;
+    ~FontCharacterBitmap() = default;
+
+    auto operator=(const FontCharacterBitmap&) -> FontCharacterBitmap& = default;
+    auto operator=(FontCharacterBitmap&&) noexcept -> FontCharacterBitmap& = default;
+
+    [[nodiscard]] auto object() const -> OpenGlObject { return obj_; }
+    [[nodiscard]] auto character() const -> uint8_t { return character_; }
+    [[nodiscard]] auto advance_offset_x() const -> FT_Pos { return advance_offset_x_; }
+    [[nodiscard]] auto size() const -> const glm::ivec2& { return size_; }
+    [[nodiscard]] auto bearing() const -> const glm::ivec2& { return bearing_; }
+
+private:
+    FontCharacterBitmap(OpenGlObject obj,
+                        uint8_t character,
                         FT_Pos advance_offset_x,
                         glm::ivec2 size,
                         glm::ivec2 bearing);
-    FontCharacterBitmap(const FontCharacterBitmap&) = delete;
-    FontCharacterBitmap(FontCharacterBitmap&& other) noexcept;
-    ~FontCharacterBitmap();
 
-    auto operator=(const FontCharacterBitmap&) -> FontCharacterBitmap& = delete;
-    auto operator=(FontCharacterBitmap&& rhs) noexcept -> FontCharacterBitmap&;
-
-    [[nodiscard]] auto character() const -> uint8_t;
-    [[nodiscard]] auto texture_id() const -> GLuint;
-    [[nodiscard]] auto advance_offset_x() const -> FT_Pos;
-    [[nodiscard]] auto size() const -> const glm::ivec2&;
-    [[nodiscard]] auto bearing() const -> const glm::ivec2&;
-
-    void free_gpu_resources();
-
-private:
-    uint8_t character_ = 0;
-    GLuint texture_id_ = 0;
-    FT_Pos advance_offset_x_ = 0;
+    OpenGlObject obj_;
+    uint8_t character_{0};
+    FT_Pos advance_offset_x_{0};
     glm::ivec2 size_{0, 0};
     glm::ivec2 bearing_{0, 0};
 };
 
 class FontBitmapCache final {
 public:
-    FontBitmapCache(const FontBitmapCache&) = delete;
-    FontBitmapCache(FontBitmapCache&&) = delete;
+    FontBitmapCache() = default;
+    FontBitmapCache(const FontBitmapCache&) = default;
+    FontBitmapCache(FontBitmapCache&&) = default;
     ~FontBitmapCache() = default;
 
-    auto operator=(const FontBitmapCache&) -> FontBitmapCache& = delete;
-    auto operator=(FontBitmapCache&&) -> FontBitmapCache& = delete;
+    auto operator=(const FontBitmapCache&) -> FontBitmapCache& = default;
+    auto operator=(FontBitmapCache&&) -> FontBitmapCache& = default;
+
     auto operator[](char c) const -> const FontCharacterBitmap&;
 
-    static auto from(Font& font, FT_UInt font_size_height, FT_UInt font_size_width = 0)
-        -> std::unique_ptr<FontBitmapCache>;
+    static auto from(Font font, FontSize size) -> FontBitmapCache;
 
 private:
-    std::unordered_map<uint8_t, FontCharacterBitmap> character_map_;
-
     FontBitmapCache(std::unordered_map<uint8_t, FontCharacterBitmap>&& character_map);
+
+    std::unordered_map<uint8_t, FontCharacterBitmap> character_map_;
+};
+
+class FontBitmapCacheRegistry final {
+public:
+    FontBitmapCacheRegistry() = default;
+    FontBitmapCacheRegistry(const FontBitmapCacheRegistry&) = delete;
+    FontBitmapCacheRegistry(FontBitmapCacheRegistry&&) = delete;
+    ~FontBitmapCacheRegistry() noexcept = default;
+
+    auto operator=(const FontBitmapCacheRegistry&) -> FontBitmapCacheRegistry& = delete;
+    auto operator=(FontBitmapCacheRegistry&&) -> FontBitmapCacheRegistry& = delete;
+
+    static auto instance() -> FontBitmapCacheRegistry&;
+
+    auto create(u32 ext_id, Font font, FontSize size) -> FontBitmapCache&;
+    auto find(u32 ext_id) -> FontBitmapCache&;
+
+private:
+    std::unordered_map<u32, FontBitmapCache> registry_map_;
 };
 
 } // namespace engine

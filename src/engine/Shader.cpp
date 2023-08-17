@@ -121,10 +121,6 @@ void ShaderProgram::customize(std::function<void(ShaderProgram&)> customizer) {
     unbind();
 }
 
-ShaderProgramRegistry::~ShaderProgramRegistry() {
-    free_all();
-}
-
 auto ShaderProgramRegistry::instance() -> ShaderProgramRegistry& {
     static ShaderProgramRegistry the_instance;
     return the_instance;
@@ -138,7 +134,4 @@ void ShaderProgramRegistry::set(u32 index, const ShaderProgram& shader_program) 
 auto ShaderProgramRegistry::get(u32 index) -> ShaderProgram& {
     XASSERT(shader_program_map_.contains(index));
     return shader_program_map_[index];
-}
-auto ShaderProgramRegistry::free_all() -> void {
-    // TODO implement me
 }
