@@ -1,7 +1,8 @@
 #include "Game.h"
 #include "ResourceId.h"
-#include "ServiceLocator.h"
 #include "TickLimiter.h"
+#include "engine/Keyboard.h"
+#include "engine/Mouse.h"
 #include "engine/MouseKeyboardCameraDirector.h"
 #include "engine/Shader.h"
 #include <glm/gtc/matrix_transform.hpp>
@@ -72,16 +73,19 @@ static auto load_fonts() -> void {
 }
 
 Game::Game(engine::Window& window) :
-    window_(window),
-    key_event_dispatcher_(window),
-    mouse_event_dispatcher_(window) {}
+    window_(window) {}
 
 void Game::initialize() {
-    key_event_dispatcher_.register_listener([this](auto event) {
+    auto& keyboard = engine::Keyboard::instance();
+    keyboard.attach(window_);
+    keyboard.register_listener([this](auto event) {
         if (event.is_keypress(GLFW_KEY_ESCAPE)) {
             this->window_.close();
         }
     });
+
+    auto& mouse = engine::Mouse::instance();
+    mouse.attach(window_);
 
     load_shaders();
     load_fonts();
@@ -89,12 +93,11 @@ void Game::initialize() {
     renderable_text_ = std::make_unique<engine::TextRenderer>(
         engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::GLYPH));
 
-    game_object_factory_ = std::make_unique<GameObjectFactory>(key_event_dispatcher_.keyboard());
+    game_object_factory_ = std::make_unique<GameObjectFactory>();
 
     game_object_factory_->create_spaceship();
 
-    camera_director_ = std::make_unique<engine::MouseKeyboardCameraDirector>(mouse_event_dispatcher_.mouse(),
-                                                                             key_event_dispatcher_.keyboard());
+    camera_director_ = std::make_unique<engine::MouseKeyboardCameraDirector>();
 
     camera_ = std::make_unique<engine::Camera>(
         *camera_director_,
@@ -103,7 +106,7 @@ void Game::initialize() {
     camera_->set_window_dimensions(window_.window_size());
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);
-    key_event_dispatcher_.register_listener([this](auto event) {
+    keyboard.register_listener([this](auto event) {
         if (event.is_keypress(GLFW_KEY_F12)) {
             this->renderer_->toggle_wireframe_rendering();
         }

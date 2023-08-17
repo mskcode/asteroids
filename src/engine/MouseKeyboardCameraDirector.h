@@ -8,18 +8,14 @@ namespace engine {
 
 class MouseKeyboardCameraDirector : public CameraDirector {
 public:
-    MouseKeyboardCameraDirector(const Mouse& mouse, const Keyboard& keyboard);
-
-    void update() override;
-
     [[nodiscard]] auto front() const -> glm::vec3 override { return front_; }
     [[nodiscard]] auto right() const -> glm::vec3 override { return right_; }
     [[nodiscard]] auto up() const -> glm::vec3 override { return up_; }
     [[nodiscard]] auto position() const -> glm::vec3 override { return position_; }
 
+    void update() override;
+
 private:
-    const engine::Mouse& mouse_;
-    const engine::Keyboard& keyboard_;
     const glm::vec3 world_up_{0.0f, 1.0f, 0.0f};
     glm::vec3 front_{0.0f, 0.0f, -1.0f};
     glm::vec3 up_{0.0f, 1.0f, 0.0f};

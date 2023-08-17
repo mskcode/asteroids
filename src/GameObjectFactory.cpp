@@ -7,11 +7,9 @@
 
 using namespace game;
 
-GameObjectFactory::GameObjectFactory(const engine::Keyboard& keyboard) :
-    keyboard_(keyboard) {}
-
 auto GameObjectFactory::create_spaceship() -> GameActor* {
-    auto input = std::make_unique<KeyboardInputComponent>(keyboard_);
+    auto& keyboard = engine::Keyboard::instance();
+    auto input = std::make_unique<KeyboardInputComponent>(keyboard);
     auto physics = std::make_unique<MoonPhysicsComponent>();
 
     auto texture = texture_registry_.load_texture(1, "./resources/images/smiley-256x256.png");

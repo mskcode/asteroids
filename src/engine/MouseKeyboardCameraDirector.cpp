@@ -35,12 +35,11 @@ static auto clamp(T current, T min, T max) -> T {
 
 } // namespace
 
-MouseKeyboardCameraDirector::MouseKeyboardCameraDirector(const Mouse& mouse, const Keyboard& keyboard) :
-    mouse_(mouse),
-    keyboard_(keyboard) {}
-
 void MouseKeyboardCameraDirector::update() {
-    auto mouse_current_position = mouse_.position();
+    auto& keyboard = Keyboard::instance();
+    auto& mouse = Mouse::instance();
+
+    auto mouse_current_position = mouse.position();
     auto offset = ::compute_camera_direction_offset(mouse_last_position_,
                                                     mouse_current_position,
                                                     mouse_look_sensitivity_);
@@ -49,22 +48,22 @@ void MouseKeyboardCameraDirector::update() {
     yaw_ += offset.x;
     pitch_ += ::clamp((float)offset.y, -89.0f, 89.0f);
 
-    if (keyboard_[GLFW_KEY_W].is_down()) { // move forward
+    if (keyboard[GLFW_KEY_W].is_down()) { // move forward
         position_ += front_ * kbd_move_velocity_;
     }
-    if (keyboard_[GLFW_KEY_S].is_down()) { // move backward
+    if (keyboard[GLFW_KEY_S].is_down()) { // move backward
         position_ -= front_ * kbd_move_velocity_;
     }
-    if (keyboard_[GLFW_KEY_A].is_down()) { // strafe left
+    if (keyboard[GLFW_KEY_A].is_down()) { // strafe left
         position_ -= right_ * kbd_move_velocity_;
     }
-    if (keyboard_[GLFW_KEY_D].is_down()) { // strafe right
+    if (keyboard[GLFW_KEY_D].is_down()) { // strafe right
         position_ += right_ * kbd_move_velocity_;
     }
-    if (keyboard_[GLFW_KEY_SPACE].is_down()) { // ascend
+    if (keyboard[GLFW_KEY_SPACE].is_down()) { // ascend
         position_ += up_ * kbd_move_velocity_;
     }
-    if (keyboard_[GLFW_KEY_LEFT_CONTROL].is_down()) { // descend
+    if (keyboard[GLFW_KEY_LEFT_CONTROL].is_down()) { // descend
         position_ -= up_ * kbd_move_velocity_;
     }
 

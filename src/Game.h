@@ -5,8 +5,6 @@
 #include "engine/Camera.h"
 #include "engine/CameraDirector.h"
 #include "engine/FontBitmapCache.h"
-#include "engine/KeyEventDispatcher.h"
-#include "engine/MouseEventDispatcher.h"
 #include "engine/Window.h"
 #include <memory>
 
@@ -22,8 +20,6 @@ public:
 
 private:
     engine::Window& window_;
-    engine::KeyEventDispatcher key_event_dispatcher_;
-    engine::MouseEventDispatcher mouse_event_dispatcher_;
     std::unique_ptr<GameObjectFactory> game_object_factory_;
     std::unique_ptr<Renderer> renderer_;
     std::unique_ptr<engine::FontBitmapCache> font_bitmap_cache_;
