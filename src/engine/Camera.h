@@ -14,7 +14,7 @@ namespace engine {
 class Camera final {
 public:
     Camera(const CameraDirector& camera_director,
-           const ShaderProgram& shader_program,
+           Resource shader_program_resource,
            std::string shader_camera_matrix_name);
     Camera(const Camera&) = delete;
     Camera(Camera&&) = delete;
@@ -28,7 +28,7 @@ public:
 
 private:
     const CameraDirector& camera_director_;
-    ShaderProgram shader_program_;
+    Resource shader_program_resource_;
     const std::string shader_camera_matrix_name_;
     Dimensions2D window_dimensions_;
     float field_of_view_degrees_{45.0f};

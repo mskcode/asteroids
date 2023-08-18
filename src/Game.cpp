@@ -59,8 +59,8 @@ static auto load_shaders() -> void {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(projection));
     });
 
-    ShaderProgramRegistry::instance().set((u32)ShaderProgramId::DEFAULT, shader1);
-    ShaderProgramRegistry::instance().set((u32)ShaderProgramId::GLYPH, shader2);
+    ShaderProgramRegistry::instance().set(ShaderProgramResources::DEFAULT, shader1);
+    ShaderProgramRegistry::instance().set(ShaderProgramResources::GLYPH, shader2);
 }
 
 static auto load_fonts() -> void {
@@ -68,8 +68,8 @@ static auto load_fonts() -> void {
     auto& font_manager = FontManager::instance();
     auto& font_bitmap_cache_registry = FontBitmapCacheRegistry::instance();
 
-    auto font = font_manager.load((u32)FontId::ARCADE, "./resources/fonts/arcadeclassic.ttf");
-    font_bitmap_cache_registry.create((u32)FontBitmapCacheId::ARCADE_48, font, {48, 0});
+    auto font = font_manager.load(FontResources::ARCADE, "./resources/fonts/arcadeclassic.ttf");
+    font_bitmap_cache_registry.create(FontBitmapCacheResources::ARCADE_48, font, {48, 0});
 }
 
 Game::Game(engine::Window& window) :
@@ -90,19 +90,14 @@ void Game::initialize() {
     load_shaders();
     load_fonts();
 
-    renderable_text_ = std::make_unique<engine::TextRenderer>(
-        engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::GLYPH));
+    renderable_text_ = std::make_unique<engine::TextRenderer>(ShaderProgramResources::GLYPH);
 
     game_object_factory_ = std::make_unique<GameObjectFactory>();
 
     game_object_factory_->create_spaceship();
 
     camera_director_ = std::make_unique<engine::MouseKeyboardCameraDirector>();
-
-    camera_ = std::make_unique<engine::Camera>(
-        *camera_director_,
-        engine::ShaderProgramRegistry::instance().get((int)ShaderProgramId::DEFAULT),
-        "camera_matrix");
+    camera_ = std::make_unique<engine::Camera>(*camera_director_, ShaderProgramResources::DEFAULT, "camera_matrix");
     camera_->set_window_dimensions(window_.window_size());
 
     renderer_ = std::make_unique<Renderer>(window_, *camera_, *game_object_factory_, *renderable_text_);

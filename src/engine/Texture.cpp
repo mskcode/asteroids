@@ -36,7 +36,8 @@ TextureRegistry::~TextureRegistry() {
     free_all_textures();
 }
 
-auto TextureRegistry::load_texture(u32 external_id, const std::string& image_file_path) -> Texture {
+auto TextureRegistry::load_texture(Resource id, const std::string& image_file_path) -> Texture {
+    XASSERT(id.type() == ResourceType::TEXTURE);
     auto image = Image::load(image_file_path);
 
     // TODO more error checking
@@ -74,15 +75,14 @@ auto TextureRegistry::load_texture(u32 external_id, const std::string& image_fil
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // add texture to map and return reference to it
-    texture_map_.emplace(external_id, Texture({external_id, opengl_texture_id}));
-    return texture_map_.find(external_id)->second;
+    texture_map_.emplace(id, Texture({id, opengl_texture_id}));
+    return texture_map_.find(id)->second;
 }
 
-auto TextureRegistry::find(u32 external_id) const -> std::optional<Texture> {
-    auto it = texture_map_.find(external_id);
-    if (it == texture_map_.end()) {
-        return {};
-    }
+auto TextureRegistry::find(Resource id) const -> Texture {
+    XASSERT(id.type() == ResourceType::TEXTURE);
+    auto it = texture_map_.find(id);
+    XASSERT(it != texture_map_.end());
     return it->second;
 }
 

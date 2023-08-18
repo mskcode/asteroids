@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/typealiases.h"
+#include "Resource.h"
 #include "opengl.h"
 #include <memory>
 #include <optional>
@@ -70,8 +71,8 @@ public:
     auto operator=(const TextureRegistry&) -> TextureRegistry& = delete;
     auto operator=(TextureRegistry&&) noexcept -> TextureRegistry& = delete;
 
-    auto load_texture(u32 external_id, const std::string& image_file_path) -> Texture;
-    auto find(u32 external_id) const -> std::optional<Texture>;
+    auto load_texture(Resource id, const std::string& image_file_path) -> Texture;
+    auto find(Resource id) const -> Texture;
 
 private:
     auto free_all_textures() -> void;

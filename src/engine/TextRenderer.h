@@ -14,11 +14,11 @@ namespace engine {
 
 class TextRenderer final {
 public:
-    TextRenderer(const ShaderProgram& shader_program);
+    TextRenderer(Resource shader_program_resource);
     ~TextRenderer() = default;
 
     void set_color(Color color);
-    void draw_text(const std::string& text, float x, float y, float scale = 1.0f);
+    void draw_text(Resource font_bitmap_cache_id, const std::string& text, float x, float y, float scale = 1.0f);
 
 private:
     VertexArrayObject vao_;

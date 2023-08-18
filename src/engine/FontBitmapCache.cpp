@@ -80,15 +80,17 @@ auto FontBitmapCacheRegistry::instance() -> FontBitmapCacheRegistry& {
     static FontBitmapCacheRegistry the_instance;
     return the_instance;
 }
-auto FontBitmapCacheRegistry::create(u32 ext_id, Font font, FontSize size) -> FontBitmapCache& {
-    XASSERTF(!registry_map_.contains(ext_id), "Font bitmap cache ID %u already exists", ext_id);
+auto FontBitmapCacheRegistry::create(Resource id, Font font, FontSize size) -> FontBitmapCache& {
+    XASSERT(id.type() == ResourceType::FONT_BITMAP_CACHE);
+    XASSERTF(!registry_map_.contains(id), "Font bitmap cache ID %u already exists", id.id());
     auto cache = FontBitmapCache::from(font, size);
-    registry_map_.insert({ext_id, std::move(cache)});
-    return registry_map_.find(ext_id)->second;
+    registry_map_.insert({id, std::move(cache)});
+    return registry_map_.find(id)->second;
 }
 
-auto FontBitmapCacheRegistry::find(u32 ext_id) -> FontBitmapCache& {
-    auto it = registry_map_.find(ext_id);
-    XASSERTF(it != registry_map_.end(), "Font bitmap cache ID %u doesn't exist", ext_id);
+auto FontBitmapCacheRegistry::find(Resource id) -> FontBitmapCache& {
+    XASSERT(id.type() == ResourceType::FONT_BITMAP_CACHE);
+    auto it = registry_map_.find(id);
+    XASSERTF(it != registry_map_.end(), "Font bitmap cache ID %u doesn't exist", id.id());
     return it->second;
 }

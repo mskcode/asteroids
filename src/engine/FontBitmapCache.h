@@ -76,8 +76,8 @@ public:
 
     static auto instance() -> FontBitmapCacheRegistry&;
 
-    auto create(u32 ext_id, Font font, FontSize size) -> FontBitmapCache&;
-    auto find(u32 ext_id) -> FontBitmapCache&;
+    auto create(Resource id, Font font, FontSize size) -> FontBitmapCache&;
+    auto find(Resource id) -> FontBitmapCache&;
 
 private:
     std::unordered_map<u32, FontBitmapCache> registry_map_;

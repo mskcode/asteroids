@@ -1,4 +1,5 @@
 #include "TextRenderer.h"
+#include "Shader.h"
 
 using namespace engine;
 
@@ -9,7 +10,8 @@ struct FontTextureCoordinates {
     GLfloat texture_y = 0;  // texture vertex Y
 };
 
-TextRenderer::TextRenderer(const ShaderProgram& shader_program) {
+TextRenderer::TextRenderer(Resource shader_program_resource) {
+    auto shader_program = ShaderProgramRegistry::instance().get(shader_program_resource);
     vao_ = VertexArrayObject::create(shader_program);
     vbo_ = vao_.create_vbo(1024, sizeof(FontTextureCoordinates), GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT);
     this->set_color(Colors::NeonGreen);
@@ -22,11 +24,14 @@ void TextRenderer::set_color(Color color) {
     shader.unbind();
 }
 
-void TextRenderer::draw_text(const std::string& text, float x, float y, float scale) {
-    vao_.bind();
-
-    u32 font_bitmap_cache_id = 1; // TODO
+void TextRenderer::draw_text(Resource font_bitmap_cache_id,
+                             const std::string& text,
+                             float x,
+                             float y,
+                             float scale /* = 1 */) {
     auto fbc = FontBitmapCacheRegistry::instance().find(font_bitmap_cache_id);
+
+    vao_.bind();
 
     auto current_x = x;
     for (size_t ix = 0; ix < text.size(); ++ix) {

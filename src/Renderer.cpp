@@ -1,7 +1,6 @@
 #include "Renderer.h"
-#include "common/strutils.h"
+#include "ResourceId.h"
 #include "common/timeutils.h"
-#include <cinttypes>
 
 using namespace game;
 using namespace engine;
@@ -79,11 +78,11 @@ void Renderer::render() {
     glDisable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    auto text = str::format("RT AVG %" PRIu64 " us", duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
-    renderable_text_.draw_text(text, 100.0f, 100.0f, 0.5f);
+    auto text = fmt::format("RT AVG {} us", duration_histogram_.avg().value(time::TimeUnit::MICROSECONDS));
+    renderable_text_.draw_text(FontBitmapCacheResources::ARCADE_48, text, 100.0f, 100.0f, 0.5f);
 
-    auto text2 = str::format("FPS %.0f", fps_counter_.hertz());
-    renderable_text_.draw_text(text2, 100.0f, 120.0f, 0.5f);
+    auto text2 = fmt::format("FPS {:.{}f}", fps_counter_.hertz(), 0);
+    renderable_text_.draw_text(FontBitmapCacheResources::ARCADE_48, text2, 100.0f, 120.0f, 0.5f);
 
     duration_histogram_.sample(sw.split());
     fps_counter_.inc();

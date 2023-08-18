@@ -5,7 +5,6 @@
 #include "openglerror.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
-#include <utility>
 
 using namespace engine;
 
@@ -126,12 +125,14 @@ auto ShaderProgramRegistry::instance() -> ShaderProgramRegistry& {
     return the_instance;
 }
 
-void ShaderProgramRegistry::set(u32 index, const ShaderProgram& shader_program) {
-    dbgfln("Consuming shader program ID %d to registry index %d", shader_program.object().ogl_id(), index);
-    shader_program_map_.insert({index, shader_program});
+void ShaderProgramRegistry::set(Resource id, const ShaderProgram& shader_program) {
+    XASSERT(id.type() == ResourceType::SHADER_PROGRAM);
+    dbgfln("Consuming shader program ID %d to registry index %u", shader_program.object().ogl_id(), id.id());
+    shader_program_map_.insert({id, shader_program});
 }
 
-auto ShaderProgramRegistry::get(u32 index) -> ShaderProgram& {
-    XASSERT(shader_program_map_.contains(index));
-    return shader_program_map_[index];
+auto ShaderProgramRegistry::get(Resource id) -> ShaderProgram& {
+    XASSERT(id.type() == ResourceType::SHADER_PROGRAM);
+    XASSERT(shader_program_map_.contains(id));
+    return shader_program_map_[id];
 }

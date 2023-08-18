@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGlObject.h"
+#include "Resource.h"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/vec3.hpp"
 #include "opengl.h"
@@ -103,8 +104,8 @@ public:
 
     static auto instance() -> ShaderProgramRegistry&;
 
-    void set(u32 index, const ShaderProgram& shader_program);
-    auto get(u32 index) -> ShaderProgram&;
+    void set(Resource id, const ShaderProgram& shader_program);
+    auto get(Resource id) -> ShaderProgram&;
 
 private:
     std::unordered_map<u32, ShaderProgram> shader_program_map_;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/typealiases.h"
+#include "Resource.h"
 #include "freetype.h"
 #include <memory>
 #include <string>
@@ -57,8 +58,8 @@ public:
 
     static auto instance() -> FontManager&;
 
-    auto load(u32 ext_id, const std::string& path) -> Font;
-    auto find(u32 ext_id) const -> Font;
+    auto load(Resource id, const std::string& path) -> Font;
+    auto find(Resource id) const -> Font;
     auto free(Font font) noexcept -> void;
     auto destroy() noexcept -> void;
 

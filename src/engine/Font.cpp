@@ -44,21 +44,23 @@ auto FontManager::instance() -> FontManager& {
     return the_instance;
 }
 
-auto FontManager::load(u32 ext_id, const std::string& path) -> Font {
-    XASSERTF(!font_map_.contains(ext_id), "Font ID {} has already been loaded", ext_id);
-    dbgfln("Loading font face from file %s as font ID %u", path.c_str(), ext_id);
+auto FontManager::load(Resource id, const std::string& path) -> Font {
+    XASSERT(id.type() == ResourceType::FONT);
+    XASSERTF(!font_map_.contains(id), "Font ID {} has already been loaded", id.id());
+    dbgfln("Loading font face from file %s as font ID %u", path.c_str(), id.id());
     FT_Face face = nullptr;
     auto status = FT_New_Face(library_, path.data(), 0, &face);
     XASSERTF(status == 0, "Failed to load font from path {} (error: {})", path, status);
 
-    Font font{ext_id, face};
-    font_map_.insert({ext_id, font});
+    Font font{id, face};
+    font_map_.insert({id, font});
     return font;
 }
 
-auto FontManager::find(u32 ext_id) const -> Font {
-    auto it = font_map_.find(ext_id);
-    XASSERTF(it != font_map_.end(), "Font ID %u doesn't exist", ext_id);
+auto FontManager::find(Resource id) const -> Font {
+    XASSERT(id.type() == ResourceType::FONT);
+    auto it = font_map_.find(id);
+    XASSERTF(it != font_map_.end(), "Font ID %u doesn't exist", id.id());
     return it->second;
 }
 
