@@ -2,54 +2,39 @@
 #include "../common/assertions.h"
 #include "../common/debug.h"
 #include "Image.h"
-#include "openglerror.h"
-#include <utility>
 
 using namespace engine;
 
-TextureId::TextureId(unsigned int external_id, GLuint ogl_id) :
-    external_id_(external_id),
-    ogl_id_(ogl_id) {}
+Texture::Texture(OpenGlObject obj) :
+    obj_(obj) {}
 
-Texture::Texture(TextureId texture_id) :
-    texture_id_(texture_id) {}
-
-auto Texture::free_gpu_resources() -> void {
-    if (texture_id_.is_valid()) {
-        auto id = texture_id_.ogl_id();
-        dbgfln("Freeing texture ID %d", id);
-        glDeleteTextures(1, &id);
-        texture_id_ = TextureId();
-    }
-}
 auto Texture::bind() const -> void {
-    XASSERTM(texture_id_.is_valid(), "Trying to bind invalid texture");
-    glBindTexture(GL_TEXTURE_2D, texture_id_.ogl_id());
+    XASSERTM(obj_.is_valid(), "Trying to bind invalid texture");
+    glBindTexture(GL_TEXTURE_2D, obj_.ogl_id());
 }
 
 auto Texture::unbind() const -> void {
-    XASSERTM(texture_id_.is_valid(), "Trying to unbind invalid texture");
+    XASSERTM(obj_.is_valid(), "Trying to unbind invalid texture");
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-TextureRegistry::~TextureRegistry() {
-    free_all_textures();
+auto TextureRegistry::instance() -> TextureRegistry& {
+    static TextureRegistry the_instance;
+    return the_instance;
 }
 
 auto TextureRegistry::load_texture(Resource id, const std::string& image_file_path) -> Texture {
     XASSERT(id.type() == ResourceType::TEXTURE);
     auto image = Image::load(image_file_path);
 
-    // TODO more error checking
+    dbgfln("Creating texture ID %u", id.id());
 
     // allocate texture
-    GLuint opengl_texture_id;
-    GL_CHECK(glGenTextures(1, &opengl_texture_id));
-
-    dbgfln("Creating texture ID %d", opengl_texture_id);
+    auto ogl_texture_obj = OpenGlObjectManager::instance().allocate(OpenGlObjectType::TEXTURE);
+    Texture texture{ogl_texture_obj};
 
     // bind texture so we can do something with it
-    glBindTexture(GL_TEXTURE_2D, opengl_texture_id);
+    texture.bind();
 
     // set texture wrapping / filtering options
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -72,10 +57,10 @@ auto TextureRegistry::load_texture(Resource id, const std::string& image_file_pa
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // unbind texture
-    glBindTexture(GL_TEXTURE_2D, 0);
+    texture.unbind();
 
     // add texture to map and return reference to it
-    texture_map_.emplace(id, Texture({id, opengl_texture_id}));
+    texture_map_.insert({id, texture});
     return texture_map_.find(id)->second;
 }
 
@@ -84,10 +69,4 @@ auto TextureRegistry::find(Resource id) const -> Texture {
     auto it = texture_map_.find(id);
     XASSERT(it != texture_map_.end());
     return it->second;
-}
-
-auto TextureRegistry::free_all_textures() -> void {
-    for (auto& [key, value] : texture_map_) {
-        value.free_gpu_resources();
-    }
 }

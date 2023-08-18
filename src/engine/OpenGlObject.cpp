@@ -81,7 +81,6 @@ auto OpenGlObjectManager::allocate_impl(u32 ext_id, OpenGlObjectType type, std::
         break;
     case OpenGlObjectType::SHADER: {
         GLenum shader_type = va_arg(args, GLenum);
-        dbgfln("shader_type=%x", shader_type);
         XASSERT(shader_type == GL_COMPUTE_SHADER || shader_type == GL_VERTEX_SHADER ||
                 shader_type == GL_TESS_CONTROL_SHADER || shader_type == GL_TESS_EVALUATION_SHADER ||
                 shader_type == GL_GEOMETRY_SHADER || shader_type == GL_FRAGMENT_SHADER);

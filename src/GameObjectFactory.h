@@ -14,7 +14,6 @@ public:
     auto updateables() const -> const std::vector<Updateable*>&;
 
 private:
-    engine::TextureRegistry texture_registry_;
     std::vector<GameActor*> objects_;
     std::vector<Renderable*> renderables_;
     std::vector<Updateable*> updateables_;

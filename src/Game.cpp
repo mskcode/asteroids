@@ -72,6 +72,12 @@ static auto load_fonts() -> void {
     font_bitmap_cache_registry.create(FontBitmapCacheResources::ARCADE_48, font, {48, 0});
 }
 
+static auto load_textures() -> void {
+    using namespace engine;
+    auto& texture_registry = TextureRegistry::instance();
+    texture_registry.load_texture(TextureResources::SMILEY, "./resources/images/smiley-256x256.png");
+}
+
 Game::Game(engine::Window& window) :
     window_(window) {}
 
@@ -89,6 +95,7 @@ void Game::initialize() {
 
     load_shaders();
     load_fonts();
+    load_textures();
 
     renderable_text_ = std::make_unique<engine::TextRenderer>(ShaderProgramResources::GLYPH);
 

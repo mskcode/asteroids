@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/typealiases.h"
+#include "OpenGlObject.h"
 #include "Resource.h"
 #include "opengl.h"
 #include <memory>
@@ -11,31 +12,7 @@
 
 namespace engine {
 
-class Texture;
 class TextureRegistry;
-
-class TextureId final {
-    friend class TextureRegistry;
-    friend class Texture;
-
-public:
-    TextureId() = default;
-    TextureId(const TextureId&) = default;
-    TextureId(TextureId&&) noexcept = default;
-
-    auto operator=(const TextureId&) -> TextureId& = default;
-    auto operator=(TextureId&&) noexcept -> TextureId& = default;
-
-    [[nodiscard]] auto external_id() const -> unsigned int { return external_id_; }
-    [[nodiscard]] auto ogl_id() const -> GLuint { return ogl_id_; }
-    [[nodiscard]] auto is_valid() const -> bool { return ogl_id_ > 0; }
-
-private:
-    TextureId(u32 external_id, GLuint ogl_id);
-
-    u32 external_id_{0}; // user given ID
-    GLuint ogl_id_{0};   // OpenGL generated ID
-};
 
 class Texture {
     friend class TextureRegistry;
@@ -47,18 +24,17 @@ public:
     ~Texture() = default;
 
     auto operator=(const Texture&) -> Texture& = default;
-    auto operator=(Texture&& rhs) noexcept -> Texture& = default;
+    auto operator=(Texture&&) noexcept -> Texture& = default;
 
-    [[nodiscard]] auto id() const -> const TextureId& { return texture_id_; }
+    [[nodiscard]] auto object() const -> const OpenGlObject { return obj_; }
 
-    auto free_gpu_resources() -> void;
     auto bind() const -> void;
     auto unbind() const -> void;
 
 private:
-    Texture(TextureId texture_id);
+    Texture(OpenGlObject obj);
 
-    TextureId texture_id_;
+    OpenGlObject obj_;
 };
 
 class TextureRegistry {
@@ -66,17 +42,17 @@ public:
     TextureRegistry() = default;
     TextureRegistry(const TextureRegistry&) = delete;
     TextureRegistry(TextureRegistry&&) noexcept = delete;
-    ~TextureRegistry();
+    ~TextureRegistry() = default;
 
     auto operator=(const TextureRegistry&) -> TextureRegistry& = delete;
     auto operator=(TextureRegistry&&) noexcept -> TextureRegistry& = delete;
+
+    static auto instance() -> TextureRegistry&;
 
     auto load_texture(Resource id, const std::string& image_file_path) -> Texture;
     auto find(Resource id) const -> Texture;
 
 private:
-    auto free_all_textures() -> void;
-
     std::unordered_map<u32, Texture> texture_map_;
 };
 

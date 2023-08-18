@@ -12,9 +12,11 @@ auto GameObjectFactory::create_spaceship() -> GameActor* {
     auto input = std::make_unique<KeyboardInputComponent>(keyboard);
     auto physics = std::make_unique<MoonPhysicsComponent>();
 
-    auto texture = texture_registry_.load_texture(TextureResources::SMILEY, "./resources/images/smiley-256x256.png");
+    auto& texture_registry = engine::TextureRegistry::instance();
+    auto texture = texture_registry.find(TextureResources::SMILEY);
 
-    auto shader_program = engine::ShaderProgramRegistry::instance().get(ShaderProgramResources::DEFAULT);
+    auto& shader_program_registry = engine::ShaderProgramRegistry::instance();
+    auto shader_program = shader_program_registry.get(ShaderProgramResources::DEFAULT);
 
     auto r = std::make_unique<engine::RenderableObject>(shader_program, texture);
     auto graphics = std::make_unique<GraphicsComponent>(std::move(r));
